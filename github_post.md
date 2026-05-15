@@ -1,6 +1,7 @@
 # What we learned: Physics Callbacks and Singleton Pattern in a damage chain
 
 Group: Awake()
+
 Scripts studied: Damage.cs, Health.cs, Enemy.cs, GameManager.cs, UIManager.cs
 
 ---
