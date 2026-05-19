@@ -2,11 +2,17 @@
 
 ## Current Status
 
-Week 1 — Project initialization. Unity project setup in progress, no playable content yet.
+🚧 Week 1 — Project initialization. Unity project setup in progress, no playable content yet.
 
 ## One-Sentence Game Idea
 
-Grow zombies on an isometric farm, then send squads out to raid scripted enemy farms for loot.
+Grow engineered zombies on a survivor base's farm and send them out to reclaim cities overrun by wild zombies.
+
+## Setting & Story
+
+A zombie virus has swept the world. Most cities have fallen, and humanity has retreated into fortified bases. Scientists in one such base have engineered a breakthrough: **plantable zombies** — a domesticated, controllable strain bred from infected DNA. These engineered zombies are humanity's new weapon. Sent into the ruins, they fight wild zombies on equal footing — flesh against flesh.
+
+The player runs the base's experimental farm. Each crop is a soldier. Each harvest is one step closer to retaking a fallen city.
 
 ## How to Run
 
@@ -33,26 +39,26 @@ Unity 6 LTS, URP 2D Renderer.
 
 ## Smallest Playable Version (MVP)
 
-One farm screen. Click tile → plant zombie seed → wait → harvest → send 3 zombies into one auto-battle → earn coins. One seed type, one enemy stage, gray boxes for art.
+One farm screen inside the survivor base. Click tile → plant engineered zombie seed → wait → harvest → send 3 zombies to reclaim a fallen city → earn resources. One seed type, one city stage, gray boxes for art.
 
 ## What the Player Does Moment to Moment
 
 1. Pans the camera with mouse drag, zooms with scroll wheel.
-2. Hovers over a farm tile, sees a highlight.
-3. Clicks an empty tile, picks a seed from a small popup, confirms planting.
+2. Hovers over a farm tile in the base, sees a highlight.
+3. Clicks an empty tile, picks an engineered zombie seed from a small popup, confirms planting.
 4. Watches a growth timer tick down on the tile (real-time, seconds for MVP).
 5. Clicks a ripe tile to harvest, sees the zombie added to inventory counter.
-6. Repeats planting and harvesting until they have enough units.
-7. Opens the battle menu, selects 3 zombies, hits "Send."
-8. Watches a short auto-battle play out, sees win/lose result and coin reward.
-9. Returns to the farm with more coins, buys more seeds, repeats.
+6. Repeats planting and harvesting until they have enough units for a mission.
+7. Opens the mission map, selects 3 zombies, hits "Deploy" against a fallen city.
+8. Watches a short auto-battle play out between engineered zombies and wild zombies, sees mission result and resource reward.
+9. Returns to the base with more resources, plants more seeds, advances to the next city.
 
 ## Realistic Vertical Slice — Five-Week Plan
 
 - **Week 1 — Foundation:** Isometric tilemap, camera controller (pan + zoom), click-to-cell conversion, hover highlight.
 - **Week 2 — Farming Loop:** Plant action, growth state machine driven by `DateTime.UtcNow`, harvest action, basic inventory.
-- **Week 3 — Battle Loop:** `BattleSimulator` pure C# class, battle scene with placeholder units, `BattlePlayer` replays event log, win/lose result screen.
-- **Week 4 — Glue:** JSON save/load, coin economy, simple shop UI, full loop playable end-to-end.
+- **Week 3 — Combat Loop:** `BattleSimulator` pure C# class, mission scene with placeholder engineered zombies vs. wild zombies, `BattlePlayer` replays event log, mission result screen.
+- **Week 4 — Glue:** JSON save/load, resource economy, simple seed bank UI, full loop playable end-to-end.
 - **Week 5 — Polish & Demo:** Bug fixing, numerical tuning, UI cleanup, gameplay video, postmortem.
 
 ## Unity Technical Plan
@@ -61,7 +67,7 @@ One farm screen. Click tile → plant zombie seed → wait → harvest → send 
 - **Render pipeline:** URP, 2D Renderer
 - **Tilemap:** Isometric Tilemap, Transparency Sort Mode = Custom Axis `(0, 1, 0)`
 - **Input:** New Input System
-- **Data:** ScriptableObjects (crops, units, stages) with a single `GameConfig` SO for tunable numbers
+- **Data:** ScriptableObjects (zombie strains, missions, cities) with a single `GameConfig` SO for tunable numbers
 - **Save format:** `JsonUtility` to JSON, written to `Application.persistentDataPath`
 
 Scripts in build order: `GridManager` → `CameraController` → `TileInteraction` → `CropData` + `CropInstance` → `Inventory` → `BattleSimulator` → `BattlePlayer` → `SaveManager`
@@ -69,16 +75,16 @@ Scripts in build order: `GridManager` → `CameraController` → `TileInteractio
 ## Scope Sorting
 
 ### Must-have (required for the game to function)
-Isometric tilemap, camera controls, plant action, real-time growth, harvest action, inventory, `BattleSimulator`, one playable battle stage, win/lose + coin reward, JSON save/load.
+Isometric tilemap, camera controls, plant action, real-time growth, harvest action, inventory, `BattleSimulator`, one playable city mission, mission result + resource reward, JSON save/load.
 
 ### Should-have (important for quality, not required for first test)
-Hover highlight, shop UI, battle replay animations, 2–3 zombie types, 2–3 enemy stages, numerical balancing, basic sound effects.
+Hover highlight, seed bank UI, battle replay animations, 2–3 engineered zombie strains, 2–3 city missions, numerical balancing, basic sound effects.
 
 ### Could-have (only if the main game works and is tested)
-Rock-paper-scissors counter system, particle effects, background music, settings menu, tutorial, statistics screen.
+Strain counter system (different engineered strains effective against different wild zombie types), particle effects, ambient base sounds, settings menu, tutorial briefing, mission statistics screen.
 
 ### Cut first (remove if scope becomes too large)
-PvP, crossbreeding system, terrain types, narrative mode, achievements, cloud save, polished art.
+PvP, strain crossbreeding, terrain effects across city types, cinematic story scenes, achievements, cloud save, polished art.
 
 ## GitHub Repository Setup
 
@@ -114,8 +120,8 @@ Detailed weekly notes will live under `/docs/testing/`.
 
 ## Biggest Risk
 
-Scope creep, not technical difficulty. Solo devs typically spend months on the farm, then months on combat, and ship nothing. Mitigation: PvP cut entirely, v1 is PvE only against scripted enemy farms; new ideas go to backlog until the vertical slice is playable. Secondary risk: isometric depth sorting bugs with overlapping multi-tile objects — budget 2–3 days.
+Scope creep, not technical difficulty. Solo devs typically spend months on the farm, then months on combat, and ship nothing. Mitigation: PvP cut entirely, v1 is PvE only — players reclaim cities from scripted wild zombie encounters; new ideas go to backlog until the vertical slice is playable. Secondary risk: isometric depth sorting bugs with overlapping multi-tile objects — budget 2–3 days.
 
 ## One Visible Task Before Next Session
 
-Initialize the Unity project: create a Unity 6 URP 2D project, add `.gitignore` and Git LFS, push the empty project to the repo, and get a 10×10 isometric tilemap rendering with placeholder tiles. Outcome: open the project, see a diamond-shaped grid.
+Initialize the Unity project: create a Unity 6 URP 2D project, add `.gitignore` and Git LFS, push the empty project to the repo, and get a 10×10 isometric tilemap rendering with placeholder tiles. Outcome: open the project, see a diamond-shaped grid representing the base's farm plot.
