@@ -1,8 +1,35 @@
 # Zombie Farm (working title)
 
+## Current Status
+
+Week 1 — Project initialization. Unity project setup in progress, no playable content yet.
+
 ## One-Sentence Game Idea
 
 Grow zombies on an isometric farm, then send squads out to raid scripted enemy farms for loot.
+
+## How to Run
+
+**Current stage:** No playable build available yet.
+
+**Future instructions (once development is further along):**
+1. Download the latest ZIP from the Releases page
+2. Extract and run `ZombieFarm.exe` (Windows only)
+3. Or open the project source in Unity 6 LTS and press Play
+
+## Controls
+
+- **Left Mouse Button** — Select tile, plant, harvest, confirm menu
+- **Right Mouse Button** — Cancel / back
+- **Mouse Drag (middle button or empty area)** — Pan camera
+- **Scroll Wheel** — Zoom in/out
+- **ESC** — Open pause menu
+
+*Controls may change during development; latest build is authoritative.*
+
+## Unity Version
+
+Unity 6 LTS, URP 2D Renderer.
 
 ## Smallest Playable Version (MVP)
 
@@ -22,43 +49,68 @@ One farm screen. Click tile → plant zombie seed → wait → harvest → send 
 
 ## Realistic Vertical Slice — Five-Week Plan
 
-- **Week 1 — Foundation:** Isometric tilemap setup, camera controller (pan + zoom), click-to-cell coordinate conversion, tile highlight on hover.
-- **Week 2 — Farming Loop:** Plant action, growth state machine driven by `DateTime.UtcNow`, harvest action, basic inventory data.
-- **Week 3 — Battle Loop:** `BattleSimulator` as a pure C# class, battle scene with placeholder units, `BattlePlayer` to replay the event log, win/lose result screen.
-- **Week 4 — Glue:** Save/load to JSON, coin economy, simple shop UI to buy seeds, one full playable loop end-to-end.
-- **Week 5 — Polish & Demo:** Bug fixing, numerical tuning, basic UI cleanup, record a short gameplay video, write postmortem.
-
-Stretch goals (only if Week 4 finishes early): a second seed type, a second enemy stage, sound effects.
+- **Week 1 — Foundation:** Isometric tilemap, camera controller (pan + zoom), click-to-cell conversion, hover highlight.
+- **Week 2 — Farming Loop:** Plant action, growth state machine driven by `DateTime.UtcNow`, harvest action, basic inventory.
+- **Week 3 — Battle Loop:** `BattleSimulator` pure C# class, battle scene with placeholder units, `BattlePlayer` replays event log, win/lose result screen.
+- **Week 4 — Glue:** JSON save/load, coin economy, simple shop UI, full loop playable end-to-end.
+- **Week 5 — Polish & Demo:** Bug fixing, numerical tuning, UI cleanup, gameplay video, postmortem.
 
 ## Unity Technical Plan
 
-- **Unity version:** Unity 6 LTS (or 2022.3 LTS if stability is preferred)
-- **Render pipeline:** URP, 2D renderer
-- **Tilemap:** Built-in Isometric Tilemap, with Transparency Sort Mode = Custom Axis `(0, 1, 0)` for Y-based depth sorting
-- **Input:** New Input System package, mouse drag + scroll + click bindings
-- **Data:** ScriptableObjects for crops, units, stages; one `GameConfig` SO for tunable numbers
-- **Save format:** JSON via `JsonUtility`, written to `Application.persistentDataPath`
+- **Unity version:** Unity 6 LTS
+- **Render pipeline:** URP, 2D Renderer
+- **Tilemap:** Isometric Tilemap, Transparency Sort Mode = Custom Axis `(0, 1, 0)`
+- **Input:** New Input System
+- **Data:** ScriptableObjects (crops, units, stages) with a single `GameConfig` SO for tunable numbers
+- **Save format:** `JsonUtility` to JSON, written to `Application.persistentDataPath`
 
-Scripts to build, in order:
+Scripts in build order: `GridManager` → `CameraController` → `TileInteraction` → `CropData` + `CropInstance` → `Inventory` → `BattleSimulator` → `BattlePlayer` → `SaveManager`
 
-- `GridManager` — isometric tilemap, world ↔ cell coordinate conversion
-- `CameraController` — mouse drag pan + scroll wheel zoom, clamped to farm bounds
-- `TileInteraction` — click to plant/harvest, hover highlight
-- `CropData` (ScriptableObject) + `CropInstance` — growth state machine
-- `Inventory` — item ID → count
-- `BattleSimulator` — pure C# class, takes two unit lists, returns result + event log
-- `BattlePlayer` — replays event log with animations
-- `SaveManager` — JSON serialization, called on key events (harvest, battle end, purchase)
+## Scope Sorting
 
-## GitHub Repository Setup Plan
+### Must-have (required for the game to function)
+Isometric tilemap, camera controls, plant action, real-time growth, harvest action, inventory, `BattleSimulator`, one playable battle stage, win/lose + coin reward, JSON save/load.
+
+### Should-have (important for quality, not required for first test)
+Hover highlight, shop UI, battle replay animations, 2–3 zombie types, 2–3 enemy stages, numerical balancing, basic sound effects.
+
+### Could-have (only if the main game works and is tested)
+Rock-paper-scissors counter system, particle effects, background music, settings menu, tutorial, statistics screen.
+
+### Cut first (remove if scope becomes too large)
+PvP, crossbreeding system, terrain types, narrative mode, achievements, cloud save, polished art.
+
+## GitHub Repository Setup
 
 - **Repo:** https://github.com/RainYans/game-programming (private)
-- **.gitignore:** Unity official template from github.com/github/gitignore
+- **.gitignore:** Unity official template
 - **Git LFS:** Enabled for `.png`, `.psd`, `.fbx`, `.wav`, `.mp3`
-- **Branching:** `main` is always stable, feature work on `feature/<name>` branches, merged via pull request even when working solo (forces self-review)
-- **Commits:** Conventional commit style — `feat:`, `fix:`, `refactor:`, `docs:`, `chore:`
+- **Branching:** `main` stays stable, feature work on `feature/<name>` branches with pull requests
+- **Commits:** Conventional Commits style (`feat:`, `fix:`, `refactor:`, `docs:`, `chore:`)
+- **Issues:** GitHub Issues used to track bugs, features, risks, and testing notes
 - **Documentation:** `README.md` for overview, `/docs` folder for design notes and weekly progress logs
-- **Releases:** Tag the end of each week as `v0.1`, `v0.2`, etc., with build artifacts attached
+
+## Asset Credits
+
+**Current stage:** No external assets used yet. All visuals are Unity built-in placeholder shapes (cubes, geometric primitives).
+
+**Planned sources:**
+- Kenney.nl — CC0 free assets
+- itch.io — isometric asset packs (author and license to be listed when purchased)
+- OpenGameArt.org — CC BY / CC BY-SA licensed assets
+
+Each external asset added will be credited here with author, source link, and license.
+
+## Testing Evidence
+
+**Current stage:** No testable functionality yet.
+
+Each week's testing will be logged here:
+- What was tested
+- What failed / which bugs surfaced
+- What changed afterwards
+
+Detailed weekly notes will live under `/docs/testing/`.
 
 ## Biggest Risk
 
@@ -66,44 +118,4 @@ Scope creep, not technical difficulty. Solo devs typically spend months on the f
 
 ## One Visible Task Before Next Session
 
-Initialize the Unity project: create a new Unity 6 URP 2D project, add `.gitignore` and Git LFS, push the empty project to the repo, and get an isometric tilemap rendering a 10×10 grid of placeholder tiles on screen. Outcome: open the project, see a diamond-shaped grid.
-
-
-## Scope Sorting
-
-### Must-have (required for the game to function — build first)
-- Isometric tilemap with click-to-cell detection
-- Camera controls (mouse pan + scroll zoom)
-- Plant action on empty tile
-- Real-time crop growth (one seed type)
-- Harvest action → add to inventory
-- `BattleSimulator` (pure C# auto-battle logic)
-- One playable battle stage with placeholder enemies
-- Win/lose result + coin reward
-- Save/load to JSON
-
-### Should-have (important for quality, not required for first test)
-- Hover highlight on tiles
-- Simple shop UI to buy seeds
-- Battle replay animations (`BattlePlayer`)
-- 2-3 zombie types with basic stat differences
-- 2-3 enemy stages with varied difficulty
-- Numerical balancing pass
-- Basic sound effects
-
-### Could-have (only if the main game works and is tested)
-- Multiple seed types with rock-paper-scissors counters
-- Particle effects (planting, harvest, combat hits)
-- Background music
-- Settings menu (volume, resolution)
-- Tutorial / first-time player guidance
-- Statistics screen (zombies grown, battles won)
-
-### Cut first (remove if scope becomes too large)
-- PvP / online multiplayer
-- Crossbreeding system (combining seeds for new species)
-- Terrain types affecting growth
-- Narrative / story mode
-- Achievement system
-- Cloud save
-- Polished art replacing placeholders
+Initialize the Unity project: create a Unity 6 URP 2D project, add `.gitignore` and Git LFS, push the empty project to the repo, and get a 10×10 isometric tilemap rendering with placeholder tiles. Outcome: open the project, see a diamond-shaped grid.
