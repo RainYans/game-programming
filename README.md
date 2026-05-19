@@ -1,33 +1,69 @@
-# game-programming
+# Zombie Farm (working title)
 
-# Zombie Farm
+## One-Sentence Game Idea
 
-**One-line idea:** Grow zombies on an isometric farm, then send them out to raid enemy farms for loot.
+Grow zombies on an isometric farm, then send squads out to raid scripted enemy farms for loot.
 
-**Core loop:** Plant seed → wait → harvest zombie → send squad to battle → earn coins → buy more seeds.
+## Smallest Playable Version (MVP)
 
-**Type:** 2.5D PC single-player game, isometric view, PvE.
+One farm screen. Click tile → plant zombie seed → wait → harvest → send 3 zombies into one auto-battle → earn coins. One seed type, one enemy stage, gray boxes for art.
 
-## Vertical Slice
+## What the Player Does Moment to Moment
 
-One farm screen. Click tile → plant zombie seed → wait → harvest → send 3 zombies into one auto-battle → earn coins. One seed, one stage, gray boxes for art.
+1. Pans the camera with mouse drag, zooms with scroll wheel.
+2. Hovers over a farm tile, sees a highlight.
+3. Clicks an empty tile, picks a seed from a small popup, confirms planting.
+4. Watches a growth timer tick down on the tile (real-time, seconds for MVP).
+5. Clicks a ripe tile to harvest, sees the zombie added to inventory counter.
+6. Repeats planting and harvesting until they have enough units.
+7. Opens the battle menu, selects 3 zombies, hits "Send."
+8. Watches a short auto-battle play out, sees win/lose result and coin reward.
+9. Returns to the farm with more coins, buys more seeds, repeats.
 
-## Core Systems (build in this order)
+## Realistic Vertical Slice — Five-Week Plan
 
-- `GridManager` — isometric tilemap, coordinate conversion
-- `CameraController` — mouse drag pan + scroll wheel zoom
+- **Week 1 — Foundation:** Isometric tilemap setup, camera controller (pan + zoom), click-to-cell coordinate conversion, tile highlight on hover.
+- **Week 2 — Farming Loop:** Plant action, growth state machine driven by `DateTime.UtcNow`, harvest action, basic inventory data.
+- **Week 3 — Battle Loop:** `BattleSimulator` as a pure C# class, battle scene with placeholder units, `BattlePlayer` to replay the event log, win/lose result screen.
+- **Week 4 — Glue:** Save/load to JSON, coin economy, simple shop UI to buy seeds, one full playable loop end-to-end.
+- **Week 5 — Polish & Demo:** Bug fixing, numerical tuning, basic UI cleanup, record a short gameplay video, write postmortem.
+
+Stretch goals (only if Week 4 finishes early): a second seed type, a second enemy stage, sound effects.
+
+## Unity Technical Plan
+
+- **Unity version:** Unity 6 LTS (or 2022.3 LTS if stability is preferred)
+- **Render pipeline:** URP, 2D renderer
+- **Tilemap:** Built-in Isometric Tilemap, with Transparency Sort Mode = Custom Axis `(0, 1, 0)` for Y-based depth sorting
+- **Input:** New Input System package, mouse drag + scroll + click bindings
+- **Data:** ScriptableObjects for crops, units, stages; one `GameConfig` SO for tunable numbers
+- **Save format:** JSON via `JsonUtility`, written to `Application.persistentDataPath`
+
+Scripts to build, in order:
+
+- `GridManager` — isometric tilemap, world ↔ cell coordinate conversion
+- `CameraController` — mouse drag pan + scroll wheel zoom, clamped to farm bounds
 - `TileInteraction` — click to plant/harvest, hover highlight
-- `CropData` (ScriptableObject) + growth via `DateTime.UtcNow`
+- `CropData` (ScriptableObject) + `CropInstance` — growth state machine
 - `Inventory` — item ID → count
-- `BattleSimulator` — pure C# class, returns result + event log
-- `BattlePlayer` — replays log with animations
-- `SaveManager` — JSON to `Application.persistentDataPath`
+- `BattleSimulator` — pure C# class, takes two unit lists, returns result + event log
+- `BattlePlayer` — replays event log with animations
+- `SaveManager` — JSON serialization, called on key events (harvest, battle end, purchase)
 
-## Repo Setup
+## GitHub Repository Setup Plan
 
-- Unity official `.gitignore`
-- Git LFS enabled for art assets (`.png`, `.psd`, `.fbx`, `.wav`)
+- **Repo:** https://github.com/RainYans/game-programming (private)
+- **.gitignore:** Unity official template from github.com/github/gitignore
+- **Git LFS:** Enabled for `.png`, `.psd`, `.fbx`, `.wav`, `.mp3`
+- **Branching:** `main` is always stable, feature work on `feature/<name>` branches, merged via pull request even when working solo (forces self-review)
+- **Commits:** Conventional commit style — `feat:`, `fix:`, `refactor:`, `docs:`, `chore:`
+- **Documentation:** `README.md` for overview, `/docs` folder for design notes and weekly progress logs
+- **Releases:** Tag the end of each week as `v0.1`, `v0.2`, etc., with build artifacts attached
 
 ## Biggest Risk
 
-Scope creep, not technical difficulty. Solo devs typically spend months on the farm, then months on combat, and ship nothing. Mitigation: PvP cut entirely, v1 is PvE only against scripted enemy farms; new ideas go to backlog until the vertical slice is playable. Secondary risk: isometric depth sorting bugs with overlapping multi-tile objects.
+Scope creep, not technical difficulty. Solo devs typically spend months on the farm, then months on combat, and ship nothing. Mitigation: PvP cut entirely, v1 is PvE only against scripted enemy farms; new ideas go to backlog until the vertical slice is playable. Secondary risk: isometric depth sorting bugs with overlapping multi-tile objects — budget 2–3 days.
+
+## One Visible Task Before Next Session
+
+Initialize the Unity project: create a new Unity 6 URP 2D project, add `.gitignore` and Git LFS, push the empty project to the repo, and get an isometric tilemap rendering a 10×10 grid of placeholder tiles on screen. Outcome: open the project, see a diamond-shaped grid.
