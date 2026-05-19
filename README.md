@@ -67,3 +67,43 @@ Scope creep, not technical difficulty. Solo devs typically spend months on the f
 ## One Visible Task Before Next Session
 
 Initialize the Unity project: create a new Unity 6 URP 2D project, add `.gitignore` and Git LFS, push the empty project to the repo, and get an isometric tilemap rendering a 10×10 grid of placeholder tiles on screen. Outcome: open the project, see a diamond-shaped grid.
+
+
+## Scope Sorting
+
+### Must-have (required for the game to function — build first)
+- Isometric tilemap with click-to-cell detection
+- Camera controls (mouse pan + scroll zoom)
+- Plant action on empty tile
+- Real-time crop growth (one seed type)
+- Harvest action → add to inventory
+- `BattleSimulator` (pure C# auto-battle logic)
+- One playable battle stage with placeholder enemies
+- Win/lose result + coin reward
+- Save/load to JSON
+
+### Should-have (important for quality, not required for first test)
+- Hover highlight on tiles
+- Simple shop UI to buy seeds
+- Battle replay animations (`BattlePlayer`)
+- 2-3 zombie types with basic stat differences
+- 2-3 enemy stages with varied difficulty
+- Numerical balancing pass
+- Basic sound effects
+
+### Could-have (only if the main game works and is tested)
+- Multiple seed types with rock-paper-scissors counters
+- Particle effects (planting, harvest, combat hits)
+- Background music
+- Settings menu (volume, resolution)
+- Tutorial / first-time player guidance
+- Statistics screen (zombies grown, battles won)
+
+### Cut first (remove if scope becomes too large)
+- PvP / online multiplayer
+- Crossbreeding system (combining seeds for new species)
+- Terrain types affecting growth
+- Narrative / story mode
+- Achievement system
+- Cloud save
+- Polished art replacing placeholders
