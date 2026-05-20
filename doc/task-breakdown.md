@@ -33,13 +33,13 @@ action logic.
 
 ## Milestone 2 — Farming Loop (Week 2)
 
-- [ ] `CropData` ScriptableObject: id, display name, grow seconds, yield count, sprite **[M]**
-- [ ] `CropInstance`: per-tile growth state machine driven by `DateTime.UtcNow` **[M]**
-- [ ] `FarmActions`: input-agnostic action layer (plant / harvest / openShop / deploy) **[M]**
-- [ ] `TileInteraction`: click empty tile → confirm plant → dispatch plant action **[M]**
-- [ ] Growth visual: tile changes appearance as it ripens (seed → growing → ripe) **[M]**
-- [ ] `TileInteraction`: click ripe tile → dispatch harvest action → free the cell **[M]**
-- [ ] `Inventory`: item id → count, with add/remove + change event **[M]**
+- [x] `CropData` ScriptableObject: id, display name, grow seconds, yield count, sprite **[M]**
+- [x] `CropInstance`: per-tile growth state machine driven by `DateTime.UtcNow` **[M]**
+- [x] `FarmActions`: input-agnostic action layer (plant / harvest / openShop / deploy) **[M]**
+- [x] `TileInteraction`: click empty tile → confirm plant → dispatch plant action **[M]**
+- [x] Growth visual: tile changes appearance as it ripens (seed → growing → ripe) **[M]**
+- [x] `TileInteraction`: click ripe tile → dispatch harvest action → free the cell **[M]**
+- [x] `Inventory`: item id → count, with add/remove + change event **[M]**
 - [ ] On-screen inventory counter showing harvested zombies **[M]**
 - [ ] Seed-pick popup / seed bank UI when planting **[S]**
 - [ ] Add 2–3 engineered zombie strains as separate `CropData` assets **[S]**
@@ -85,3 +85,37 @@ action logic.
 
 PvP · strain crossbreeding · per-city terrain effects · cinematic story scenes ·
 achievements · cloud save · polished art.
+
+---
+
+## Depth Backlog (Icebox)
+
+Captured ambition for after the v1 slice ships with time to spare, or for a post-course
+depth pass. **Not committed work** — nothing here blocks the 5-week v1, and build order
+stays slice-first. This is *how each system grows* once the core loop is proven.
+
+### Farm as a place (not just a grid)
+- Controllable doctor-farmer avatar — walk to plots / buildings (`FarmActions` is already
+  input-decoupled so the action logic needs no rewrite).
+- Walkable ground + paths, base layout, enterable buildings.
+- Decorations & ambiance (fences, props, ruined-base look), NPC survivors.
+- Day/night cycle and in-game time.
+
+### Buildings & systems
+- Seed Shop / Lab / Warehouse / Deploy room as visitable buildings (vs. flat UI panels).
+- Lab depth: research tree, strain upgrades, crossbreeding / mutation.
+- Storage with capacity and multiple resource types; plot-expansion zones; terrain variety.
+
+### Crop / farming depth
+- Tending mechanics: watering, fertilizer, pests, growth boosters.
+- Many strains with distinct cost / grow time / combat stats / rarity.
+
+### Combat depth
+- Unit abilities, formations, positioning, terrain effects.
+- Counter system (strain types vs. wild-zombie types).
+- Casualties / permadeath of deployed zombies; risk-reward mission choices.
+- City map with branching progression and escalating difficulty.
+
+### UI / UX polish
+- Tooltips, confirmation dialogs, toast notifications, feedback "juice".
+- Settings, save-slot management, codex / encyclopedia.
