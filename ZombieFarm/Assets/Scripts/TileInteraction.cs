@@ -32,10 +32,7 @@ public class TileInteraction : MonoBehaviour
         UpdateHighlight(cell, onFarm);
 
         if (onFarm && mouse.leftButton.wasPressedThisFrame)
-        {
             CellClicked?.Invoke(cell);
-            Debug.Log($"Clicked farm cell {cell} (occupied: {gridManager.IsOccupied(cell)})");
-        }
     }
 
     private void UpdateHighlight(Vector3Int cell, bool onFarm)
