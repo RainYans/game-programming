@@ -21,3 +21,6 @@ Thumbs.db
 
 # Unity asset meta files (keep these)
 # *.meta — do NOT ignore, Unity needs them
+
+# Claude Code local memory (not part of the project)
+memory/
