@@ -12,6 +12,12 @@ shop, deploy) are written as input-agnostic operations; click input dispatches t
 keeps the door open to add a controllable doctor-farmer character later without rewriting the
 action logic.
 
+**Farm as a place:** the farm should read as a location, not a bare grid — but built at
+M3/M4, once the deploy point and shop actually have content (no empty props before then).
+Approach: two tilemaps — a decorative Ground/paths layer that is *not* plantable, plus the
+plantable FarmPlot layer that `GridManager` points at — with Shop / Lab / Deploy as
+click-to-open placeholder buildings placed around the plot. Still no avatar (deferred to Icebox).
+
 ---
 
 ## Milestone 0 — Project Setup
@@ -46,14 +52,14 @@ action logic.
 
 ## Milestone 3 — Combat Loop (Week 3)
 
-- [ ] `ZombieData` / `UnitStats` ScriptableObject: hp, attack, speed (for both engineered & wild) **[M]**
-- [ ] `MissionData` / `CityData` ScriptableObject: enemy roster, reward, one playable city **[M]**
-- [ ] `BattleSimulator`: pure C# class, two unit lists → result + ordered event log **[M]**
+- [x] `ZombieData` / `UnitStats` ScriptableObject: hp, attack, speed (for both engineered & wild) **[M]**
+- [x] `MissionData` / `CityData` ScriptableObject: enemy roster, reward, one playable city **[M]**
+- [x] `BattleSimulator`: pure C# class, two unit lists → result + ordered event log **[M]**
 - [ ] Unit tests for `BattleSimulator` (deterministic given a seed) **[S]**
-- [ ] Mission map screen: pick up to 3 zombies from inventory → "Deploy" button **[M]**
-- [ ] Battle scene: spawn placeholder engineered vs. wild zombies **[M]**
-- [ ] `BattlePlayer`: replay the event log as timed animations **[M]**
-- [ ] Mission result screen: win/lose + resource reward **[M]**
+- [x] Mission map screen: pick up to 3 zombies from inventory → "Deploy" button **[M]** _(MVP: Deploy button auto-takes up to 3)_
+- [x] Battle scene: spawn placeholder engineered vs. wild zombies **[M]** _(same-scene overlay panel)_
+- [x] `BattlePlayer`: replay the event log as timed animations **[M]**
+- [x] Mission result screen: win/lose + resource reward **[M]**
 - [ ] Add 2–3 more city missions of rising difficulty **[S]**
 - [ ] Strain-counter system: strain types strong/weak vs. wild types **[C]**
 
@@ -111,6 +117,8 @@ stays slice-first. This is *how each system grows* once the core loop is proven.
 - Many strains with distinct cost / grow time / combat stats / rarity.
 
 ### Combat depth
+- Dedicated Battle scene with proper art + zombie attack/death animations (v1 is a
+  placeholder UI-box replay in the farm scene).
 - Unit abilities, formations, positioning, terrain effects.
 - Counter system (strain types vs. wild-zombie types).
 - Casualties / permadeath of deployed zombies; risk-reward mission choices.
