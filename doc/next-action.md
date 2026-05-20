@@ -2,28 +2,22 @@
 
 ## Current Goal
 
-Initialize the Unity project and get a visible isometric grid on screen by end of Week 1.
+Build the farming loop (M2): plant a seed on a cell, watch it grow in real time,
+harvest it into inventory.
 
 ## Concrete Task
 
-Create a Unity 2022.3 LTS URP 2D project, configure the repository, and render a 10×10 isometric tilemap with placeholder tiles.
+Add `CropData` (ScriptableObject), `CropInstance` (growth state machine driven by
+`DateTime.UtcNow`), and an input-agnostic `FarmActions` layer that `TileInteraction`
+dispatches plant/harvest calls into.
 
-## Steps
+## Done So Far
 
-1. Install Unity 2022.3 LTS via Unity Hub
-2. Create new project: 2D URP template
-3. Add Unity's official `.gitignore` from github.com/github/gitignore
-4. Initialize Git LFS, track `.png`, `.psd`, `.fbx`, `.wav`, `.mp3`
-5. Push empty project to https://github.com/RainYans/game-programming
-6. Create an Isometric Tilemap in the scene
-7. Make a simple diamond-shaped placeholder tile (or use a built-in shape)
-8. Paint a 10×10 area on the tilemap
-9. Set Transparency Sort Mode to Custom Axis `(0, 1, 0)` in Project Settings → Graphics
-
-## Definition of Done
-
-Open the project, press Play, see a diamond-shaped grid of 100 isometric tiles representing the base's farm plot. Commit and push.
+- **M0 — Setup:** Unity 2022.3 LTS + URP 2D, New Input System (Both), Transparency
+  Sort Axis `(0, 1, 0)`.
+- **M1 — Map & Camera:** isometric 10×10 grid, `GridManager` (world↔cell + occupancy),
+  `CameraController` (pan + zoom), `TileInteraction` (hover highlight + click).
 
 ## Target Completion
 
-End of Week 1.
+End of Week 2.

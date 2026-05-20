@@ -31,13 +31,14 @@ Unity 2022.3 LTS, URP 2D Renderer.
 
 ## Documentation
 
-- 📘 [Project Direction](docs/project-direction.md) — game design, MVP, scope sorting
-- 🔧 [Process Plan](docs/process-plan.md) — five-week plan, technical setup, GitHub workflow
-- 🎯 [Next Action](docs/next-action.md) — what's being worked on right now
-- 💬 [Peer Feedback](docs/peer-feedback.md) — feedback received and responses
-- 🎨 [Asset Credits](docs/asset-credits.md) — sources and licenses
-- 🧪 [Testing Notes](docs/testing/) — weekly testing logs
+- 📘 [Project Direction](doc/project-direction.md) — game design, MVP, scope sorting
+- 🔧 [Process Plan](doc/process-plan.md) — five-week plan, technical setup, GitHub workflow
+- ✅ [Task Breakdown](doc/task-breakdown.md) — full feature backlog, ordered by build dependency
+- 🎯 [Next Action](doc/next-action.md) — what's being worked on right now
+- 💬 [Peer Feedback](doc/peer-feedback.md) — feedback received and responses
+- 🎨 [Asset Credits](doc/asset-credits.md) — sources and licenses
+- 🧪 [Testing Notes](doc/testing/) — weekly testing logs
 
 ## Biggest Risk
 
-Scope creep. Solo devs typically spend months on the farm, months on combat, and ship nothing. Mitigation: PvP cut, v1 is PvE only against scripted wild zombies. See [Project Direction](docs/project-direction.md) for full scope sorting.
+Scope creep. Solo devs typically spend months on the farm, months on combat, and ship nothing. Mitigation: PvP cut, v1 is PvE only against scripted wild zombies. See [Project Direction](doc/project-direction.md) for full scope sorting.

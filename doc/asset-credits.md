@@ -1,15 +1,34 @@
-# Week 1 Testing Notes
+# Asset Credits
 
-**Status:** No testable functionality yet. This file will be filled at end of Week 1.
+Sources and licenses for all third-party assets used in the game. Every imported
+art, audio, font, or code asset must be logged here with its source and license.
 
-## What Was Tested
+**Current status:** All art is placeholder (gray boxes / built-in shapes). No
+third-party assets imported yet.
 
-*To be filled.*
+## Art
 
-## What Failed
+*None yet — using placeholder shapes.*
 
-*To be filled.*
+| Asset | Source | License | Notes |
+|-------|--------|---------|-------|
 
-## What Changed Afterwards
+## Audio
 
-*To be filled.*·
+*None yet.*
+
+| Asset | Source | License | Notes |
+|-------|--------|---------|-------|
+
+## Fonts
+
+| Asset | Source | License | Notes |
+|-------|--------|---------|-------|
+| TextMesh Pro default | Unity built-in | Unity Companion License | Bundled with Unity |
+
+## Code / Packages
+
+| Package | Source | License | Notes |
+|---------|--------|---------|-------|
+| Universal RP | Unity Package Manager | Unity Companion License | 2D Renderer |
+| Input System | Unity Package Manager | Unity Companion License | New Input System |
