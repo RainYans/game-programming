@@ -2,17 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-/// Replays a BattleSimulator event log as a UI overlay: two rows of unit views,
-/// stepped through the log with delays (hit flash + hp tick + death).
 public class BattlePlayer : MonoBehaviour
 {
     [SerializeField] private GameObject panelRoot;
     [SerializeField] private Transform playerRow;
     [SerializeField] private Transform enemyRow;
     [SerializeField] private BattleUnitView unitViewPrefab;
-    [SerializeField] private Button closeButton;
     [SerializeField] private DeployController deployController;
     [SerializeField] private TMP_Text resultLabel;
 
@@ -24,9 +20,7 @@ public class BattlePlayer : MonoBehaviour
 
     private void Awake()
     {
-        if (deployController == null) deployController = FindFirstObjectByType<DeployController>();
-        if (closeButton != null) closeButton.onClick.AddListener(Close);
-        if (panelRoot != null) panelRoot.SetActive(false);
+        if (deployController == null) deployController = Object.FindFirstObjectByType<DeployController>();
     }
 
     private void OnEnable()
@@ -42,8 +36,7 @@ public class BattlePlayer : MonoBehaviour
     private void OnBattleResolved(BattleResult result, List<BattleUnit> player, List<BattleUnit> enemy, string resultMessage)
     {
         ClearViews();
-        if (resultLabel != null) resultLabel.text = string.Empty; // hide until the replay ends
-        if (panelRoot != null) panelRoot.SetActive(true);
+        if (resultLabel != null) resultLabel.text = string.Empty;
 
         SpawnTeam(player, playerRow, playerColor);
         SpawnTeam(enemy, enemyRow, enemyColor);
@@ -58,7 +51,7 @@ public class BattlePlayer : MonoBehaviour
         foreach (BattleUnit u in team)
         {
             BattleUnitView view = Instantiate(unitViewPrefab, row);
-            view.Setup(color, u.MaxHp);
+            view.Setup(color, u.Name, u.MaxHp);
             views[u.Id] = view;
         }
     }
@@ -83,7 +76,7 @@ public class BattlePlayer : MonoBehaviour
             }
         }
 
-        if (resultLabel != null) resultLabel.text = resultMessage; // reveal only after the fight
+        if (resultLabel != null) resultLabel.text = resultMessage;
     }
 
     private void ClearViews()
@@ -91,12 +84,5 @@ public class BattlePlayer : MonoBehaviour
         foreach (BattleUnitView v in views.Values)
             if (v != null) Destroy(v.gameObject);
         views.Clear();
-    }
-
-    private void Close()
-    {
-        ClearViews();
-        if (resultLabel != null) resultLabel.text = string.Empty;
-        if (panelRoot != null) panelRoot.SetActive(false);
     }
 }

@@ -1,11 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-/// Builds a player team from inventory + an enemy team from the mission, runs the
-/// BattleSimulator, grants the reward, and announces the result. BattlePlayer (next)
-/// subscribes to BattleResolved to replay the event log.
 public class DeployController : MonoBehaviour
 {
     [SerializeField] private Inventory inventory;
@@ -14,27 +10,23 @@ public class DeployController : MonoBehaviour
     [SerializeField] private List<ZombieData> zombieRoster = new List<ZombieData>();
     [SerializeField] private int maxDeploy = 3;
     [SerializeField] private TMP_Text resultLabel;
-    [SerializeField] private float messageSeconds = 3f;
-
-    private Coroutine messageRoutine;
 
     public event System.Action<BattleResult, List<BattleUnit>, List<BattleUnit>, string> BattleResolved;
 
     private void Awake()
     {
-        if (inventory == null) inventory = FindFirstObjectByType<Inventory>();
-        if (wallet == null) wallet = FindFirstObjectByType<Wallet>();
+        if (inventory == null) inventory = Object.FindFirstObjectByType<Inventory>();
+        if (wallet == null) wallet = Object.FindFirstObjectByType<Wallet>();
     }
 
-    /// Hook this to the Deploy button's OnClick.
     public void Deploy()
     {
-        if (messageRoutine != null) { StopCoroutine(messageRoutine); messageRoutine = null; }
+        if (resultLabel != null) resultLabel.text = string.Empty;
 
         List<BattleUnit> player = BuildPlayerTeam();
         if (player.Count == 0)
         {
-            ShowMessage("No zombies to deploy!");
+            if (resultLabel != null) resultLabel.text = "No zombies to deploy!";
             return;
         }
         List<BattleUnit> enemy = BuildEnemyTeam();
@@ -45,24 +37,10 @@ public class DeployController : MonoBehaviour
         if (reward > 0) wallet.Add(reward);
 
         string message = result.PlayerWon
-            ? $"WIN vs {mission.cityName}!  +{reward} resources  (total {wallet.Resources})"
+            ? $"WIN vs {mission.cityName}! +{reward} resources (total {wallet.Resources})"
             : $"LOST vs {mission.cityName}...";
 
         BattleResolved?.Invoke(result, player, enemy, message);
-    }
-
-    private void ShowMessage(string message)
-    {
-        if (resultLabel == null) return;
-        resultLabel.text = message;
-        if (messageRoutine != null) StopCoroutine(messageRoutine);
-        messageRoutine = StartCoroutine(ClearAfter(messageSeconds));
-    }
-
-    private IEnumerator ClearAfter(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-        if (resultLabel != null) resultLabel.text = string.Empty;
     }
 
     private List<BattleUnit> BuildPlayerTeam()

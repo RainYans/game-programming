@@ -23,4 +23,11 @@ public class Wallet : MonoBehaviour
         Changed?.Invoke();
         return true;
     }
+
+    /// Set the balance directly. Used when loading a save or applying fresh-save defaults.
+    public void SetResources(int amount)
+    {
+        resources = Mathf.Max(0, amount);
+        Changed?.Invoke();
+    }
 }

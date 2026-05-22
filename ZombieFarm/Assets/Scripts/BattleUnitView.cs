@@ -3,10 +3,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// Visual for one unit in the battle replay: a colored box + an hp number.
 public class BattleUnitView : MonoBehaviour
 {
     [SerializeField] private Image image;
+    [SerializeField] private TMP_Text nameLabel;
     [SerializeField] private TMP_Text hpLabel;
 
     private void Awake()
@@ -15,11 +15,12 @@ public class BattleUnitView : MonoBehaviour
         if (hpLabel == null) hpLabel = GetComponentInChildren<TMP_Text>();
     }
 
-    public void Setup(Color color, int maxHp)
+    public void Setup(Color color, string unitName, int maxHp)
     {
         if (image == null) image = GetComponent<Image>();
         if (hpLabel == null) hpLabel = GetComponentInChildren<TMP_Text>();
         image.color = color;
+        if (nameLabel != null) nameLabel.text = unitName;
         SetHp(maxHp);
     }
 

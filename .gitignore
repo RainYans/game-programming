@@ -24,3 +24,8 @@ Thumbs.db
 
 # Claude Code local memory (not part of the project)
 memory/
+
+# Claude Code / MCP local tooling (not part of the game)
+.claude/
+.mcp.json
+**/Plugins/NuGet/
