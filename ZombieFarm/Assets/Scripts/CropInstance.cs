@@ -15,6 +15,7 @@ public class CropInstance : MonoBehaviour
 
     public CropData Data => data;
     public bool IsRipe => stage == Stage.Ripe;
+    public DateTime PlantedAtUtc => plantedAtUtc;
 
     private void Awake() => sr = GetComponent<SpriteRenderer>();
 
