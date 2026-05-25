@@ -2,30 +2,36 @@
 
 ## Current Goal
 
-Build the combat loop (M3): deploy harvested zombies against a fallen city and watch
-an auto-battle resolve, then collect a resource reward.
+**Milestone 1 — Avatar Farm & Zombie Foundation.** Re-tool the farm around a controllable
+avatar and stand up the zombie data + hunger model. (See [roadmap.md](roadmap.md#milestone-1--avatar-farm--zombie-foundation-week-of-may-25).)
 
-## Concrete Task
+## Immediate P0 Tasks
 
-- `ZombieData` / `UnitStats` and `MissionData` / `CityData` ScriptableObjects.
-- `BattleSimulator` — pure C# class: two unit lists → result + ordered event log.
-- Mission map: pick up to 3 zombies from inventory → Deploy.
-- `BattlePlayer` — replay the event log as timed animations; mission result + reward.
+1. **WASD avatar movement** (isometric) + camera follow + zoom clamp.
+2. **Walk-up interaction:** plant near a plot (seed-pick popup) and harvest.
+3. **Six `ZombieData` strains** defined (stats + passive flags); 3 starting strains plantable.
+4. **Hunger state machine** (Full ↔ Hungry) on zombies with the farm-side idle timer.
+5. **Extend save/load** to cover planted crops and zombie state.
+6. **Set up Git LFS** before importing binary art.
 
-## Done So Far
+## Then (P1, if M1 P0 is done & tested)
 
-- **M0 — Setup:** Unity 2022.3 LTS + URP 2D, New Input System (Both), Transparency
-  Sort Axis `(0, 1, 0)`.
-- **M1 — Map & Camera:** isometric 10×10 grid, `GridManager`, `CameraController`
-  (pan + zoom), `TileInteraction` (hover highlight + click).
-- **M2 — Farming Loop:** `CropData` + `CropInstance` growth state machine,
-  input-agnostic `FarmActions`, `Inventory` + on-screen counter. Full
-  plant → grow → harvest → inventory loop playable.
+- Harvested zombies spawn as **roaming farm units**.
+- On-farm visual indicators for strain and hunger state.
 
-## Current Branch
+## Open Decisions to Resolve
 
-`feature/m3-combat-loop` (cut from `main`; M0–M2 already merged).
+- **Over-hunger downside:** starvation (lose HP) or frenzy (uncontrollable)? Needed before
+  hunger combat balancing in M3. (See [zombies.md](design/zombies.md#open-question--downside-of-being-hungry).)
+- Squad-size cap for deployment (~3–4, finalized against City-1 stage design).
 
-## Target Completion
+## Status of the Foundation
 
-End of Week 3.
+The pre-existing loop (isometric farm, camera, crop growth, inventory, battle simulator,
+shop, wallet, `GameConfig`, save/load, building placeholders) is implemented and merged.
+The four-week plan builds the full design on top of it — see [roadmap.md](roadmap.md).
+
+## Branch
+
+Cut a fresh `feature/<story>` branch from `main` per story. (The repo is mid-transition from
+the old milestone branches; the design/plan rewrite lives on its own branch.)
