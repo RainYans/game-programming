@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// Input-agnostic farm operations. Click input (TileInteraction) dispatches here today;
-/// a walking avatar could call the same Plant/Harvest later without changing this layer.
+/// Input-agnostic farm operations. The walking avatar (AvatarInteraction) dispatches Interact
+/// here; the logic stays decoupled from input.
 public class FarmActions : MonoBehaviour
 {
     [SerializeField] private GridManager gridManager;
     [SerializeField] private Inventory inventory;
     [SerializeField] private SeedInventory seedInventory;
-    [SerializeField] private TileInteraction tileInteraction;
     [SerializeField] private CropInstance cropPrefab;
     [SerializeField] private CropData defaultSeed;
     [SerializeField] private Transform cropParent;
@@ -24,21 +23,11 @@ public class FarmActions : MonoBehaviour
         if (gridManager == null) gridManager = FindFirstObjectByType<GridManager>();
         if (inventory == null) inventory = FindFirstObjectByType<Inventory>();
         if (seedInventory == null) seedInventory = FindFirstObjectByType<SeedInventory>();
-        if (tileInteraction == null) tileInteraction = FindFirstObjectByType<TileInteraction>();
     }
 
-    private void OnEnable()
-    {
-        if (tileInteraction != null) tileInteraction.CellClicked += OnCellClicked;
-    }
-
-    private void OnDisable()
-    {
-        if (tileInteraction != null) tileInteraction.CellClicked -= OnCellClicked;
-    }
-
-    /// Decide what a click on a cell means: harvest a ripe crop, else plant on empty soil.
-    private void OnCellClicked(Vector3Int cell)
+    /// Decide what an interaction on a cell means: harvest a ripe crop, else plant on empty
+    /// soil. Dispatched by the walking avatar (AvatarInteraction).
+    public void Interact(Vector3Int cell)
     {
         if (crops.TryGetValue(cell, out CropInstance crop))
         {

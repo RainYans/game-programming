@@ -9,7 +9,8 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private GameObject shopPage;
     [SerializeField] private GameObject battlePage;
-    [SerializeField] private TileInteraction farmInput;
+    [SerializeField] private AvatarController avatarMovement;
+    [SerializeField] private AvatarInteraction avatarInteraction;
     [SerializeField] private ShopPanelUI shopPanel;
     [SerializeField] private BattlePlayer battlePlayer;
 
@@ -17,7 +18,8 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        if (farmInput == null) farmInput = FindFirstObjectByType<TileInteraction>();
+        if (avatarMovement == null) avatarMovement = FindFirstObjectByType<AvatarController>();
+        if (avatarInteraction == null) avatarInteraction = FindFirstObjectByType<AvatarInteraction>();
         if (shopPanel == null) shopPanel = FindFirstObjectByType<ShopPanelUI>();
         if (battlePlayer == null) battlePlayer = FindFirstObjectByType<BattlePlayer>();
         CloseAll();
@@ -44,6 +46,39 @@ public class UIManager : MonoBehaviour
             var dc = FindFirstObjectByType<DeployController>();
             if (dc != null) deployBtn.onClick.AddListener(dc.Deploy);
         }
+    }
+
+    /// Dispatch a building open by type (called by AvatarInteraction when E is pressed nearby).
+    public void OpenBuilding(BuildingType type)
+    {
+        switch (type)
+        {
+            case BuildingType.Shop: OpenShop(); break;
+            case BuildingType.WarCamp: OpenBattle(); break;   // placeholder: existing deploy/battle page
+            case BuildingType.Lab: OpenLab(); break;
+            case BuildingType.Home: OpenHome(); break;
+        }
+    }
+
+    /// Home: manual save for now (SaveManager also autosaves). A proper save/load panel comes later.
+    public void OpenHome()
+    {
+        var save = FindFirstObjectByType<SaveManager>();
+        var toast = FindFirstObjectByType<MessageToast>();
+        if (save != null)
+        {
+            save.Save();
+            if (toast != null) toast.Show("Game saved.");
+        }
+        else if (toast != null) toast.Show("Save system not found.");
+    }
+
+    /// Lab panel isn't built yet — show a placeholder message.
+    public void OpenLab()
+    {
+        var toast = FindFirstObjectByType<MessageToast>();
+        if (toast != null) toast.Show("Lab coming soon.");
+        else Debug.Log("[UIManager] Lab coming soon.");
     }
 
     public void OpenShop()
@@ -89,8 +124,10 @@ public class UIManager : MonoBehaviour
         if (page != null) page.SetActive(active);
     }
 
+    /// Freeze/unfreeze the avatar (movement + interaction) while a full-screen page is open.
     private void SetFarmInput(bool enabled)
     {
-        if (farmInput != null) farmInput.enabled = enabled;
+        if (avatarMovement != null) avatarMovement.enabled = enabled;
+        if (avatarInteraction != null) avatarInteraction.enabled = enabled;
     }
 }
