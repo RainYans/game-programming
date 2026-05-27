@@ -130,7 +130,8 @@ breaking down. Stories without listed sub-issues are small enough to take as-is.
 
 ### EPIC: Tech & Release (`tech`)
 
-- **Set up Git LFS for binary art/audio assets** `[P0 · M1]` (chore — not yet configured)
+- **Set up Git LFS for binary art/audio assets** `[P0 · M1]` — **skipped** (2D art is small;
+  not worth the overhead — revisit only if binaries grow large)
 - **Extend `SaveData` additively + version it as state grows** `[P0 · ongoing]` (chore)
 - **Per-milestone testing log under `doc/testing/`** `[P0 · ongoing]` (chore)
 - **Balancing pass on `GameConfig`** `[P0 · M4]`

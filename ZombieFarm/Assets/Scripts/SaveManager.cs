@@ -16,6 +16,10 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private GameConfig config;
     [SerializeField] private string fileName = "save.json";
 
+    /// Bump when the save layout changes incompatibly. Load tolerates older/missing versions
+    /// (fields are added additively), and warns if a save is from a newer build.
+    private const int CurrentSaveVersion = 1;
+
     private string SavePath => Path.Combine(Application.persistentDataPath, fileName);
 
     private void Awake()
@@ -53,7 +57,7 @@ public class SaveManager : MonoBehaviour
 
     public void Save()
     {
-        var data = new SaveData { resources = wallet != null ? wallet.Resources : 0 };
+        var data = new SaveData { version = CurrentSaveVersion, resources = wallet != null ? wallet.Resources : 0 };
 
         if (inventory != null)
             foreach (ZombieUnit u in inventory.Units)
@@ -99,6 +103,10 @@ public class SaveManager : MonoBehaviour
             return;
         }
         if (data == null) { ApplyDefaults(); return; }
+
+        if (data.version > CurrentSaveVersion)
+            Debug.LogWarning($"Save version {data.version} is newer than supported " +
+                             $"{CurrentSaveVersion}; loading anyway, some data may be ignored.");
 
         if (wallet != null) wallet.SetResources(data.resources);
 
@@ -159,6 +167,7 @@ public class SaveManager : MonoBehaviour
     [Serializable]
     public class SaveData
     {
+        public int version;   // 0 = pre-versioning legacy save
         public int resources;
         public List<ZombieUnitEntry> zombies = new List<ZombieUnitEntry>();
         public List<CountEntry> inventory = new List<CountEntry>(); // legacy pre-hunger counts; read-only for migration

@@ -71,4 +71,4 @@ reward already lands via the battle result; Lab upgrades / plot expansion (M2 P1
   the save to test the shop. Delete the save via Tools > Zombie Farm > Save File.
 - Map size: `FarmMapSetup.cs`; building positions: `BuildingsSetup.cs`; tile fit: PPU in the
   tile setup scripts.
-- **Git LFS still not set up** — do it before bulk binary art grows the repo.
+- **Git LFS:** intentionally skipped — 2D art is small; revisit only if binaries grow large.
