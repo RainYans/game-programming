@@ -11,6 +11,11 @@ public class GameConfig : ScriptableObject
     [Min(0)] public int startingResources = 0;
     public List<SeedStack> startingSeeds = new List<SeedStack>();
 
+    [Header("Hunger")]
+    [Tooltip("Farm-side idle time before a Full zombie drifts to Hungry (stronger). " +
+             "A freshly harvested unit starts Full and becomes Hungry after this many seconds.")]
+    [Min(1f)] public float hungerDelaySeconds = 60f;
+
     [Header("Seed shop")]
     public List<ShopEntry> seedCatalog = new List<ShopEntry>();
 

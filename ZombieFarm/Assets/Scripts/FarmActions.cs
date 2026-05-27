@@ -6,6 +6,11 @@ using UnityEngine;
 /// here; the logic stays decoupled from input.
 public class FarmActions : MonoBehaviour
 {
+    /// Raised when the player interacts with empty, plantable soil — the UI (SeedPickPopup)
+    /// listens and asks which strain to sow, then calls Plant(cell, seed). If nothing is
+    /// listening, Interact falls back to planting the defaultSeed so the farm still works.
+    public event Action<Vector3Int> PlantRequested;
+
     [SerializeField] private GridManager gridManager;
     [SerializeField] private Inventory inventory;
     [SerializeField] private SeedInventory seedInventory;
@@ -33,8 +38,14 @@ public class FarmActions : MonoBehaviour
         {
             if (crop.IsRipe) Harvest(cell);
         }
+        else if (PlantRequested != null)
+        {
+            // Defer the seed choice to the UI (seed-pick popup).
+            PlantRequested.Invoke(cell);
+        }
         else
         {
+            // No UI wired — keep the farm usable by sowing the default strain.
             Plant(cell, defaultSeed);
         }
     }

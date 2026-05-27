@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// Keeps wandering FarmRoamer visuals in sync with the harvested-zombie Inventory: one roamer
-/// per owned zombie. Listens to Inventory.Changed and reconciles — harvesting adds a roamer,
-/// deploying/selling later removes one. Reconcile is idempotent, so it also restores the
-/// right roamers when a save is loaded. Visual only for now.
+/// Keeps wandering FarmRoamer visuals in sync with the harvested-zombie roster: exactly one
+/// roamer per owned ZombieUnit, keyed by the unit's uid. Listens to Inventory.Changed and
+/// reconciles — harvesting adds a roamer, deploying/selling removes one. Reconcile is
+/// idempotent, so it also restores the right roamers when a save is loaded (uids are preserved).
 ///
 /// The wander region is a Collider2D (use a PolygonCollider2D so you can freely drag its
 /// vertices into your isometric farm's diamond shape via Unity's "Edit Collider" tool).
@@ -15,8 +15,7 @@ public class FarmRoamerSpawner : MonoBehaviour
     [Tooltip("Defines the wander region. A PolygonCollider2D works best — edit its shape with " +
              "the 'Edit Collider' button. If left empty, a Collider2D on this object is used.")]
     [SerializeField] private Collider2D wanderArea;
-    [Tooltip("Optional. If assigned, roamers are tinted with each strain's ripe color; " +
-             "otherwise they use a default zombie green.")]
+    [Tooltip("Tints each roamer with its strain's ripe color and labels it with the strain name.")]
     [SerializeField] private GameConfig config;
     [Tooltip("Optional placeholder sprite. A small square is generated at runtime if empty.")]
     [SerializeField] private Sprite roamerSprite;
@@ -26,7 +25,7 @@ public class FarmRoamerSpawner : MonoBehaviour
     [SerializeField] private float roamerScale = 0.6f;
     [SerializeField] private int sortingOrder = 4;
 
-    private readonly Dictionary<string, List<FarmRoamer>> roamers = new Dictionary<string, List<FarmRoamer>>();
+    private readonly Dictionary<string, FarmRoamer> roamersByUid = new Dictionary<string, FarmRoamer>();
     private static Sprite generatedSquare;
 
     private void Awake()
@@ -47,43 +46,43 @@ public class FarmRoamerSpawner : MonoBehaviour
 
     private void Start() => Reconcile();
 
-    /// Make the on-farm roamer count for every strain match the inventory count.
+    /// Spawn a roamer for every owned unit that lacks one, and remove roamers whose unit is gone.
     private void Reconcile()
     {
         if (inventory == null) return;
 
-        var ids = new HashSet<string>(roamers.Keys);
-        foreach (KeyValuePair<string, int> kv in inventory.Entries) ids.Add(kv.Key);
-
-        foreach (string id in ids)
+        var live = new HashSet<string>();
+        foreach (ZombieUnit u in inventory.Units)
         {
-            int want = inventory.Get(id);
-            List<FarmRoamer> list = GetList(id);
+            live.Add(u.uid);
+            if (!roamersByUid.ContainsKey(u.uid)) roamersByUid[u.uid] = SpawnRoamer(u);
+        }
 
-            while (list.Count < want) list.Add(SpawnRoamer(id));
-            while (list.Count > want)
-            {
-                int last = list.Count - 1;
-                if (list[last] != null) Destroy(list[last].gameObject);
-                list.RemoveAt(last);
-            }
+        var stale = new List<string>();
+        foreach (KeyValuePair<string, FarmRoamer> kv in roamersByUid)
+            if (!live.Contains(kv.Key)) stale.Add(kv.Key);
+
+        foreach (string deadUid in stale)
+        {
+            if (roamersByUid[deadUid] != null) Destroy(roamersByUid[deadUid].gameObject);
+            roamersByUid.Remove(deadUid);
         }
     }
 
-    private FarmRoamer SpawnRoamer(string id)
+    private FarmRoamer SpawnRoamer(ZombieUnit unit)
     {
-        var go = new GameObject($"Roamer_{id}");
+        var go = new GameObject($"Roamer_{unit.strainId}_{unit.uid.Substring(0, 4)}");
         go.transform.SetParent(transform, false);
         go.transform.position = RandomPointInArea();
         go.transform.localScale = Vector3.one * roamerScale;
 
         var sr = go.AddComponent<SpriteRenderer>();
         sr.sprite = roamerSprite != null ? roamerSprite : GeneratedSquare();
-        sr.color = ResolveColor(id);
+        sr.color = ResolveColor(unit.strainId);
         sr.sortingOrder = sortingOrder;
 
         var roamer = go.AddComponent<FarmRoamer>();
-        roamer.Init(moveSpeed, RandomPointInArea);
+        roamer.Init(moveSpeed, RandomPointInArea, unit.uid, ResolveName(unit.strainId), inventory);
         return roamer;
     }
 
@@ -101,16 +100,6 @@ public class FarmRoamerSpawner : MonoBehaviour
         return b.center; // fallback if sampling kept missing (e.g. a very thin shape)
     }
 
-    private List<FarmRoamer> GetList(string id)
-    {
-        if (!roamers.TryGetValue(id, out List<FarmRoamer> list))
-        {
-            list = new List<FarmRoamer>();
-            roamers[id] = list;
-        }
-        return list;
-    }
-
     private Color ResolveColor(string id)
     {
         if (config != null)
@@ -119,6 +108,16 @@ public class FarmRoamerSpawner : MonoBehaviour
             if (seed != null) return seed.ripeColor;
         }
         return new Color(0.45f, 0.75f, 0.35f); // default zombie green
+    }
+
+    private string ResolveName(string id)
+    {
+        if (config != null)
+        {
+            CropData seed = config.FindSeed(id);
+            if (seed != null && !string.IsNullOrEmpty(seed.displayName)) return seed.displayName;
+        }
+        return id;
     }
 
     private static Sprite GeneratedSquare()

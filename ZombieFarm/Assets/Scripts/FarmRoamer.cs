@@ -1,10 +1,13 @@
 using System;
+using TMPro;
 using UnityEngine;
 
-/// A harvested zombie idly wandering the farm. Walks to target points supplied by a provider
-/// (so the spawner decides the region shape — e.g. an isometric diamond), pauses, repeats.
-/// Visual only for now — it represents one unit of the player's standing army (a count in
-/// Inventory). When the hunger system lands, this is where per-zombie state will live.
+/// One harvested zombie idly wandering the farm — a visual stand-in for a single owned
+/// ZombieUnit. Walks to target points supplied by a provider (so the spawner decides the
+/// region shape, e.g. an isometric diamond), pauses, repeats. Shows a floating label whose
+/// text is the strain name (identity) and whose color flags hunger (Full vs Hungry, the latter
+/// being the stronger combat state). Hunger drifts over time, so the label is polled, not
+/// event-driven. Holds the unit's uid (not the object) so it survives a save reload.
 public class FarmRoamer : MonoBehaviour
 {
     private float moveSpeed = 1.2f;
@@ -14,22 +17,45 @@ public class FarmRoamer : MonoBehaviour
     private Vector3 target;
     private float pauseTimer;
 
+    private string uid;
+    private Inventory inventory;
+    private TextMeshPro label;
+    private string displayName = "";
+    private float hungerPollTimer;
+    private HungerState lastState = HungerState.Full;
+
+    private static readonly Color FullColor = new Color(0.85f, 0.85f, 0.85f);
+    private static readonly Color HungryColor = new Color(1f, 0.5f, 0.2f);
+    private const float HungerPollInterval = 0.5f;
+
     private void Awake()
     {
         if (sprite == null) sprite = GetComponentInChildren<SpriteRenderer>();
     }
 
-    /// Configure speed and a target-point provider, then start moving.
-    /// The provider returns a fresh random world point inside the wander region each call.
-    public void Init(float speed, Func<Vector3> targetProvider)
+    /// Configure movement + identity. `inventory` is used to re-resolve this unit's hunger by
+    /// uid each poll (robust across save reloads that rebuild the roster).
+    public void Init(float speed, Func<Vector3> targetProvider, string unitUid,
+        string strainDisplayName, Inventory inv)
     {
         moveSpeed = speed;
         nextTarget = targetProvider;
+        uid = unitUid;
+        displayName = strainDisplayName ?? "";
+        inventory = inv;
         if (sprite == null) sprite = GetComponentInChildren<SpriteRenderer>();
+        EnsureLabel();
         PickNewTarget();
+        RefreshHunger(force: true);
     }
 
     private void Update()
+    {
+        Wander();
+        PollHunger();
+    }
+
+    private void Wander()
     {
         if (nextTarget == null) return;
 
@@ -50,6 +76,55 @@ public class FarmRoamer : MonoBehaviour
         Vector3 dir = to.normalized;
         transform.position += dir * (moveSpeed * Time.deltaTime);
         if (sprite != null && Mathf.Abs(dir.x) > 0.01f) sprite.flipX = dir.x < 0f;
+    }
+
+    private void PollHunger()
+    {
+        hungerPollTimer -= Time.deltaTime;
+        if (hungerPollTimer > 0f) return;
+        hungerPollTimer = HungerPollInterval;
+        RefreshHunger(force: false);
+    }
+
+    private void RefreshHunger(bool force)
+    {
+        if (inventory == null || label == null) return;
+        ZombieUnit unit = inventory.FindUnit(uid);
+        HungerState state = unit != null ? inventory.StateOf(unit) : HungerState.Full;
+        if (!force && state == lastState) return;
+        lastState = state;
+
+        bool hungry = state == HungerState.Hungry;
+        label.text = hungry ? $"{displayName}!" : displayName;
+        label.color = hungry ? HungryColor : FullColor;
+    }
+
+    private void EnsureLabel()
+    {
+        if (label != null) return;
+
+        var go = new GameObject("Label", typeof(RectTransform));
+        var rt = go.GetComponent<RectTransform>();
+        rt.SetParent(transform, false);
+        // Counter the roamer's downscale so the text stays a sane size, and float above the head.
+        float inv = transform.localScale.x > 0.001f ? 1f / transform.localScale.x : 1f;
+        rt.localScale = Vector3.one * inv;
+        rt.localPosition = new Vector3(0f, 0.9f, 0f);
+        rt.sizeDelta = new Vector2(4f, 1f);
+
+        label = go.AddComponent<TextMeshPro>();
+        if (TMP_Settings.defaultFontAsset != null) label.font = TMP_Settings.defaultFontAsset;
+        label.text = displayName;
+        label.fontSize = 2.2f;
+        label.alignment = TextAlignmentOptions.Center;
+        label.color = FullColor;
+
+        var mr = go.GetComponent<MeshRenderer>();
+        if (mr != null)
+        {
+            mr.sortingLayerID = sprite != null ? sprite.sortingLayerID : mr.sortingLayerID;
+            mr.sortingOrder = (sprite != null ? sprite.sortingOrder : 0) + 1;
+        }
     }
 
     private void PickNewTarget()

@@ -12,10 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dbb91561dd748440991cb55dd865483, type: 3}
   m_Name: Game Config
   m_EditorClassIdentifier: 
-  startingResources: 0
+  startingResources: 50
   startingSeeds:
-  - seed: {fileID: 11400000, guid: a0b496a3df698f04a9f1c36fd618d536, type: 2}
-    count: 5
+  - seed: {fileID: 11400000, guid: 17571c97ca1e9434aab5895180b9383f, type: 2}
+    count: 3
+  - seed: {fileID: 11400000, guid: 6cc75656c0140c842a981c5bf23ddf77, type: 2}
+    count: 3
+  - seed: {fileID: 11400000, guid: 3eab754adb4168542a23a3dd638d6501, type: 2}
+    count: 3
+  hungerDelaySeconds: 60
   seedCatalog:
-  - seed: {fileID: 11400000, guid: a0b496a3df698f04a9f1c36fd618d536, type: 2}
+  - seed: {fileID: 11400000, guid: 17571c97ca1e9434aab5895180b9383f, type: 2}
     price: 10
+  - seed: {fileID: 11400000, guid: 6cc75656c0140c842a981c5bf23ddf77, type: 2}
+    price: 15
+  - seed: {fileID: 11400000, guid: 3eab754adb4168542a23a3dd638d6501, type: 2}
+    price: 12

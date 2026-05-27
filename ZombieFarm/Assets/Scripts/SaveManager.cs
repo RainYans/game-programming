@@ -56,8 +56,13 @@ public class SaveManager : MonoBehaviour
         var data = new SaveData { resources = wallet != null ? wallet.Resources : 0 };
 
         if (inventory != null)
-            foreach (KeyValuePair<string, int> kv in inventory.Entries)
-                data.inventory.Add(new CountEntry { id = kv.Key, count = kv.Value });
+            foreach (ZombieUnit u in inventory.Units)
+                data.zombies.Add(new ZombieUnitEntry
+                {
+                    uid = u.uid,
+                    strainId = u.strainId,
+                    becameFullAtUtcMs = u.becameFullAtUtcMs
+                });
 
         if (seedInventory != null)
             foreach (KeyValuePair<string, int> kv in seedInventory.Entries)
@@ -99,8 +104,22 @@ public class SaveManager : MonoBehaviour
 
         if (inventory != null)
         {
-            inventory.Clear();
-            foreach (CountEntry e in data.inventory) inventory.Add(e.id, e.count);
+            var loaded = new List<ZombieUnit>();
+            if (data.zombies.Count > 0)
+            {
+                foreach (ZombieUnitEntry e in data.zombies)
+                {
+                    DateTime fullAt = DateTimeOffset.FromUnixTimeMilliseconds(e.becameFullAtUtcMs).UtcDateTime;
+                    loaded.Add(new ZombieUnit(e.strainId, fullAt, e.uid));
+                }
+            }
+            else
+            {
+                // Migrate a pre-hunger save (plain id->count) into individual units, all Full now.
+                foreach (CountEntry e in data.inventory)
+                    for (int i = 0; i < e.count; i++) loaded.Add(new ZombieUnit(e.id, DateTime.UtcNow));
+            }
+            inventory.LoadUnits(loaded);
         }
 
         if (seedInventory != null)
@@ -141,9 +160,18 @@ public class SaveManager : MonoBehaviour
     public class SaveData
     {
         public int resources;
-        public List<CountEntry> inventory = new List<CountEntry>();
+        public List<ZombieUnitEntry> zombies = new List<ZombieUnitEntry>();
+        public List<CountEntry> inventory = new List<CountEntry>(); // legacy pre-hunger counts; read-only for migration
         public List<CountEntry> seeds = new List<CountEntry>();
         public List<CropEntry> crops = new List<CropEntry>();
+    }
+
+    [Serializable]
+    public struct ZombieUnitEntry
+    {
+        public string uid;
+        public string strainId;
+        public long becameFullAtUtcMs;
     }
 
     [Serializable]
