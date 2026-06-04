@@ -46,6 +46,8 @@ public static class ZombieStrainsSetup
 
         var seedsById = new Dictionary<string, CropData>();
 
+        var allZombies = new List<ZombieData>();
+
         foreach (Strain s in Strains)
         {
             ZombieData zombie = LoadOrCreate<ZombieData>($"{StrainFolder}/Zombie_{s.displayName}.asset");
@@ -60,23 +62,25 @@ public static class ZombieStrainsSetup
             zombie.unlockedAtStart = s.startActive;
             zombie.color = s.ripe;
             EditorUtility.SetDirty(zombie);
+            allZombies.Add(zombie);
 
-            if (s.startActive)
-            {
-                CropData seed = LoadOrCreate<CropData>($"{StrainFolder}/Seed_{s.displayName}.asset");
-                seed.id = s.id; // seed id == strain id so harvest maps to ZombieData
-                seed.displayName = s.displayName;
-                seed.growSeconds = s.growSeconds;
-                seed.yieldCount = 1;
-                seed.seedColor = new Color(0.55f, 0.40f, 0.22f);
-                seed.growingColor = new Color(0.40f, 0.70f, 0.30f);
-                seed.ripeColor = s.ripe;
-                EditorUtility.SetDirty(seed);
-                seedsById[s.id] = seed;
-            }
+            // Generate a CropData seed for EVERY strain. The 3 starters end up in
+            // GameConfig.startingSeeds (free at fresh save); the other 3 only appear in the
+            // shop catalog (priced higher). When the task system lands later we'll re-gate
+            // them, but for now this lets the player actually use all six.
+            CropData seed = LoadOrCreate<CropData>($"{StrainFolder}/Seed_{s.displayName}.asset");
+            seed.id = s.id; // seed id == strain id so harvest maps to ZombieData
+            seed.displayName = s.displayName;
+            seed.growSeconds = s.growSeconds;
+            seed.yieldCount = 1;
+            seed.seedColor = new Color(0.55f, 0.40f, 0.22f);
+            seed.growingColor = new Color(0.40f, 0.70f, 0.30f);
+            seed.ripeColor = s.ripe;
+            EditorUtility.SetDirty(seed);
+            seedsById[s.id] = seed;
         }
 
-        RewireGameConfig(seedsById);
+        RewireGameConfig(seedsById, allZombies);
         TryPointDefaultSeed(seedsById);
 
         AssetDatabase.SaveAssets();
@@ -89,7 +93,7 @@ public static class ZombieStrainsSetup
                   "Old BasicSeed/BasicZombie assets are now unused and can be deleted.");
     }
 
-    private static void RewireGameConfig(Dictionary<string, CropData> seeds)
+    private static void RewireGameConfig(Dictionary<string, CropData> seeds, List<ZombieData> allStrains)
     {
         string[] guids = AssetDatabase.FindAssets("t:GameConfig");
         if (guids.Length == 0) { Debug.LogWarning("[ZombieStrainsSetup] No GameConfig asset found to rewire."); return; }
@@ -103,12 +107,18 @@ public static class ZombieStrainsSetup
             new GameConfig.SeedStack { seed = seeds["mauler"], count = 3 },
             new GameConfig.SeedStack { seed = seeds["runner"], count = 3 },
         };
+        // All 6 strains in the shop; starters cheap, advanced ones priced as premium.
         config.seedCatalog = new List<GameConfig.ShopEntry>
         {
-            new GameConfig.ShopEntry { seed = seeds["brute"],  price = 10 },
-            new GameConfig.ShopEntry { seed = seeds["mauler"], price = 15 },
-            new GameConfig.ShopEntry { seed = seeds["runner"], price = 12 },
+            new GameConfig.ShopEntry { seed = seeds["brute"],   price = 10 },
+            new GameConfig.ShopEntry { seed = seeds["runner"],  price = 12 },
+            new GameConfig.ShopEntry { seed = seeds["mauler"],  price = 15 },
+            new GameConfig.ShopEntry { seed = seeds["spitter"], price = 25 },
+            new GameConfig.ShopEntry { seed = seeds["shaman"],  price = 25 },
+            new GameConfig.ShopEntry { seed = seeds["bomber"],  price = 30 },
         };
+        config.allStrains = new List<ZombieData>(allStrains); // strain id -> stats registry
+        if (config.squadCap < 1) config.squadCap = 4;
         EditorUtility.SetDirty(config);
     }
 

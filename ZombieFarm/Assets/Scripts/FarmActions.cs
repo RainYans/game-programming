@@ -69,6 +69,7 @@ public class FarmActions : MonoBehaviour
         // Consume the seed last: this fires SeedInventory.Changed (which autosaves), and by
         // now the new crop is already in the dictionary so the save captures it.
         seedInventory.TryRemove(seed.id, 1);
+        SfxManager.Play(SfxKind.Plant);
         return true;
     }
 
@@ -84,6 +85,7 @@ public class FarmActions : MonoBehaviour
         // Add to inventory last: this fires Inventory.Changed (which autosaves), and by now
         // the harvested crop is already gone from the dictionary so the save reflects that.
         inventory.Add(data.id, data.yieldCount);
+        SfxManager.Play(SfxKind.Harvest);
         Debug.Log($"Harvested {data.displayName} x{data.yieldCount}. Inventory total: {inventory.Total}");
         return true;
     }

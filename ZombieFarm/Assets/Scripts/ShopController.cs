@@ -26,6 +26,7 @@ public class ShopController : MonoBehaviour
                 return false;
             }
             seedInventory.Add(e.seed.id, 1);
+            SfxManager.Play(SfxKind.Buy);
             ShowMessage($"Bought {e.seed.displayName} for {e.price} resources.");
             return true;
         }
