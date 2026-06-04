@@ -46,8 +46,9 @@ unit of work.
 - **Definition of Ready:** scoped to a vertical slice, acceptance criteria written, fits the
   milestone, dependencies known.
 - **Definition of Done:** implemented, manually verified in-editor, tested where practical,
-  merged to `main` via PR, and (for player-facing work) the relevant exit criterion in the
-  roadmap is satisfied.
+  merged to `main`, and (for player-facing work) the relevant exit criterion in the
+  roadmap is satisfied. The chunk's pre-agreed **M / T / P tier** (see
+  [process.md](process.md#definition-of-done--per-chunk-tiers)) must also be met.
 
 ---
 

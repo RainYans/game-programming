@@ -27,10 +27,11 @@ older `2D_Game_Improvement` and `SolarSystem`). Scripts are in
 - **Repo:** https://github.com/RainYans/game-programming (private).
 - **`.gitignore`:** Unity template (configured). Local Claude/MCP tooling and the local
   `memory/` directory are ignored.
-- **Git LFS:** to be set up for binary assets (`.png .psd .fbx .wav .mp3`) before bulk art
-  import — tracked as a `tech` task in [backlog.md](backlog.md), not yet configured.
-- **Branching:** `main` stays stable. Work happens on `feature/<name>` branches and merges
-  via Pull Request (self-review even when solo). Prefer **one branch per story/epic**.
+- **Git LFS:** intentionally skipped — 2D art is small; not worth the overhead. Revisit
+  only if binary assets ever grow large.
+- **Branching:** **`main`-direct workflow** — commit straight to `main` for routine work.
+  Open a short-lived `feature/<name>` branch + PR only for risky/large changes that need a
+  safety net. (Early milestones used per-chunk feature branches; that policy is retired.)
 - **Commits:** Conventional Commits — `feat:`, `fix:`, `refactor:`, `docs:`, `chore:`.
   Code, identifiers, and commit messages are in **English**.
 
@@ -47,6 +48,22 @@ older `2D_Game_Improvement` and `SolarSystem`). Scripts are in
   unit-tested.
 - Keep a short **testing log per milestone** under [`testing/`](testing/) (what was tested,
   what failed, what changed). `week-1.md` is the existing example.
+
+## Definition of Done — Per-Chunk Tiers
+
+Before writing code for any new chunk, acceptance criteria are declared in three tiers and
+the user picks which to ship. This is the planning vocabulary; it sits *underneath* the
+issue-closing DoD in [backlog.md](backlog.md).
+
+- **M (minimum):** mechanic fires, no errors, the loop closes; placeholder numbers /
+  visuals.
+- **T (target):** feedback is in (visual / audio / UI), balance is reasonable, placeholder
+  art is acceptable.
+- **P (polish):** edge cases handled, transitions in place, demoable.
+
+State the chunk's **M / T / P** explicitly **before** writing code, get an explicit pick
+from the user, and ship at that tier. This avoids the recurring "I called it done, the user
+feels it isn't" mismatch.
 
 ## Releases
 
