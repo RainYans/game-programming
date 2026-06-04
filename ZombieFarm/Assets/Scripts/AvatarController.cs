@@ -24,6 +24,10 @@ public class AvatarController : MonoBehaviour
 
     public Vector2 MoveInput => input;
 
+    /// External speed multiplier — used by LeaderDash in the battle scene to boost the leader
+    /// during a dash without modifying the base moveSpeed. Defaults to 1 in the farm.
+    public float SpeedMultiplier { get; set; } = 1f;
+
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
@@ -53,7 +57,7 @@ public class AvatarController : MonoBehaviour
     private void FixedUpdate()
     {
         if (body != null)
-            body.velocity = new Vector2(input.x, input.y * isoYScale) * moveSpeed;
+            body.velocity = new Vector2(input.x, input.y * isoYScale) * (moveSpeed * SpeedMultiplier);
     }
 
     // When frozen (e.g. a UI panel opens and this component is disabled), stop dead so the

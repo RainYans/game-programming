@@ -13,7 +13,21 @@ MonoBehaviour:
   m_Name: City1
   m_EditorClassIdentifier: 
   cityName: Fallen City 1
+  stages:
+  - enemies:
+    - zombie: {fileID: 11400000, guid: 05b59e6a0eb103449bc87f848639b181, type: 2}
+      count: 4
+  - enemies:
+    - zombie: {fileID: 11400000, guid: 05b59e6a0eb103449bc87f848639b181, type: 2}
+      count: 3
+    - zombie: {fileID: 11400000, guid: db03e83aece513146bf63dad56ae6f11, type: 2}
+      count: 2
+  - enemies:
+    - zombie: {fileID: 11400000, guid: 05b59e6a0eb103449bc87f848639b181, type: 2}
+      count: 4
+    - zombie: {fileID: 11400000, guid: 399dbc7c3810f024eb4f6caf56f512f5, type: 2}
+      count: 2
   enemies:
   - zombie: {fileID: 11400000, guid: b8dcf356a5198a341ad5c96d7bb7dd0a, type: 2}
     count: 3
-  rewardAmount: 50
+  rewardAmount: 120

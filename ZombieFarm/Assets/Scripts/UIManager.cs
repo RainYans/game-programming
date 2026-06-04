@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private AvatarInteraction avatarInteraction;
     [SerializeField] private ShopPanelUI shopPanel;
     [SerializeField] private BattlePlayer battlePlayer;
+    [SerializeField] private DeployPanel deployPanel;
 
     public PageType CurrentPage { get; private set; } = PageType.None;
 
@@ -22,6 +23,7 @@ public class UIManager : MonoBehaviour
         if (avatarInteraction == null) avatarInteraction = FindFirstObjectByType<AvatarInteraction>();
         if (shopPanel == null) shopPanel = FindFirstObjectByType<ShopPanelUI>();
         if (battlePlayer == null) battlePlayer = FindFirstObjectByType<BattlePlayer>();
+        if (deployPanel == null) deployPanel = FindFirstObjectByType<DeployPanel>();
         CloseAll();
         WireButtons();
     }
@@ -54,7 +56,10 @@ public class UIManager : MonoBehaviour
         switch (type)
         {
             case BuildingType.Shop: OpenShop(); break;
-            case BuildingType.WarCamp: OpenBattle(); break;   // placeholder: existing deploy/battle page
+            case BuildingType.WarCamp:
+                if (deployPanel != null) deployPanel.Open();   // real deploy → battle scene
+                else OpenBattle();                             // fallback: old in-farm battle page
+                break;
             case BuildingType.Lab: OpenLab(); break;
             case BuildingType.Home: OpenHome(); break;
         }

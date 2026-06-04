@@ -21,10 +21,24 @@ MonoBehaviour:
   - seed: {fileID: 11400000, guid: 3eab754adb4168542a23a3dd638d6501, type: 2}
     count: 3
   hungerDelaySeconds: 60
+  allStrains:
+  - {fileID: 11400000, guid: 25fd5cffecd86a44a82f215450704010, type: 2}
+  - {fileID: 11400000, guid: 323ef8d9c17cee043b71de84644855ca, type: 2}
+  - {fileID: 11400000, guid: 843c0179a6e965e46b27dfc752b65a56, type: 2}
+  - {fileID: 11400000, guid: fcd2fab468461da459fc662a74d0398a, type: 2}
+  - {fileID: 11400000, guid: 27d653f5284b3584c9a088d53c73bc20, type: 2}
+  - {fileID: 11400000, guid: 30235bc2f5a6c88499b56f2f9debf287, type: 2}
+  squadCap: 4
   seedCatalog:
   - seed: {fileID: 11400000, guid: 17571c97ca1e9434aab5895180b9383f, type: 2}
     price: 10
-  - seed: {fileID: 11400000, guid: 6cc75656c0140c842a981c5bf23ddf77, type: 2}
-    price: 15
   - seed: {fileID: 11400000, guid: 3eab754adb4168542a23a3dd638d6501, type: 2}
     price: 12
+  - seed: {fileID: 11400000, guid: 6cc75656c0140c842a981c5bf23ddf77, type: 2}
+    price: 15
+  - seed: {fileID: 11400000, guid: 89101e01112bd504e8858a4ce07a9696, type: 2}
+    price: 25
+  - seed: {fileID: 11400000, guid: b261324ee00514f47a24f139c01d05d6, type: 2}
+    price: 25
+  - seed: {fileID: 11400000, guid: 704efa5a46add3f44ae3b29b4324f00d, type: 2}
+    price: 30

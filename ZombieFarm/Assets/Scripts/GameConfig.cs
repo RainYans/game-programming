@@ -16,6 +16,22 @@ public class GameConfig : ScriptableObject
              "A freshly harvested unit starts Full and becomes Hungry after this many seconds.")]
     [Min(1f)] public float hungerDelaySeconds = 60f;
 
+    [Header("Strains & combat")]
+    [Tooltip("Every strain's ZombieData, for resolving a saved strain id back to its stats " +
+             "(deploy screen, battle). Populated by Tools > Zombie Farm > Setup Zombie Strains.")]
+    public List<ZombieData> allStrains = new List<ZombieData>();
+
+    [Tooltip("Max zombies the player can deploy in one squad.")]
+    [Min(1)] public int squadCap = 4;
+
+    /// Resolve a strain id to its ZombieData (stats + passive). Null if unknown.
+    public ZombieData FindStrain(string id)
+    {
+        foreach (ZombieData z in allStrains)
+            if (z != null && z.id == id) return z;
+        return null;
+    }
+
     [Header("Seed shop")]
     public List<ShopEntry> seedCatalog = new List<ShopEntry>();
 
