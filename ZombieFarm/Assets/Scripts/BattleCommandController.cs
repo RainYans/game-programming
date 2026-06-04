@@ -85,6 +85,14 @@ public class BattleCommandController : MonoBehaviour
         if (dragBox != null) dragBox.gameObject.SetActive(false);
         if (targetingHint != null) targetingHint.SetActive(false);
 
+        // A real deployment overrides the inspector default with the count the player actually
+        // bought + carried in; a standalone test scene (no deployment) keeps the serialized value.
+        if (BattleHandoff.HasDeployment)
+        {
+            onionsAvailable = Mathf.Max(0, BattleHandoff.OnionsCarried);
+            BattleHandoff.OnionsUsed = 0;
+        }
+
         BuildTargeter();
         UpdateOnionLabel();
         UpdateFreezeLabel();
@@ -275,6 +283,7 @@ public class BattleCommandController : MonoBehaviour
             case Item.Onion:
                 if (onionsAvailable <= 0) return;
                 onionsAvailable--;
+                BattleHandoff.OnionsUsed++; // consumed on return (BattleResultApplier removes it)
                 foreach (BattleAgent e in manager.Enemies)
                 {
                     if (e == null || !e.IsAlive) continue;

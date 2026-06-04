@@ -94,7 +94,7 @@ public class BattleManager : MonoBehaviour
         if (BattleHandoff.HasDeployment)
         {
             foreach (BattleHandoff.DeployedUnit u in BattleHandoff.Squad)
-                SpawnAgent(u.data, Team.Player, at, u.uid);
+                SpawnAgent(u.data, Team.Player, at, u.uid, u.damageMultiplier);
         }
         else
         {
@@ -112,7 +112,7 @@ public class BattleManager : MonoBehaviour
                 SpawnAgent(spawn.zombie, Team.Enemy, at, string.Empty);
     }
 
-    private void SpawnAgent(ZombieData data, Team team, Transform at, string uid)
+    private void SpawnAgent(ZombieData data, Team team, Transform at, string uid, float damageMultiplier = 1f)
     {
         if (data == null) return;
 
@@ -126,7 +126,7 @@ public class BattleManager : MonoBehaviour
         sr.sortingOrder = sortingOrder;
 
         var agent = go.AddComponent<BattleAgent>();
-        agent.Init(this, data, team, leader, uid);
+        agent.Init(this, data, team, leader, uid, damageMultiplier);
 
         (team == Team.Player ? players : enemies).Add(agent);
     }

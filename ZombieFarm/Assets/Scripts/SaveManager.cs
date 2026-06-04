@@ -12,6 +12,8 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private Wallet wallet;
     [SerializeField] private Inventory inventory;          // harvested zombies
     [SerializeField] private SeedInventory seedInventory;  // seed stock
+    [SerializeField] private ItemInventory itemInventory;  // combat items (e.g. Rotten Onion)
+    [SerializeField] private CityProgress cityProgress;    // which cities are cleared
     [SerializeField] private FarmActions farmActions;
     [SerializeField] private GameConfig config;
     [SerializeField] private string fileName = "save.json";
@@ -27,6 +29,8 @@ public class SaveManager : MonoBehaviour
         if (wallet == null) wallet = FindFirstObjectByType<Wallet>();
         if (inventory == null) inventory = FindFirstObjectByType<Inventory>();
         if (seedInventory == null) seedInventory = FindFirstObjectByType<SeedInventory>();
+        if (itemInventory == null) itemInventory = FindFirstObjectByType<ItemInventory>();
+        if (cityProgress == null) cityProgress = FindFirstObjectByType<CityProgress>();
         if (farmActions == null) farmActions = FindFirstObjectByType<FarmActions>();
     }
 
@@ -46,6 +50,8 @@ public class SaveManager : MonoBehaviour
         if (wallet != null) wallet.Changed += Save;
         if (inventory != null) inventory.Changed += Save;
         if (seedInventory != null) seedInventory.Changed += Save;
+        if (itemInventory != null) itemInventory.Changed += Save;
+        if (cityProgress != null) cityProgress.Changed += Save;
     }
 
     private void Unsubscribe()
@@ -53,6 +59,8 @@ public class SaveManager : MonoBehaviour
         if (wallet != null) wallet.Changed -= Save;
         if (inventory != null) inventory.Changed -= Save;
         if (seedInventory != null) seedInventory.Changed -= Save;
+        if (itemInventory != null) itemInventory.Changed -= Save;
+        if (cityProgress != null) cityProgress.Changed -= Save;
     }
 
     public void Save()
@@ -71,6 +79,13 @@ public class SaveManager : MonoBehaviour
         if (seedInventory != null)
             foreach (KeyValuePair<string, int> kv in seedInventory.Entries)
                 data.seeds.Add(new CountEntry { id = kv.Key, count = kv.Value });
+
+        if (itemInventory != null)
+            foreach (KeyValuePair<string, int> kv in itemInventory.Entries)
+                data.items.Add(new CountEntry { id = kv.Key, count = kv.Value });
+
+        if (cityProgress != null)
+            data.clearedCities.AddRange(cityProgress.Cleared);
 
         if (farmActions != null)
             foreach (KeyValuePair<Vector3Int, CropInstance> kv in farmActions.Crops)
@@ -136,6 +151,15 @@ public class SaveManager : MonoBehaviour
             foreach (CountEntry e in data.seeds) seedInventory.Add(e.id, e.count);
         }
 
+        if (itemInventory != null)
+        {
+            itemInventory.Clear();
+            foreach (CountEntry e in data.items) itemInventory.Add(e.id, e.count);
+        }
+
+        if (cityProgress != null)
+            cityProgress.LoadCleared(data.clearedCities);
+
         if (farmActions != null)
         {
             farmActions.ClearAllCrops();
@@ -172,6 +196,8 @@ public class SaveManager : MonoBehaviour
         public List<ZombieUnitEntry> zombies = new List<ZombieUnitEntry>();
         public List<CountEntry> inventory = new List<CountEntry>(); // legacy pre-hunger counts; read-only for migration
         public List<CountEntry> seeds = new List<CountEntry>();
+        public List<CountEntry> items = new List<CountEntry>(); // combat items (e.g. Rotten Onion)
+        public List<string> clearedCities = new List<string>(); // MissionData.ids the player cleared
         public List<CropEntry> crops = new List<CropEntry>();
     }
 

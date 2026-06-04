@@ -21,6 +21,7 @@ MonoBehaviour:
   - seed: {fileID: 11400000, guid: 3eab754adb4168542a23a3dd638d6501, type: 2}
     count: 3
   hungerDelaySeconds: 60
+  hungryDamageMultiplier: 1.35
   allStrains:
   - {fileID: 11400000, guid: 25fd5cffecd86a44a82f215450704010, type: 2}
   - {fileID: 11400000, guid: 323ef8d9c17cee043b71de84644855ca, type: 2}
@@ -42,3 +43,7 @@ MonoBehaviour:
     price: 25
   - seed: {fileID: 11400000, guid: 704efa5a46add3f44ae3b29b4324f00d, type: 2}
     price: 30
+  itemCatalog:
+  - id: rotten_onion
+    displayName: Rotten Onion
+    price: 12

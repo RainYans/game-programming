@@ -95,7 +95,8 @@ public class BattleAgent : MonoBehaviour
     private static readonly Color HealColor = new Color(0.55f, 0.95f, 0.55f);
     private static readonly Color DodgeColor = new Color(0.85f, 0.85f, 0.95f);
 
-    public void Init(BattleManager mgr, ZombieData data, Team team, Transform leaderTransform, string sourceUid)
+    public void Init(BattleManager mgr, ZombieData data, Team team, Transform leaderTransform,
+        string sourceUid, float damageMultiplier = 1f)
     {
         manager = mgr;
         Team = team;
@@ -106,6 +107,8 @@ public class BattleAgent : MonoBehaviour
         maxHp = Mathf.Max(1, data.maxHp);
         hp = maxHp;
         attack = Mathf.Max(1, data.attack);
+        // Hunger makes a unit hit harder (snapshotted at deploy; 1x for Full units and enemies).
+        if (damageMultiplier > 1f) attack = Mathf.Max(1, Mathf.RoundToInt(attack * damageMultiplier));
         moveSpeed = Mathf.Max(0.1f, data.moveSpeed);
         range = data.range;
         passive = data.passive;

@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private ShopPanelUI shopPanel;
     [SerializeField] private BattlePlayer battlePlayer;
     [SerializeField] private DeployPanel deployPanel;
+    [SerializeField] private CityMapPanel cityMapPanel;
 
     public PageType CurrentPage { get; private set; } = PageType.None;
 
@@ -24,6 +25,7 @@ public class UIManager : MonoBehaviour
         if (shopPanel == null) shopPanel = FindFirstObjectByType<ShopPanelUI>();
         if (battlePlayer == null) battlePlayer = FindFirstObjectByType<BattlePlayer>();
         if (deployPanel == null) deployPanel = FindFirstObjectByType<DeployPanel>();
+        if (cityMapPanel == null) cityMapPanel = FindFirstObjectByType<CityMapPanel>();
         CloseAll();
         WireButtons();
     }
@@ -57,8 +59,9 @@ public class UIManager : MonoBehaviour
         {
             case BuildingType.Shop: OpenShop(); break;
             case BuildingType.WarCamp:
-                if (deployPanel != null) deployPanel.Open();   // real deploy → battle scene
-                else OpenBattle();                             // fallback: old in-farm battle page
+                if (cityMapPanel != null) cityMapPanel.Open();  // pick a city → deploy → battle scene
+                else if (deployPanel != null) deployPanel.Open(); // fallback: straight to deploy
+                else OpenBattle();                              // fallback: old in-farm battle page
                 break;
             case BuildingType.Lab: OpenLab(); break;
             case BuildingType.Home: OpenHome(); break;

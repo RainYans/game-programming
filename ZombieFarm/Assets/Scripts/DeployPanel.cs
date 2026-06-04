@@ -13,6 +13,7 @@ public class DeployPanel : MonoBehaviour
 {
     [Header("Data / scene refs")]
     [SerializeField] private Inventory inventory;
+    [SerializeField] private ItemInventory itemInventory;
     [SerializeField] private GameConfig config;
     [SerializeField] private MissionData mission;
     [SerializeField] private AvatarController avatarMovement;
@@ -35,6 +36,7 @@ public class DeployPanel : MonoBehaviour
     private readonly List<Row> rows = new List<Row>();
     private readonly HashSet<string> selected = new HashSet<string>();
     private bool isOpen;
+    private MissionData activeMission; // the city being deployed to; defaults to the serialized one
 
     private struct Row
     {
@@ -49,6 +51,7 @@ public class DeployPanel : MonoBehaviour
     private void Awake()
     {
         if (inventory == null) inventory = FindFirstObjectByType<Inventory>();
+        if (itemInventory == null) itemInventory = FindFirstObjectByType<ItemInventory>();
         if (avatarMovement == null) avatarMovement = FindFirstObjectByType<AvatarController>();
         if (avatarInteraction == null) avatarInteraction = FindFirstObjectByType<AvatarInteraction>();
 
@@ -72,9 +75,18 @@ public class DeployPanel : MonoBehaviour
         if (kb != null && kb[Key.Escape].wasPressedThisFrame) Cancel();
     }
 
+    /// Open for a specific city (called by the CityMapPanel). Falls back to the serialized
+    /// mission when none is passed, so opening the panel directly still works.
+    public void Open(MissionData forMission)
+    {
+        activeMission = forMission != null ? forMission : mission;
+        Open();
+    }
+
     public void Open()
     {
         if (content == null) return;
+        if (activeMission == null) activeMission = mission;
         BuildRows();
         selected.Clear();
         isOpen = true;
@@ -157,11 +169,17 @@ public class DeployPanel : MonoBehaviour
             if (unit == null) continue;
             ZombieData data = config != null ? config.FindStrain(unit.strainId) : null;
             if (data == null) continue;
-            squad.Add(new BattleHandoff.DeployedUnit { uid = uid, data = data });
+
+            // Snapshot hunger -> a damage multiplier at deploy time, so the field result is fixed
+            // regardless of how long the raid runs.
+            bool hungry = inventory.StateOf(unit) == HungerState.Hungry;
+            float mult = hungry && config != null ? Mathf.Max(1f, config.hungryDamageMultiplier) : 1f;
+            squad.Add(new BattleHandoff.DeployedUnit { uid = uid, data = data, damageMultiplier = mult });
         }
         if (squad.Count == 0) return;
 
-        BattleHandoff.SetDeployment(squad, mission);
+        BattleHandoff.SetDeployment(squad, activeMission != null ? activeMission : mission);
+        BattleHandoff.OnionsCarried = itemInventory != null ? itemInventory.Get(GameConfig.RottenOnionId) : 0;
         BattleHandoff.ClearResult();
         Close();
         SceneManager.LoadScene(battleSceneName);

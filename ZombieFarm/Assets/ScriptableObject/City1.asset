@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b375e3441b6e7c4d80db2becfed1780, type: 3}
   m_Name: City1
   m_EditorClassIdentifier: 
+  id: city1
   cityName: Fallen City 1
+  mapHint: "Wild grunts, runners & a brute \u2014 a gentle first push."
   stages:
   - enemies:
     - zombie: {fileID: 11400000, guid: 05b59e6a0eb103449bc87f848639b181, type: 2}

@@ -6,7 +6,15 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MissionData", menuName = "ZombieFarm/Mission Data")]
 public class MissionData : ScriptableObject
 {
+    [Tooltip("Stable id for save/progression (which cities are cleared). Distinct from the " +
+             "display name. e.g. \"city1\".")]
+    public string id = "city1";
+
     public string cityName = "Fallen City 1";
+
+    [Tooltip("One-line difficulty / enemy hint shown on the city-map node, e.g. " +
+             "\"Wild grunts & runners — gentle\".")]
+    [TextArea] public string mapHint = "";
 
     [Tooltip("The stages fought in order. If empty, the flat 'enemies' list below is used as a " +
              "single stage (back-compat).")]

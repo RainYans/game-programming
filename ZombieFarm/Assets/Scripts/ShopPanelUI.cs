@@ -9,6 +9,7 @@ public class ShopPanelUI : MonoBehaviour
     [SerializeField] private ShopController shop;
     [SerializeField] private Wallet wallet;
     [SerializeField] private SeedInventory seedInventory;
+    [SerializeField] private ItemInventory itemInventory;
 
     [Header("UI")]
     [SerializeField] private GameObject panelRoot;
@@ -20,7 +21,9 @@ public class ShopPanelUI : MonoBehaviour
     {
         public string id;
         public int price;
-        public string seedName;
+        public string displayName;
+        public bool isItem;          // false = seed (shop.Buy), true = combat item (shop.BuyItem)
+        public ItemStore stockSource; // where "Owned: N" is read from for this card
         public GameObject root;
         public Button buyBtn;
         public TMP_Text nameLabel;
@@ -33,6 +36,7 @@ public class ShopPanelUI : MonoBehaviour
         if (shop == null) shop = GetComponentInParent<ShopController>() ?? Object.FindFirstObjectByType<ShopController>();
         if (wallet == null) wallet = Object.FindFirstObjectByType<Wallet>();
         if (seedInventory == null) seedInventory = Object.FindFirstObjectByType<SeedInventory>();
+        if (itemInventory == null) itemInventory = Object.FindFirstObjectByType<ItemInventory>();
         if (rowParent == null)
         {
             var grid = GetComponentInChildren<GridLayoutGroup>(true);
@@ -45,6 +49,7 @@ public class ShopPanelUI : MonoBehaviour
     {
         if (wallet != null) wallet.Changed += Refresh;
         if (seedInventory != null) seedInventory.Changed += Refresh;
+        if (itemInventory != null) itemInventory.Changed += Refresh;
         Refresh();
     }
 
@@ -52,6 +57,7 @@ public class ShopPanelUI : MonoBehaviour
     {
         if (wallet != null) wallet.Changed -= Refresh;
         if (seedInventory != null) seedInventory.Changed -= Refresh;
+        if (itemInventory != null) itemInventory.Changed -= Refresh;
     }
 
     public void Open() => Refresh();
@@ -72,18 +78,25 @@ public class ShopPanelUI : MonoBehaviour
         foreach (GameConfig.ShopEntry e in config.seedCatalog)
         {
             if (e.seed == null) continue;
-            var card = BuildCard(e);
-            cards.Add(card);
+            cards.Add(BuildCard(e.seed.id, e.seed.displayName, e.price, isItem: false, stockSource: seedInventory));
         }
+
+        // Combat items (e.g. Rotten Onion) sit in the same grid, bought via shop.BuyItem.
+        foreach (GameConfig.ItemEntry e in config.itemCatalog)
+        {
+            if (string.IsNullOrEmpty(e.id)) continue;
+            cards.Add(BuildCard(e.id, e.displayName, e.price, isItem: true, stockSource: itemInventory));
+        }
+
         Refresh();
     }
 
-    private Card BuildCard(GameConfig.ShopEntry entry)
+    private Card BuildCard(string id, string displayName, int price, bool isItem, ItemStore stockSource)
     {
         TMP_FontAsset bodyFont = TMP_Settings.defaultFontAsset;
         TMP_FontAsset titleFont = bodyFont;
 
-        var go = new GameObject("Card_" + entry.seed.id);
+        var go = new GameObject("Card_" + id);
         go.transform.SetParent(rowParent, false);
 
         var rt = go.AddComponent<RectTransform>();
@@ -93,7 +106,7 @@ public class ShopPanelUI : MonoBehaviour
         var bg = go.AddComponent<Image>();
         bg.color = new Color(0.08f, 0.10f, 0.16f, 1f);
 
-        // Seed icon background
+        // Icon background
         var iconGo = new GameObject("Icon");
         iconGo.transform.SetParent(go.transform, false);
         var iconRT = iconGo.AddComponent<RectTransform>();
@@ -101,7 +114,7 @@ public class ShopPanelUI : MonoBehaviour
         iconRT.anchorMax = new Vector2(0.28f, 0.93f);
         iconRT.sizeDelta = Vector2.zero;
         var iconBg = iconGo.AddComponent<Image>();
-        iconBg.color = new Color(0.15f, 0.18f, 0.28f, 1f);
+        iconBg.color = isItem ? new Color(0.28f, 0.24f, 0.10f, 1f) : new Color(0.15f, 0.18f, 0.28f, 1f);
 
         // Name label - larger, uses title font
         var nameGo = new GameObject("Name");
@@ -111,7 +124,7 @@ public class ShopPanelUI : MonoBehaviour
         nameRT.anchorMax = new Vector2(0.98f, 0.93f);
         nameRT.sizeDelta = Vector2.zero;
         var nameTmp = nameGo.AddComponent<TextMeshProUGUI>();
-        nameTmp.text = entry.seed.displayName;
+        nameTmp.text = displayName;
         nameTmp.fontSize = 22;
         nameTmp.color = new Color(1f, 0.95f, 0.75f);
         nameTmp.alignment = TextAlignmentOptions.Left;
@@ -125,7 +138,7 @@ public class ShopPanelUI : MonoBehaviour
         priceRT.anchorMax = new Vector2(0.98f, 0.55f);
         priceRT.sizeDelta = Vector2.zero;
         var priceTmp = priceGo.AddComponent<TextMeshProUGUI>();
-        priceTmp.text = $"{entry.price} res";
+        priceTmp.text = $"{price} res";
         priceTmp.fontSize = 15;
         priceTmp.color = new Color(0.95f, 0.82f, 0.35f);
         priceTmp.alignment = TextAlignmentOptions.Left;
@@ -178,14 +191,17 @@ public class ShopPanelUI : MonoBehaviour
         blTmp.font = titleFont;
         blTmp.fontStyle = FontStyles.Bold;
 
-        string id = entry.seed.id;
-        btn.onClick.AddListener(() => shop.Buy(id));
+        string captured = id;
+        if (isItem) btn.onClick.AddListener(() => shop.BuyItem(captured));
+        else btn.onClick.AddListener(() => shop.Buy(captured));
 
         return new Card
         {
             id = id,
-            price = entry.price,
-            seedName = entry.seed.displayName,
+            price = price,
+            displayName = displayName,
+            isItem = isItem,
+            stockSource = stockSource,
             root = go,
             buyBtn = btn,
             nameLabel = nameTmp,
@@ -198,7 +214,7 @@ public class ShopPanelUI : MonoBehaviour
     {
         foreach (Card c in cards)
         {
-            int owned = seedInventory != null ? seedInventory.Get(c.id) : 0;
+            int owned = c.stockSource != null ? c.stockSource.Get(c.id) : 0;
             if (c.stockLabel != null)
                 c.stockLabel.text = $"Owned: {owned}";
             if (c.buyBtn != null)
