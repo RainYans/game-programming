@@ -1,4 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
+
+/// Which side an agent fights on. (Was defined in the old BattleSimulator; kept here now that
+/// the prototype sim is gone — BattleAgent/BattleManager still use it.)
+public enum Team { Player, Enemy }
 
 /// One real-time combat unit (a squad zombie or a wild enemy). Behaviour priority (highest
 /// first):
@@ -65,29 +70,17 @@ public class BattleAgent : MonoBehaviour
     private static Sprite leftSquareSprite;
     private static Sprite discSprite;
 
-    // Tunables — placeholder; move to GameConfig during the balancing pass.
-    private const float MeleeReach = 0.7f;
-    private const float RangedReach = 4f;
-    private const float AggroRange = 4f;
-    private const float AttackInterval = 1.0f;
+    // Feel constants (fixed). The balance-relevant tunables now live in GameConfig.CombatTuning.
     private const float FollowStopDistance = 1.6f;
     private const float IsoYScale = 0.5f;
     private const float ArriveEpsilon = 0.05f;
     private const float MoveArriveDistance = 0.3f;
-
-    // Passive tunables.
-    private const int   ThickHideReduction = 2;
-    private const float BloodlustPerHitBonus = 0.20f; // +20% per stack
-    private const int   BloodlustMaxStacks = 5;
-    private const float EvasionChance = 0.30f;
-    private const float CorrosionMultiplier = 0.5f;
-    private const float CorrosionDuration = 4f;
-    private const float AuraTickInterval = 2f;
-    private const int   AuraHealAmount = 2;
-    private const float AuraRadius = 2.5f;
-    private const float DetonateRadius = 1.8f;
-    private const int   DetonateDamage = 8;
     private const float FlashSeconds = 0.14f;
+
+    // Balance tunables, resolved from GameConfig via BattleManager.Tuning at Init.
+    private GameConfig.CombatTuning t;
+    // Incoming-damage multiplier from being deployed Hungry (1 = Full / enemy).
+    private float damageTakenMultiplier = 1f;
 
     private static readonly Color HitColor = Color.white;
     private static readonly Color FrozenColor = new Color(0.55f, 0.80f, 1f);
@@ -96,13 +89,15 @@ public class BattleAgent : MonoBehaviour
     private static readonly Color DodgeColor = new Color(0.85f, 0.85f, 0.95f);
 
     public void Init(BattleManager mgr, ZombieData data, Team team, Transform leaderTransform,
-        string sourceUid, float damageMultiplier = 1f)
+        string sourceUid, float damageMultiplier = 1f, float damageTakenMultiplier = 1f)
     {
         manager = mgr;
         Team = team;
         leader = leaderTransform;
         SourceUid = sourceUid;
         DisplayName = data.displayName;
+        t = mgr != null && mgr.Tuning != null ? mgr.Tuning : new GameConfig.CombatTuning();
+        this.damageTakenMultiplier = damageTakenMultiplier;
 
         maxHp = Mathf.Max(1, data.maxHp);
         hp = maxHp;
@@ -112,7 +107,7 @@ public class BattleAgent : MonoBehaviour
         moveSpeed = Mathf.Max(0.1f, data.moveSpeed);
         range = data.range;
         passive = data.passive;
-        auraTimer = AuraTickInterval; // delay first tick
+        auraTimer = t.auraTickInterval; // delay first tick
 
         sprite = GetComponentInChildren<SpriteRenderer>();
         baseColor = data.color;
@@ -219,7 +214,7 @@ public class BattleAgent : MonoBehaviour
         }
 
         // 4) Default AI.
-        BattleAgent target = manager.NearestEnemyOf(this, AggroRange);
+        BattleAgent target = manager.NearestEnemyOf(this, t.aggroRange);
         if (target != null) { EngageTarget(target); return; }
 
         if (Team == Team.Player && leader != null)
@@ -243,7 +238,7 @@ public class BattleAgent : MonoBehaviour
 
     private void EngageTarget(BattleAgent target)
     {
-        float reach = range == AttackRange.Ranged ? RangedReach : MeleeReach;
+        float reach = range == AttackRange.Ranged ? t.rangedReach : t.meleeReach;
         float dist = Vector2.Distance(transform.position, target.transform.position);
         if (dist > reach)
             MoveToward(target.transform.position);
@@ -255,9 +250,9 @@ public class BattleAgent : MonoBehaviour
             // Mauler — Bloodlust ramps damage on consecutive same-target hits.
             if (passive == Passive.Bloodlust)
             {
-                if (lastAttackTarget == target) consecutiveHits = Mathf.Min(consecutiveHits + 1, BloodlustMaxStacks);
+                if (lastAttackTarget == target) consecutiveHits = Mathf.Min(consecutiveHits + 1, t.bloodlustMaxStacks);
                 else { lastAttackTarget = target; consecutiveHits = 1; }
-                float bonus = 1f + (consecutiveHits - 1) * BloodlustPerHitBonus;
+                float bonus = 1f + (consecutiveHits - 1) * t.bloodlustPerHitBonus;
                 outgoing = Mathf.RoundToInt(attack * bonus);
             }
 
@@ -265,9 +260,9 @@ public class BattleAgent : MonoBehaviour
 
             // Spitter — Corrosion debuff on hit.
             if (passive == Passive.Corrosion && target.IsAlive)
-                target.ApplyCorrosion(CorrosionDuration, CorrosionMultiplier);
+                target.ApplyCorrosion(t.corrosionDuration, t.corrosionExtraDamage);
 
-            attackTimer = AttackInterval;
+            attackTimer = t.attackInterval;
         }
     }
 
@@ -297,12 +292,16 @@ public class BattleAgent : MonoBehaviour
         if (corrosionTimer > 0f)
             finalAmount = Mathf.RoundToInt(finalAmount * (1f + corrosionMultiplier));
 
+        // Hunger vulnerability — a unit deployed Hungry takes more (the cost of the attack bonus).
+        if (damageTakenMultiplier > 1f)
+            finalAmount = Mathf.RoundToInt(finalAmount * damageTakenMultiplier);
+
         // Brute ThickHide.
         if (passive == Passive.ThickHide)
-            finalAmount = Mathf.Max(0, finalAmount - ThickHideReduction);
+            finalAmount = Mathf.Max(0, finalAmount - t.thickHideReduction);
 
         // Runner Evasion.
-        if (passive == Passive.Evasion && Random.value < EvasionChance)
+        if (passive == Passive.Evasion && Random.value < t.evasionChance)
         {
             DamagePopup.Spawn(transform.position, "Dodge!", DodgeColor);
             return;
@@ -335,14 +334,14 @@ public class BattleAgent : MonoBehaviour
     {
         auraTimer -= Time.deltaTime;
         if (auraTimer > 0f) return;
-        auraTimer = AuraTickInterval;
+        auraTimer = t.auraTickInterval;
 
         var allies = Team == Team.Player ? manager.Players : manager.Enemies;
         foreach (BattleAgent a in allies)
         {
             if (a == null || a == this || !a.IsAlive) continue;
-            if (Vector2.Distance(a.transform.position, transform.position) <= AuraRadius)
-                a.Heal(AuraHealAmount);
+            if (Vector2.Distance(a.transform.position, transform.position) <= t.auraRadius)
+                a.Heal(t.auraHealAmount);
         }
     }
 
@@ -355,12 +354,14 @@ public class BattleAgent : MonoBehaviour
         // Bomber — SelfDetonate AoE on death.
         if (passive == Passive.SelfDetonate)
         {
-            var foes = Team == Team.Player ? manager.Enemies : manager.Players;
+            // Snapshot the foe list: a detonate kill runs OnAgentDied, which removes from the
+            // manager's live list — iterating that list directly would throw "Collection modified".
+            var foes = new List<BattleAgent>(Team == Team.Player ? manager.Enemies : manager.Players);
             foreach (BattleAgent f in foes)
             {
                 if (f == null || !f.IsAlive) continue;
-                if (Vector2.Distance(f.transform.position, transform.position) <= DetonateRadius)
-                    f.TakeDamage(DetonateDamage, this);
+                if (Vector2.Distance(f.transform.position, transform.position) <= t.detonateRadius)
+                    f.TakeDamage(t.detonateDamage, this);
             }
             DamagePopup.Spawn(transform.position, "BOOM!", new Color(1f, 0.7f, 0.3f));
         }

@@ -18,6 +18,9 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private GameObject returnButton;
     [SerializeField] private string farmSceneName = "Farm";
     [SerializeField] private BattleCameraFollow battleCamera; // optional; auto-resolved
+    [Tooltip("Optional fallback for combat tuning when played directly (no deployment). " +
+             "In the real flow the deploy screen carries the GameConfig via BattleHandoff.")]
+    [SerializeField] private GameConfig config;
 
     [Header("Rooms (one per stage)")]
     [Tooltip("One Room per mission stage. Room 0 hosts the squad and stage 0's enemies. " +
@@ -59,12 +62,20 @@ public class BattleManager : MonoBehaviour
     private bool ended;
     private static Sprite generatedSquare;
 
+    private GameConfig.CombatTuning tuning;
+    /// Battle balance numbers for this raid (resolved from the carried/serialized GameConfig).
+    public GameConfig.CombatTuning Tuning => tuning;
+
     private void Start()
     {
         Time.timeScale = 1f;
         if (resultLabel != null) resultLabel.text = string.Empty;
         if (battleCamera == null) battleCamera = FindFirstObjectByType<BattleCameraFollow>();
         WireButton(returnButton, ReturnToFarm, startHidden: true);
+
+        GameConfig resolvedConfig = BattleHandoff.Config != null ? BattleHandoff.Config : config;
+        tuning = resolvedConfig != null && resolvedConfig.combat != null
+            ? resolvedConfig.combat : new GameConfig.CombatTuning();
 
         activeMission = BattleHandoff.Mission != null ? BattleHandoff.Mission : mission;
         stages = ResolveStages();
@@ -94,7 +105,7 @@ public class BattleManager : MonoBehaviour
         if (BattleHandoff.HasDeployment)
         {
             foreach (BattleHandoff.DeployedUnit u in BattleHandoff.Squad)
-                SpawnAgent(u.data, Team.Player, at, u.uid, u.damageMultiplier);
+                SpawnAgent(u.data, Team.Player, at, u.uid, u.damageMultiplier, u.damageTakenMultiplier);
         }
         else
         {
@@ -112,7 +123,8 @@ public class BattleManager : MonoBehaviour
                 SpawnAgent(spawn.zombie, Team.Enemy, at, string.Empty);
     }
 
-    private void SpawnAgent(ZombieData data, Team team, Transform at, string uid, float damageMultiplier = 1f)
+    private void SpawnAgent(ZombieData data, Team team, Transform at, string uid,
+        float damageMultiplier = 1f, float damageTakenMultiplier = 1f)
     {
         if (data == null) return;
 
@@ -126,7 +138,7 @@ public class BattleManager : MonoBehaviour
         sr.sortingOrder = sortingOrder;
 
         var agent = go.AddComponent<BattleAgent>();
-        agent.Init(this, data, team, leader, uid, damageMultiplier);
+        agent.Init(this, data, team, leader, uid, damageMultiplier, damageTakenMultiplier);
 
         (team == Team.Player ? players : enemies).Add(agent);
     }

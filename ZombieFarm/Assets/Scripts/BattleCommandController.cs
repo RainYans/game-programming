@@ -90,7 +90,9 @@ public class BattleCommandController : MonoBehaviour
         if (BattleHandoff.HasDeployment)
         {
             onionsAvailable = Mathf.Max(0, BattleHandoff.OnionsCarried);
+            freezesAvailable = Mathf.Max(0, BattleHandoff.FreezesCarried);
             BattleHandoff.OnionsUsed = 0;
+            BattleHandoff.FreezesUsed = 0;
         }
 
         BuildTargeter();
@@ -298,6 +300,7 @@ public class BattleCommandController : MonoBehaviour
             case Item.Freeze:
                 if (freezesAvailable <= 0) return;
                 freezesAvailable--;
+                BattleHandoff.FreezesUsed++; // consumed on return (BattleResultApplier removes it)
                 foreach (BattleAgent e in manager.Enemies)
                 {
                     if (e == null || !e.IsAlive) continue;

@@ -173,13 +173,20 @@ public class DeployPanel : MonoBehaviour
             // Snapshot hunger -> a damage multiplier at deploy time, so the field result is fixed
             // regardless of how long the raid runs.
             bool hungry = inventory.StateOf(unit) == HungerState.Hungry;
-            float mult = hungry && config != null ? Mathf.Max(1f, config.hungryDamageMultiplier) : 1f;
-            squad.Add(new BattleHandoff.DeployedUnit { uid = uid, data = data, damageMultiplier = mult });
+            float dealtMult = hungry && config != null ? Mathf.Max(1f, config.hungryDamageMultiplier) : 1f;
+            float takenMult = hungry && config != null ? Mathf.Max(1f, config.hungryDamageTakenMultiplier) : 1f;
+            squad.Add(new BattleHandoff.DeployedUnit
+            {
+                uid = uid, data = data,
+                damageMultiplier = dealtMult, damageTakenMultiplier = takenMult,
+            });
         }
         if (squad.Count == 0) return;
 
         BattleHandoff.SetDeployment(squad, activeMission != null ? activeMission : mission);
+        BattleHandoff.Config = config;
         BattleHandoff.OnionsCarried = itemInventory != null ? itemInventory.Get(GameConfig.RottenOnionId) : 0;
+        BattleHandoff.FreezesCarried = itemInventory != null ? itemInventory.Get(GameConfig.FreezeCanisterId) : 0;
         BattleHandoff.ClearResult();
         Close();
         SceneManager.LoadScene(battleSceneName);

@@ -1,18 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum PageType { None, Shop, Battle }
+public enum PageType { None, Shop }
 
 /// Central page switcher. Panels are full-screen opaque GameObjects under Canvas.
 /// Only one page is visible at a time. Farm input is disabled when any page is open.
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private GameObject shopPage;
-    [SerializeField] private GameObject battlePage;
     [SerializeField] private AvatarController avatarMovement;
     [SerializeField] private AvatarInteraction avatarInteraction;
     [SerializeField] private ShopPanelUI shopPanel;
-    [SerializeField] private BattlePlayer battlePlayer;
     [SerializeField] private DeployPanel deployPanel;
     [SerializeField] private CityMapPanel cityMapPanel;
 
@@ -23,7 +21,6 @@ public class UIManager : MonoBehaviour
         if (avatarMovement == null) avatarMovement = FindFirstObjectByType<AvatarController>();
         if (avatarInteraction == null) avatarInteraction = FindFirstObjectByType<AvatarInteraction>();
         if (shopPanel == null) shopPanel = FindFirstObjectByType<ShopPanelUI>();
-        if (battlePlayer == null) battlePlayer = FindFirstObjectByType<BattlePlayer>();
         if (deployPanel == null) deployPanel = FindFirstObjectByType<DeployPanel>();
         if (cityMapPanel == null) cityMapPanel = FindFirstObjectByType<CityMapPanel>();
         CloseAll();
@@ -35,21 +32,12 @@ public class UIManager : MonoBehaviour
         var shopCloseBtn = transform.Find("ShopPage/Frame/CloseBtn")?.GetComponent<Button>();
         if (shopCloseBtn != null) shopCloseBtn.onClick.AddListener(CloseAll);
 
-        var battleCloseBtn = transform.Find("BattlePage/Frame/CloseBtn")?.GetComponent<Button>();
-        if (battleCloseBtn != null) battleCloseBtn.onClick.AddListener(CloseAll);
-
         var shopBtn = transform.Find("BottomBar/ShopBtn")?.GetComponent<Button>();
         if (shopBtn != null) shopBtn.onClick.AddListener(ToggleShop);
 
+        // The HUD "battle" button now opens the city map (the in-farm battle page is retired).
         var battleBtn = transform.Find("BottomBar/BattleBtn")?.GetComponent<Button>();
-        if (battleBtn != null) battleBtn.onClick.AddListener(ToggleBattle);
-
-        var deployBtn = transform.Find("BattlePage/Frame/DeployBtn")?.GetComponent<Button>();
-        if (deployBtn != null)
-        {
-            var dc = FindFirstObjectByType<DeployController>();
-            if (dc != null) deployBtn.onClick.AddListener(dc.Deploy);
-        }
+        if (battleBtn != null && cityMapPanel != null) battleBtn.onClick.AddListener(cityMapPanel.Open);
     }
 
     /// Dispatch a building open by type (called by AvatarInteraction when E is pressed nearby).
@@ -59,9 +47,8 @@ public class UIManager : MonoBehaviour
         {
             case BuildingType.Shop: OpenShop(); break;
             case BuildingType.WarCamp:
-                if (cityMapPanel != null) cityMapPanel.Open();  // pick a city → deploy → battle scene
+                if (cityMapPanel != null) cityMapPanel.Open();    // pick a city → deploy → battle scene
                 else if (deployPanel != null) deployPanel.Open(); // fallback: straight to deploy
-                else OpenBattle();                              // fallback: old in-farm battle page
                 break;
             case BuildingType.Lab: OpenLab(); break;
             case BuildingType.Home: OpenHome(); break;
@@ -98,18 +85,9 @@ public class UIManager : MonoBehaviour
         CurrentPage = PageType.Shop;
     }
 
-    public void OpenBattle()
-    {
-        CloseAll();
-        SetPageActive(battlePage, true);
-        SetFarmInput(false);
-        CurrentPage = PageType.Battle;
-    }
-
     public void CloseAll()
     {
         SetPageActive(shopPage, false);
-        SetPageActive(battlePage, false);
         shopPanel?.Close();
         SetFarmInput(true);
         CurrentPage = PageType.None;
@@ -119,12 +97,6 @@ public class UIManager : MonoBehaviour
     {
         if (CurrentPage == PageType.Shop) CloseAll();
         else OpenShop();
-    }
-
-    public void ToggleBattle()
-    {
-        if (CurrentPage == PageType.Battle) CloseAll();
-        else OpenBattle();
     }
 
     private void SetPageActive(GameObject page, bool active)

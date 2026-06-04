@@ -39,6 +39,8 @@ public class BattleResultApplier : MonoBehaviour
         // like surviving units — unused onions simply stay in stock.)
         if (itemInventory != null && BattleHandoff.OnionsUsed > 0)
             itemInventory.TryRemove(GameConfig.RottenOnionId, BattleHandoff.OnionsUsed);
+        if (itemInventory != null && BattleHandoff.FreezesUsed > 0)
+            itemInventory.TryRemove(GameConfig.FreezeCanisterId, BattleHandoff.FreezesUsed);
 
         // Reclaiming a city marks it cleared on the map (unlocks adjacent nodes; shows a ✓).
         if (BattleHandoff.Won && cityProgress != null && BattleHandoff.Mission != null)

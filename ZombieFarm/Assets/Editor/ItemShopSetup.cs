@@ -18,6 +18,8 @@ public static class ItemShopSetup
 {
     private const string OnionDisplayName = "Rotten Onion";
     private const int OnionPrice = 12; // placeholder; tune in the M4 balancing pass (#73)
+    private const string FreezeDisplayName = "Freeze Canister";
+    private const int FreezePrice = 18;
 
     [MenuItem("Tools/Zombie Farm/Setup Item Shop")]
     public static void SetupItemShop()
@@ -31,7 +33,7 @@ public static class ItemShopSetup
             return;
         }
 
-        EnsureOnionCatalogEntry();
+        EnsureItemCatalog();
         WireRefs(item);
 
         EditorSceneManager.MarkSceneDirty(host.scene);
@@ -54,7 +56,7 @@ public static class ItemShopSetup
         return item;
     }
 
-    private static void EnsureOnionCatalogEntry()
+    private static void EnsureItemCatalog()
     {
         string[] guids = AssetDatabase.FindAssets("t:GameConfig");
         if (guids.Length == 0) { Debug.LogWarning("[ItemShopSetup] No GameConfig asset found."); return; }
@@ -63,19 +65,20 @@ public static class ItemShopSetup
         if (config == null) return;
 
         if (config.itemCatalog == null) config.itemCatalog = new List<GameConfig.ItemEntry>();
-
-        int idx = config.itemCatalog.FindIndex(e => e.id == GameConfig.RottenOnionId);
-        var onion = new GameConfig.ItemEntry
-        {
-            id = GameConfig.RottenOnionId,
-            displayName = OnionDisplayName,
-            price = OnionPrice,
-        };
-        if (idx >= 0) config.itemCatalog[idx] = onion; // refresh name/price, keep it single
-        else config.itemCatalog.Add(onion);
+        Upsert(config, GameConfig.RottenOnionId, OnionDisplayName, OnionPrice);
+        Upsert(config, GameConfig.FreezeCanisterId, FreezeDisplayName, FreezePrice);
 
         EditorUtility.SetDirty(config);
         AssetDatabase.SaveAssets();
+    }
+
+    /// Add the item to the catalog, or refresh its name/price if it's already there (idempotent).
+    private static void Upsert(GameConfig config, string id, string displayName, int price)
+    {
+        var entry = new GameConfig.ItemEntry { id = id, displayName = displayName, price = price };
+        int idx = config.itemCatalog.FindIndex(e => e.id == id);
+        if (idx >= 0) config.itemCatalog[idx] = entry;
+        else config.itemCatalog.Add(entry);
     }
 
     private static void WireRefs(ItemInventory item)

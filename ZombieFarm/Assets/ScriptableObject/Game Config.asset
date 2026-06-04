@@ -22,6 +22,7 @@ MonoBehaviour:
     count: 3
   hungerDelaySeconds: 60
   hungryDamageMultiplier: 1.35
+  hungryDamageTakenMultiplier: 1.25
   allStrains:
   - {fileID: 11400000, guid: 25fd5cffecd86a44a82f215450704010, type: 2}
   - {fileID: 11400000, guid: 323ef8d9c17cee043b71de84644855ca, type: 2}
@@ -30,6 +31,22 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 27d653f5284b3584c9a088d53c73bc20, type: 2}
   - {fileID: 11400000, guid: 30235bc2f5a6c88499b56f2f9debf287, type: 2}
   squadCap: 4
+  combat:
+    aggroRange: 4
+    meleeReach: 0.7
+    rangedReach: 4
+    attackInterval: 1
+    thickHideReduction: 2
+    bloodlustPerHitBonus: 0.2
+    bloodlustMaxStacks: 5
+    evasionChance: 0.3
+    corrosionExtraDamage: 0.5
+    corrosionDuration: 4
+    auraTickInterval: 2
+    auraHealAmount: 2
+    auraRadius: 2.5
+    detonateRadius: 1.8
+    detonateDamage: 8
   seedCatalog:
   - seed: {fileID: 11400000, guid: 17571c97ca1e9434aab5895180b9383f, type: 2}
     price: 10
@@ -47,3 +64,6 @@ MonoBehaviour:
   - id: rotten_onion
     displayName: Rotten Onion
     price: 12
+  - id: freeze_canister
+    displayName: Freeze Canister
+    price: 18
