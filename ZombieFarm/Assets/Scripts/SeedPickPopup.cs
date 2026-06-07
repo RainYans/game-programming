@@ -8,9 +8,8 @@ using UnityEngine.UI;
 /// FarmActions.PlantRequested, lists the plantable strains from GameConfig.seedCatalog (with
 /// the owned count, disabled at zero), and plants the chosen strain at the requested cell.
 ///
-/// The panel is a hand-built hierarchy in the scene (so you can restyle it in the editor) —
-/// see Tools > Zombie Farm > Setup Seed Pick Popup, which creates and wires it. Only the seed
-/// rows are data-driven: at runtime one row is cloned from `rowTemplate` per catalog entry.
+/// Rows are generated in code (Cute Fantasy parchment skin + harvested-monster icon) so the
+/// look matches the shop. Gameplay (PlantRequested/Plant/cancel, farm-input pause) is unchanged.
 public class SeedPickPopup : MonoBehaviour
 {
     [Header("Data / scene refs")]
@@ -21,16 +20,27 @@ public class SeedPickPopup : MonoBehaviour
     [SerializeField] private AvatarInteraction avatarInteraction;
 
     [Header("UI (wired by the setup menu; editable in the scene)")]
-    [Tooltip("The dialog container toggled on/off. This component's GameObject stays active so " +
-             "it keeps listening; only this child is shown/hidden.")]
     [SerializeField] private GameObject content;
-    [Tooltip("Dimmed full-screen button behind the dialog; clicking it cancels.")]
     [SerializeField] private Button backdropButton;
-    [Tooltip("Container the seed rows are added under (give it a VerticalLayoutGroup).")]
     [SerializeField] private Transform rowParent;
-    [Tooltip("Inactive template row cloned once per catalog seed. A Button with a TMP_Text child.")]
-    [SerializeField] private Button rowTemplate;
+    [SerializeField] private GameObject seedRowTemplate; // editable row template, cloned per seed
+    [SerializeField] private Button rowTemplate;   // legacy; no longer cloned
     [SerializeField] private Button cancelButton;
+
+    [Header("Skin (appearance only — no gameplay)")]
+    [SerializeField] private TMP_FontAsset uiFont;
+    [SerializeField] private Sprite panelFrame;     // parchment 9-slice for the dialog
+    [SerializeField] private Sprite rowSprite;      // wood/parchment 9-slice per row
+    [SerializeField] private Sprite iconSlotSprite; // inset behind the monster icon
+    [SerializeField] private Sprite buttonSprite;   // cancel button
+    [SerializeField] private IconEntry[] icons = new IconEntry[0];
+
+    [System.Serializable]
+    public struct IconEntry { public string id; public Sprite sprite; }
+
+    private static readonly Color Ink = new Color(0.29f, 0.19f, 0.11f);
+    private static readonly Color InkSoft = new Color(0.47f, 0.37f, 0.24f);
+    private static readonly Color Cream = new Color(0.97f, 0.93f, 0.84f);
 
     private readonly List<Row> rows = new List<Row>();
     private Vector3Int targetCell;
@@ -40,7 +50,9 @@ public class SeedPickPopup : MonoBehaviour
     {
         public string id;
         public Button button;
-        public TMP_Text label;
+        public TMP_Text nameLabel;
+        public TMP_Text countLabel;
+        public Image icon;
         public CropData seed;
     }
 
@@ -51,10 +63,9 @@ public class SeedPickPopup : MonoBehaviour
         if (avatarMovement == null) avatarMovement = FindFirstObjectByType<AvatarController>();
         if (avatarInteraction == null) avatarInteraction = FindFirstObjectByType<AvatarInteraction>();
 
-        if (content == null || rowParent == null || rowTemplate == null)
+        if (content == null || rowParent == null)
         {
-            Debug.LogWarning("[SeedPickPopup] UI not wired. Run Tools > Zombie Farm > " +
-                             "Setup Seed Pick Popup.");
+            Debug.LogWarning("[SeedPickPopup] UI not wired. Run Tools > Zombie Farm > Setup Seed Pick Popup.");
             return;
         }
 
@@ -69,6 +80,8 @@ public class SeedPickPopup : MonoBehaviour
             cancelButton.onClick.AddListener(Cancel);
         }
 
+        if (seedRowTemplate != null) seedRowTemplate.SetActive(false);
+        StyleStatics();
         BuildRows();
         Hide();
     }
@@ -81,6 +94,9 @@ public class SeedPickPopup : MonoBehaviour
     private void OnDisable()
     {
         if (farmActions != null) farmActions.PlantRequested -= Open;
+        // Safety: never leave the farm input disabled if this popup is torn down while open.
+        if (isOpen) SetFarmInput(true);
+        isOpen = false;
     }
 
     private void Update()
@@ -116,38 +132,90 @@ public class SeedPickPopup : MonoBehaviour
     private void Pick(CropData seed)
     {
         if (seed == null) { Close(); return; }
-        // Close first (re-enables farm input) so nothing double-fires, then plant.
         Vector3Int cell = targetCell;
         Close();
         farmActions?.Plant(cell, seed);
     }
 
+    private Sprite IconFor(string id)
+    {
+        if (icons != null)
+            foreach (IconEntry e in icons)
+                if (e.id == id) return e.sprite;
+        return null;
+    }
+
+    // ---- Skin the scene-built container (dialog / title / backdrop / cancel) ----
+    private void StyleStatics()
+    {
+        if (backdropButton != null)
+        {
+            var bi = backdropButton.GetComponent<Image>();
+            if (bi != null) bi.color = new Color(0f, 0f, 0f, 0.62f);
+        }
+        Transform panel = rowParent.parent;
+        if (panel != null)
+        {
+            var pi = panel.GetComponent<Image>();
+            if (pi != null && panelFrame != null) { pi.sprite = panelFrame; pi.type = Image.Type.Sliced; pi.pixelsPerUnitMultiplier = 4f; pi.color = Color.white; }
+            var title = panel.Find("Title")?.GetComponent<TMP_Text>();
+            if (title != null) { if (uiFont != null) title.font = uiFont; title.text = "Plant a Monster"; title.color = Ink; title.fontSize = 34; title.alignment = TextAlignmentOptions.Center; }
+        }
+        if (cancelButton != null)
+        {
+            var ci = cancelButton.GetComponent<Image>();
+            if (ci != null && buttonSprite != null) { ci.sprite = buttonSprite; ci.type = Image.Type.Sliced; ci.pixelsPerUnitMultiplier = 6f; ci.color = Color.white;
+                var cbk = cancelButton.colors; cbk.normalColor = Color.white; cbk.highlightedColor = new Color(1f,1f,0.92f); cbk.pressedColor = new Color(0.82f,0.82f,0.78f); cbk.selectedColor = Color.white; cancelButton.colors = cbk; }
+            var cl = cancelButton.GetComponentInChildren<TMP_Text>(true);
+            if (cl != null) { if (uiFont != null) cl.font = uiFont; cl.text = "Cancel"; cl.color = Cream; cl.fontSize = 26; }
+        }
+    }
+
     private void BuildRows()
     {
         rows.Clear();
-        rowTemplate.gameObject.SetActive(false);
-        if (config == null) return;
-
+        if (rowParent == null || seedRowTemplate == null || config == null) return;
+        // clear previously built rows (keep the template)
+        for (int i = rowParent.childCount - 1; i >= 0; i--)
+        {
+            GameObject ch = rowParent.GetChild(i).gameObject;
+            if (ch != seedRowTemplate) Destroy(ch);
+        }
         foreach (GameConfig.ShopEntry e in config.seedCatalog)
         {
             if (e.seed == null) continue;
-
-            GameObject go = Instantiate(rowTemplate.gameObject, rowParent);
-            go.name = "Seed_" + e.seed.id;
-            go.SetActive(true);
-
-            var btn = go.GetComponent<Button>();
-            var label = go.GetComponentInChildren<TMP_Text>(true);
-
-            CropData captured = e.seed;
-            if (btn != null)
-            {
-                btn.onClick.RemoveAllListeners();
-                btn.onClick.AddListener(() => Pick(captured));
-            }
-
-            rows.Add(new Row { id = e.seed.id, button = btn, label = label, seed = e.seed });
+            rows.Add(BuildRow(e.seed));
         }
+    }
+
+    private Row BuildRow(CropData seed)
+    {
+        GameObject go = Instantiate(seedRowTemplate, rowParent);
+        go.name = "Seed_" + seed.id;
+        go.SetActive(true);
+
+        Transform iconT = go.transform.Find("IconSlot/Icon");
+        Image icon = iconT != null ? iconT.GetComponent<Image>() : null;
+        if (icon != null)
+        {
+            Sprite mon = IconFor(seed.id);
+            if (mon != null) { icon.sprite = mon; icon.preserveAspect = true; icon.color = Color.white; icon.enabled = true; }
+            else icon.color = new Color(0f, 0f, 0f, 0f);
+        }
+
+        TMP_Text name = Child<TMP_Text>(go, "Name"); if (name != null) name.text = seed.displayName;
+        TMP_Text count = Child<TMP_Text>(go, "Count"); if (count != null) count.text = "x0";
+
+        Button btn = go.GetComponent<Button>();
+        if (btn != null) { btn.onClick.RemoveAllListeners(); CropData captured = seed; btn.onClick.AddListener(() => Pick(captured)); }
+
+        return new Row { id = seed.id, button = btn, nameLabel = name, countLabel = count, icon = icon, seed = seed };
+    }
+
+    private static T Child<T>(GameObject row, string child) where T : Component
+    {
+        Transform t = row.transform.Find(child);
+        return t != null ? t.GetComponent<T>() : null;
     }
 
     private void Refresh()
@@ -155,8 +223,10 @@ public class SeedPickPopup : MonoBehaviour
         foreach (Row r in rows)
         {
             int owned = seedInventory != null ? seedInventory.Get(r.id) : 0;
-            if (r.label != null) r.label.text = $"{r.seed.displayName}    x{owned}";
+            if (r.nameLabel != null) r.nameLabel.text = r.seed.displayName;
+            if (r.countLabel != null) r.countLabel.text = "x" + owned;
             if (r.button != null) r.button.interactable = owned > 0;
+            if (r.icon != null && r.icon.sprite != null) r.icon.color = owned > 0 ? Color.white : new Color(1f, 1f, 1f, 0.4f);
         }
     }
 

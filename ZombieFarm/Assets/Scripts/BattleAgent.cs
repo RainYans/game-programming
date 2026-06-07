@@ -70,9 +70,20 @@ public class BattleAgent : MonoBehaviour
     private static Sprite leftSquareSprite;
     private static Sprite discSprite;
 
+    // Animated real monster art (Resources/MonsterAnim/<id>), cycled while alive.
+    private Sprite[] animFrames;
+    private float animTimer;
+    private int animIdx;
+    private const float AnimFps = 6f;
+
     // Feel constants (fixed). The balance-relevant tunables now live in GameConfig.CombatTuning.
     private const float FollowStopDistance = 1.6f;
-    private const float IsoYScale = 0.5f;
+    private const float IsoYScale = 1f; // top-down: no Y squash (was 0.5f for isometric)
+    private const float BattleMoveScale = 0.6f; // global slowdown — units felt too fast
+    private const float LungeDuration = 0.13f;
+    private const float LungeSpeed = 7f;
+    private float lungeTimer;
+    private Vector2 lungeDir;
     private const float ArriveEpsilon = 0.05f;
     private const float MoveArriveDistance = 0.3f;
     private const float FlashSeconds = 0.14f;
@@ -104,13 +115,27 @@ public class BattleAgent : MonoBehaviour
         attack = Mathf.Max(1, data.attack);
         // Hunger makes a unit hit harder (snapshotted at deploy; 1x for Full units and enemies).
         if (damageMultiplier > 1f) attack = Mathf.Max(1, Mathf.RoundToInt(attack * damageMultiplier));
-        moveSpeed = Mathf.Max(0.1f, data.moveSpeed);
+        moveSpeed = Mathf.Max(0.1f, data.moveSpeed) * BattleMoveScale;
         range = data.range;
         passive = data.passive;
         auraTimer = t.auraTickInterval; // delay first tick
 
         sprite = GetComponentInChildren<SpriteRenderer>();
-        baseColor = data.color;
+        // Real animated monster art by strain id; fall back to a static sprite, then the
+        // placeholder colour tint if no art exists.
+        animFrames = Resources.LoadAll<Sprite>("MonsterAnim/" + data.id);
+        if (animFrames != null && animFrames.Length > 0)
+        {
+            System.Array.Sort(animFrames, (a, b) => string.CompareOrdinal(a.name, b.name));
+            baseColor = Color.white;
+            if (sprite != null) sprite.sprite = animFrames[0];
+        }
+        else
+        {
+            Sprite still = Resources.Load<Sprite>("Monsters/" + data.id);
+            if (still != null) { baseColor = Color.white; if (sprite != null) sprite.sprite = still; }
+            else baseColor = data.color;
+        }
         if (sprite != null) sprite.color = baseColor;
 
         BuildHpBar();
@@ -176,6 +201,7 @@ public class BattleAgent : MonoBehaviour
         if (!IsAlive || manager == null) return;
 
         TickFlashAndDebuffs();
+        Animate();
 
         attackTimer -= Time.deltaTime;
 
@@ -192,6 +218,15 @@ public class BattleAgent : MonoBehaviour
         {
             fleeTimer -= Time.deltaTime;
             MoveToward(fleeTarget);
+            return;
+        }
+
+        // Attack lunge — jab toward the target then back (a clear melee "swing", no drift).
+        if (lungeTimer > 0f)
+        {
+            lungeTimer -= Time.deltaTime;
+            float sign = lungeTimer > LungeDuration * 0.5f ? 1f : -1f;
+            transform.position += (Vector3)(lungeDir * sign * (LungeSpeed * Time.deltaTime));
             return;
         }
 
@@ -223,6 +258,15 @@ public class BattleAgent : MonoBehaviour
                 MoveToward(leader.position);
         }
         // Enemy idle: hold position.
+    }
+
+    private void Animate()
+    {
+        if (sprite == null || animFrames == null || animFrames.Length < 2) return;
+        animTimer += Time.deltaTime;
+        float spf = 1f / AnimFps;
+        while (animTimer >= spf) { animTimer -= spf; animIdx++; }
+        sprite.sprite = animFrames[animIdx % animFrames.Length];
     }
 
     private void TickFlashAndDebuffs()
@@ -261,6 +305,13 @@ public class BattleAgent : MonoBehaviour
             // Spitter — Corrosion debuff on hit.
             if (passive == Passive.Corrosion && target.IsAlive)
                 target.ApplyCorrosion(t.corrosionDuration, t.corrosionExtraDamage);
+
+            // Visible attack: melee units lunge into the target so combat reads clearly.
+            if (range == AttackRange.Melee)
+            {
+                lungeDir = ((Vector2)(target.transform.position - transform.position)).normalized;
+                lungeTimer = LungeDuration;
+            }
 
             attackTimer = t.attackInterval;
         }

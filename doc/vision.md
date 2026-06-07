@@ -1,17 +1,42 @@
 # Vision
 
+> ⚠️ **Direction updated (2026-06-06) — see [design/direction.md](design/direction.md).**
+> Pivoted to **top-down pixel-art**, theme **"Monster Farm"**, art from the single
+> **Ninja Adventure** pack, and **clear-the-village** combat. "isometric / zombie / Kenney+AI"
+> wording below is superseded; **"zombie" now means "monster" at the display layer (ids
+> unchanged)**. Mechanics/logic stay valid unless they conflict with `direction.md`.
+
 ## Logline
 
-Grow engineered zombies on a survivor base's farm, raise them to fighting strength,
-and lead a squad of them to retake cities overrun by wild zombies.
+Grow **monsters** on your farm, raise them to fighting strength, and lead a squad of them to
+**clear monster-infested villages**.
 
-## Setting
+## Story & World
 
-A zombie virus has swept the world. Most cities have fallen and humanity has retreated
-into fortified bases. Scientists in one such base engineered a breakthrough:
-**plantable zombies** — a domesticated, controllable strain bred from infected DNA. The
-player runs the base's experimental farm. Each crop is a soldier; each reclaimed city is
-one step toward taking the world back.
+Long ago, monsters and people shared the **Verdant Vale** in balance — farmers even grew
+**seed-monsters**: gentle creatures sprouted from spores and raised like livestock to guard the
+fields. Then came the **Wildbloom**, a creeping spore-corruption drifting out of the deep
+forest. It turned free monsters feral and swallowed the outer villages one by one, until the
+people fell back to the last safe town.
+
+You are the Vale's last **Monster Rancher**, heir to the half-forgotten seed-monster craft.
+From your farm at the town's edge you revive the old art — **plant monster-seeds, raise them to
+strength, and lead a small squad to purge the Wildbloom village by village**, taming the land
+back. At the heart of the worst-hit regions wait **Wildbloom-corrupted great beasts** (dragons,
+tengu, giant slimes…) — the boss of each region. Reclaim every village, reach the **source of
+the Wildbloom**, and restore the Vale's balance.
+
+**The fiction carries the mechanics:**
+- **Plant & grow** — a monster-seed sprouts through three stages into one of your fighters.
+- **Hunger** — a freshly-fed monster is docile and *weaker*; let it grow **hungry and it turns
+  fierce** (stronger in battle), so a long raid slowly wears down your edge.
+- **Permadeath** — these are creatures you raised by hand; one lost in the field is a real loss.
+- **Clear-the-village** — each village is choked with feral monsters; clear them all to reclaim
+  it, earn resources, and unlock new seeds. Regions cap with a **boss**.
+
+Tone: warm, hopeful, **cozy-with-stakes** — a friendly rancher's adventure, *not* horror.
+(Implementation note: the 6 strain ids, stats, passives, hunger, and save data are unchanged
+from the original "engineered zombie" build — this is a theme/skin layer only.)
 
 ## Genre & Pivot
 
@@ -29,8 +54,8 @@ implemented; this design layers real systems on top of that foundation:
 
 1. **The farm is a place, not a menu.** You walk a character through the base to plant,
    harvest, shop, and deploy. Grown zombies roam the farm and become your army.
-2. **Outsmart the horde, don't out-damage it.** Combat in an isometric view is won by
-   control — repelling, freezing, slowing, and rerouting wild zombies — not by raw numbers.
+2. **Outsmart the horde, don't out-damage it.** Combat in a **top-down view** is won by
+   control — repelling, freezing, slowing, and rerouting wild monsters — not by raw numbers.
 3. **Every zombie is a risk.** Zombies are permanently lost if they die in battle, and a
    hunger system means a squad's strength shifts over time. Deployment is a real decision.
 4. **Casual to hold, deep to master.** Easy moment-to-moment input (WASD + mouse); the
@@ -39,11 +64,11 @@ implemented; this design layers real systems on top of that foundation:
 ## Core Loop
 
 ```
-Plant seed → grow → harvest → zombie roams the farm
-   → let it get hungry (stronger) → deploy a squad to a city
-   → clear stage-by-stage (control the horde, mind casualties)
+Plant seed → grow → harvest → monster roams the farm
+   → raise/feed it for battle → deploy a squad to a village
+   → clear the village of all monsters (control the horde, mind casualties)
    → earn currency → buy seeds / items, upgrade strains, expand plots
-   → unlock new strains via tasks → take the next city
+   → unlock new monsters via tasks → take the next village
 ```
 
 ## Target Experience

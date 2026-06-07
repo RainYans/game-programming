@@ -5,10 +5,11 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-/// Farm-side deploy screen: opened at the WarCamp, it lists the player's roaming zombies and
-/// lets them pick a squad (up to GameConfig.squadCap), then loads the Battle scene with that
-/// squad + the mission via BattleHandoff. Hand-built panel (editable in the scene); rows are
-/// cloned from a template per owned unit at open time. Same modal pattern as SeedPickPopup.
+/// Squad-select screen (opened from the level-select panel). The panel chrome (title, card grid,
+/// squad bar, buttons) and a card TEMPLATE are real, inspectable GameObjects built in the scene
+/// (NOT generated from scratch in code). At runtime one card is Instantiated from the template per
+/// harvested monster, so the grid is data-driven while the look stays defined by the editable
+/// template. Gameplay (selection, Deploy, BattleHandoff) is unchanged.
 public class DeployPanel : MonoBehaviour
 {
     [Header("Data / scene refs")]
@@ -20,31 +21,27 @@ public class DeployPanel : MonoBehaviour
     [SerializeField] private AvatarInteraction avatarInteraction;
     [SerializeField] private string battleSceneName = "Battle";
 
-    [Header("UI (wired by the setup menu; editable in the scene)")]
+    [Header("UI refs (real objects in the scene)")]
     [SerializeField] private GameObject content;
     [SerializeField] private Button backdropButton;
-    [SerializeField] private Transform rowParent;
-    [SerializeField] private Button rowTemplate;
+    [SerializeField] private TMP_Text titleLabel;
+    [SerializeField] private Transform gridRT;        // Grid (GridLayoutGroup) holding the cards
+    [SerializeField] private GameObject cardTemplate; // inactive card under Grid, cloned per unit
+    [SerializeField] private Image[] squadIcons;      // squad-bar slot icon Images
     [SerializeField] private TMP_Text counterLabel;
     [SerializeField] private Button deployButton;
     [SerializeField] private Button cancelButton;
 
-    private static readonly Color RowNormal = new Color(0.16f, 0.18f, 0.24f, 1f);
-    private static readonly Color RowSelected = new Color(0.25f, 0.45f, 0.28f, 1f);
+    private static readonly Color Gold = new Color(0.59f, 0.37f, 0.08f);
+    private static readonly Color Hungry = new Color(0.80f, 0.30f, 0.12f);
     private const int FallbackCap = 4;
 
-    private readonly List<Row> rows = new List<Row>();
+    private readonly List<Card> cards = new List<Card>();
     private readonly HashSet<string> selected = new HashSet<string>();
     private bool isOpen;
-    private MissionData activeMission; // the city being deployed to; defaults to the serialized one
+    private MissionData activeMission;
 
-    private struct Row
-    {
-        public string uid;
-        public Button button;
-        public Image bg;
-        public TMP_Text label;
-    }
+    private struct Card { public string uid; public Outline sel; public Image check; public TMP_Text state; }
 
     private int Cap => config != null ? Mathf.Max(1, config.squadCap) : FallbackCap;
 
@@ -54,17 +51,8 @@ public class DeployPanel : MonoBehaviour
         if (itemInventory == null) itemInventory = FindFirstObjectByType<ItemInventory>();
         if (avatarMovement == null) avatarMovement = FindFirstObjectByType<AvatarController>();
         if (avatarInteraction == null) avatarInteraction = FindFirstObjectByType<AvatarInteraction>();
-
-        if (content == null || rowParent == null || rowTemplate == null)
-        {
-            Debug.LogWarning("[DeployPanel] UI not wired. Run Tools > Zombie Farm > Setup Deploy Panel.");
-            return;
-        }
-
-        WireOnce(backdropButton, Cancel);
-        WireOnce(cancelButton, Cancel);
-        WireOnce(deployButton, Deploy);
-        rowTemplate.gameObject.SetActive(false);
+        WireOnce(backdropButton, Cancel); WireOnce(cancelButton, Cancel); WireOnce(deployButton, Deploy);
+        if (cardTemplate != null) cardTemplate.SetActive(false);
         Hide();
     }
 
@@ -75,114 +63,131 @@ public class DeployPanel : MonoBehaviour
         if (kb != null && kb[Key.Escape].wasPressedThisFrame) Cancel();
     }
 
-    /// Open for a specific city (called by the CityMapPanel). Falls back to the serialized
-    /// mission when none is passed, so opening the panel directly still works.
-    public void Open(MissionData forMission)
-    {
-        activeMission = forMission != null ? forMission : mission;
-        Open();
-    }
+    public void Open(MissionData forMission) { activeMission = forMission != null ? forMission : mission; Open(); }
 
     public void Open()
     {
         if (content == null) return;
         if (activeMission == null) activeMission = mission;
-        BuildRows();
+        if (titleLabel != null) titleLabel.text = "RAID  —  " + (activeMission != null && !string.IsNullOrEmpty(activeMission.cityName) ? activeMission.cityName : "Unknown Farm");
+        BuildCards();
         selected.Clear();
-        isOpen = true;
+        content.transform.SetAsLastSibling();
         content.SetActive(true);
-        SetFarmInput(false);
         RefreshAll();
+        isOpen = true;
+        SetFarmInput(false);
     }
 
     public void Cancel() => Close();
+    private void Close() { isOpen = false; Hide(); SetFarmInput(true); }
+    private void OnDisable() { if (isOpen) SetFarmInput(true); isOpen = false; }
+    private void Hide() { if (content != null) content.SetActive(false); }
 
-    private void Close()
+    private void BuildCards()
     {
-        isOpen = false;
-        Hide();
-        SetFarmInput(true);
-    }
-
-    private void Hide()
-    {
-        if (content != null) content.SetActive(false);
-    }
-
-    private void BuildRows()
-    {
-        foreach (Row r in rows) if (r.button != null) Destroy(r.button.gameObject);
-        rows.Clear();
-        if (inventory == null) return;
-
-        foreach (ZombieUnit unit in inventory.Units)
+        cards.Clear();
+        if (gridRT == null || cardTemplate == null || inventory == null) return;
+        for (int i = gridRT.childCount - 1; i >= 0; i--)
         {
-            GameObject go = Instantiate(rowTemplate.gameObject, rowParent);
-            go.name = "Unit_" + unit.uid;
-            go.SetActive(true);
-
-            var btn = go.GetComponent<Button>();
-            var bg = go.GetComponent<Image>();
-            var label = go.GetComponentInChildren<TMP_Text>(true);
-
-            string uid = unit.uid;
-            if (btn != null) { btn.onClick.RemoveAllListeners(); btn.onClick.AddListener(() => Toggle(uid)); }
-            if (label != null) label.text = DescribeUnit(unit);
-
-            rows.Add(new Row { uid = uid, button = btn, bg = bg, label = label });
+            GameObject ch = gridRT.GetChild(i).gameObject;
+            if (ch != cardTemplate) Destroy(ch);
         }
+        foreach (ZombieUnit unit in inventory.Units) cards.Add(BuildCard(unit));
     }
 
-    private string DescribeUnit(ZombieUnit unit)
+    private Card BuildCard(ZombieUnit unit)
     {
-        string name = unit.strainId;
         ZombieData data = config != null ? config.FindStrain(unit.strainId) : null;
-        if (data != null && !string.IsNullOrEmpty(data.displayName)) name = data.displayName;
-        string hunger = inventory != null && inventory.StateOf(unit) == HungerState.Hungry ? "Hungry" : "Full";
-        return $"{name} — {hunger}";
+        string name = data != null && !string.IsNullOrEmpty(data.displayName) ? data.displayName : unit.strainId;
+        string role = data != null ? (data.role + (data.passive != Passive.None ? " · " + data.passive : "")) : "";
+        int hp = data != null ? data.maxHp : 0, atk = data != null ? data.attack : 0;
+
+        GameObject go = Instantiate(cardTemplate, gridRT);
+        go.name = "Card_" + unit.uid;
+        go.SetActive(true);
+
+        Transform iconT = go.transform.Find("Slot/Icon");
+        Image icon = iconT != null ? iconT.GetComponent<Image>() : null;
+        if (icon != null)
+        {
+            Sprite mon = Resources.Load<Sprite>("Monsters/" + unit.strainId);
+            if (mon != null) { icon.sprite = mon; icon.preserveAspect = true; icon.enabled = true; } else icon.enabled = false;
+        }
+
+        SetLabel(go, "Name", name);
+        SetLabel(go, "Role", role);
+        TMP_Text st = Child<TMP_Text>(go, "Stats"); if (st != null) st.text = $"HP {hp}    ATK {atk}";
+
+        Outline sel = go.GetComponent<Outline>(); if (sel != null) sel.enabled = false;
+        Image check = Child<Image>(go, "Check"); if (check != null) check.enabled = false;
+
+        Button btn = go.GetComponent<Button>(); if (btn != null) { btn.onClick.RemoveAllListeners(); string uid = unit.uid; btn.onClick.AddListener(() => Toggle(uid)); }
+        return new Card { uid = unit.uid, sel = sel, check = check, state = st };
+    }
+
+    private static T Child<T>(GameObject card, string child) where T : Component
+    {
+        Transform t = card.transform.Find(child);
+        return t != null ? t.GetComponent<T>() : null;
+    }
+    private static void SetLabel(GameObject card, string child, string text)
+    {
+        TMP_Text l = Child<TMP_Text>(card, child);
+        if (l != null) l.text = text;
     }
 
     private void Toggle(string uid)
     {
-        if (selected.Contains(uid)) selected.Remove(uid);
-        else if (selected.Count < Cap) selected.Add(uid);
+        if (selected.Contains(uid)) selected.Remove(uid); else if (selected.Count < Cap) selected.Add(uid);
         RefreshAll();
     }
 
     private void RefreshAll()
     {
-        foreach (Row r in rows)
-            if (r.bg != null) r.bg.color = selected.Contains(r.uid) ? RowSelected : RowNormal;
-
-        if (counterLabel != null) counterLabel.text = $"Squad: {selected.Count} / {Cap}";
+        foreach (Card c in cards)
+        {
+            bool s = selected.Contains(c.uid);
+            if (c.sel != null) c.sel.enabled = s;
+            if (c.check != null) c.check.enabled = s;
+            if (c.state != null)
+            {
+                ZombieUnit u = inventory != null ? inventory.FindUnit(c.uid) : null;
+                bool hungry = u != null && inventory.StateOf(u) == HungerState.Hungry;
+                c.state.color = hungry ? Hungry : Gold;
+            }
+        }
+        List<string> list = new List<string>(selected);
+        if (squadIcons != null)
+            for (int i = 0; i < squadIcons.Length; i++)
+            {
+                if (squadIcons[i] == null) continue;
+                if (i < list.Count)
+                {
+                    ZombieUnit u = inventory != null ? inventory.FindUnit(list[i]) : null;
+                    Sprite mon = u != null ? Resources.Load<Sprite>("Monsters/" + u.strainId) : null;
+                    squadIcons[i].sprite = mon; squadIcons[i].enabled = mon != null;
+                }
+                else squadIcons[i].enabled = false;
+            }
+        if (counterLabel != null) counterLabel.text = selected.Count + " / " + Cap;
         if (deployButton != null) deployButton.interactable = selected.Count > 0;
     }
 
     private void Deploy()
     {
         if (selected.Count == 0 || inventory == null) return;
-
         var squad = new List<BattleHandoff.DeployedUnit>();
         foreach (string uid in selected)
         {
-            ZombieUnit unit = inventory.FindUnit(uid);
-            if (unit == null) continue;
-            ZombieData data = config != null ? config.FindStrain(unit.strainId) : null;
-            if (data == null) continue;
-
-            // Snapshot hunger -> a damage multiplier at deploy time, so the field result is fixed
-            // regardless of how long the raid runs.
+            ZombieUnit unit = inventory.FindUnit(uid); if (unit == null) continue;
+            ZombieData data = config != null ? config.FindStrain(unit.strainId) : null; if (data == null) continue;
             bool hungry = inventory.StateOf(unit) == HungerState.Hungry;
-            float dealtMult = hungry && config != null ? Mathf.Max(1f, config.hungryDamageMultiplier) : 1f;
-            float takenMult = hungry && config != null ? Mathf.Max(1f, config.hungryDamageTakenMultiplier) : 1f;
-            squad.Add(new BattleHandoff.DeployedUnit
-            {
-                uid = uid, data = data,
-                damageMultiplier = dealtMult, damageTakenMultiplier = takenMult,
-            });
+            float dealt = hungry && config != null ? Mathf.Max(1f, config.hungryDamageMultiplier) : 1f;
+            float taken = hungry && config != null ? Mathf.Max(1f, config.hungryDamageTakenMultiplier) : 1f;
+            squad.Add(new BattleHandoff.DeployedUnit { uid = uid, data = data, damageMultiplier = dealt, damageTakenMultiplier = taken });
         }
         if (squad.Count == 0) return;
-
         BattleHandoff.SetDeployment(squad, activeMission != null ? activeMission : mission);
         BattleHandoff.Config = config;
         BattleHandoff.OnionsCarried = itemInventory != null ? itemInventory.Get(GameConfig.RottenOnionId) : 0;
@@ -192,16 +197,6 @@ public class DeployPanel : MonoBehaviour
         SceneManager.LoadScene(battleSceneName);
     }
 
-    private void SetFarmInput(bool enabled)
-    {
-        if (avatarMovement != null) avatarMovement.enabled = enabled;
-        if (avatarInteraction != null) avatarInteraction.enabled = enabled;
-    }
-
-    private static void WireOnce(Button btn, UnityEngine.Events.UnityAction action)
-    {
-        if (btn == null) return;
-        btn.onClick.RemoveListener(action);
-        btn.onClick.AddListener(action);
-    }
+    private void SetFarmInput(bool enabled) { if (avatarMovement != null) avatarMovement.enabled = enabled; if (avatarInteraction != null) avatarInteraction.enabled = enabled; }
+    private static void WireOnce(Button btn, UnityEngine.Events.UnityAction action) { if (btn == null) return; btn.onClick.RemoveListener(action); btn.onClick.AddListener(action); }
 }

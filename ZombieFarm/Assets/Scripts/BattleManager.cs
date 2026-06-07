@@ -27,6 +27,10 @@ public class BattleManager : MonoBehaviour
              "Rooms[i].entranceGate is opened when stage i-1 clears (leave null for room 0).")]
     [SerializeField] private List<Room> rooms = new List<Room>();
 
+    [Header("Areas (branching map). If set, used instead of linear Rooms.")]
+    [SerializeField] private List<BattleArea> areas = new List<BattleArea>();
+    [SerializeField] private Transform squadSpawn; // squad start in area mode
+
     [Header("Mission (stages + reward) when played directly")]
     [SerializeField] private MissionData mission;
 
@@ -80,12 +84,44 @@ public class BattleManager : MonoBehaviour
         activeMission = BattleHandoff.Mission != null ? BattleHandoff.Mission : mission;
         stages = ResolveStages();
 
+        if (AreaMode)
+        {
+            SpawnSquad(squadSpawn);
+            foreach (BattleArea a in areas) if (a != null) a.Bind(this);
+            if (areas.Count > 0 && areas[0] != null) areas[0].Activate(); // start area fights at once
+            return;
+        }
+
         Transform squadAnchor = rooms.Count > 0 && rooms[0] != null ? rooms[0].squadSpawn : null;
         SpawnSquad(squadAnchor);
 
         currentStage = 0;
         if (stages.Count == 0) { End(true); return; }
         SpawnStage(0); // first room is already "open" — enemies are immediately present
+    }
+
+    private bool AreaMode => areas != null && areas.Count > 0;
+    public IReadOnlyList<BattleArea> Areas => areas;
+
+    /// Spawn one area's enemies (called by BattleArea on activation); appends to `outList`.
+    public void SpawnAreaEnemies(BattleArea area, List<BattleAgent> outList)
+    {
+        if (area == null) return;
+        foreach (BattleArea.Group g in area.enemies)
+        {
+            if (g.zombie == null) continue;
+            for (int i = 0; i < Mathf.Max(1, g.count); i++)
+            {
+                SpawnAgent(g.zombie, Team.Enemy, area.enemySpawn, string.Empty);
+                if (enemies.Count > 0) outList.Add(enemies[enemies.Count - 1]);
+            }
+        }
+    }
+
+    public void OnAreaCleared(BattleArea area)
+    {
+        if (ended) return;
+        if (area != null && area.isFinal) End(true);
     }
 
     private List<MissionData.Stage> ResolveStages()
@@ -179,7 +215,7 @@ public class BattleManager : MonoBehaviour
     {
         if (ended) return;
         if (AliveCount(players) == 0) { End(false); return; }
-        if (AliveCount(enemies) == 0) StageCleared();
+        if (!AreaMode && AliveCount(enemies) == 0) StageCleared();
     }
 
     private void StageCleared()

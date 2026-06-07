@@ -7,8 +7,9 @@ issue breakdown in [backlog.md](backlog.md).)
 
 - **Engine:** Unity 2022.3 LTS.
 - **Render pipeline:** URP, 2D Renderer.
-- **View:** Isometric Tilemap; Transparency Sort Mode = Custom Axis `(0, 1, 0)` so taller
-  objects depth-sort correctly.
+- **View:** **Top-down (orthographic)**, rectangular Tilemap; Y-sort via Transparency Sort
+  Custom Axis `(0, 1, 0)`. **Pixel-art**: FilterMode = Point, consistent PPU, 2D Pixel Perfect
+  Camera. (Pivoted from isometric — see [design/direction.md](design/direction.md).)
 - **Input:** New Input System (used by both the farm avatar and combat controls).
 - **Data:** ScriptableObjects for strains (`ZombieData`), crops (`CropData`), missions/
   cities, with a single **`GameConfig`** SO holding all tunable numbers.
@@ -48,6 +49,26 @@ older `2D_Game_Improvement` and `SolarSystem`). Scripts are in
   unit-tested.
 - Keep a short **testing log per milestone** under [`testing/`](testing/) (what was tested,
   what failed, what changed). `week-1.md` is the existing example.
+
+## Day-to-day Kanban moves
+
+Keep [Project #1](https://github.com/users/RainYans/projects/1) in sync as work happens.
+The columns are `Backlog → Ready → In progress → In review → Done`. The helpers live in
+[`tools/board/`](../tools/board/).
+
+| When | Command |
+|---|---|
+| Starting a Story | `bash tools/board/board.sh move <issue#> in-progress` |
+| Pausing / blocked | `bash tools/board/board.sh move <issue#> backlog` |
+| PR opened, waiting on review | `bash tools/board/board.sh move <issue#> in-review` |
+| Finished + merged | `gh issue close <issue#> -c "shipped in <commit>"` &nbsp;*(the "Item closed → Done" workflow moves the card)* |
+| Spawn a Task under a Story | `gh issue create --title "Task — XXX" --label Task,system/X --body "..."` then `bash tools/board/board.sh link <story#> <task#>` |
+| Brand-new Story | `gh issue create --title "Story — XXX" --label Story,P0,system/X --milestone "M4 — Progression & Polish"` &nbsp;*(auto-add workflow lands it in Backlog; sub-link it to its Epic if applicable)* |
+
+Project ID and Status-field option IDs are hardcoded in
+[`tools/board/board.sh`](../tools/board/board.sh) and
+[`tools/board/set-status.sh`](../tools/board/set-status.sh) — refer there if a deeper
+GraphQL call is needed.
 
 ## Definition of Done — Per-Chunk Tiers
 

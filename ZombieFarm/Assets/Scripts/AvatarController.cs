@@ -14,15 +14,16 @@ public class AvatarController : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 4f;
 
-    [Tooltip("Vertical movement is scaled by this to match the isometric tile ratio (≈0.5 for " +
-             "a 2:1 iso grid). Set 1 for straight XY.")]
-    [SerializeField, Range(0.25f, 1f)] private float isoYScale = 0.5f;
-
     private Rigidbody2D body;
     private SpriteRenderer sprite;
     private Vector2 input;
+    private Vector2Int facingCell = Vector2Int.down;
 
     public Vector2 MoveInput => input;
+
+    /// Last-moved 4-direction as a cell step (e.g. (1,0) = facing right). Used by
+    /// AvatarInteraction to target the tile in front of the avatar. Persists while idle.
+    public Vector2Int FacingCell => facingCell;
 
     /// External speed multiplier — used by LeaderDash in the battle scene to boost the leader
     /// during a dash without modifying the base moveSpeed. Defaults to 1 in the farm.
@@ -51,13 +52,19 @@ public class AvatarController : MonoBehaviour
         if (dir.sqrMagnitude > 1f) dir.Normalize();
         input = dir;
 
+        // Track 4-way facing (dominant axis) so E targets the tile in front.
+        if (Mathf.Abs(x) > 0.01f || Mathf.Abs(y) > 0.01f)
+            facingCell = Mathf.Abs(x) >= Mathf.Abs(y)
+                ? new Vector2Int(x > 0f ? 1 : -1, 0)
+                : new Vector2Int(0, y > 0f ? 1 : -1);
+
         if (sprite != null && Mathf.Abs(x) > 0.01f) sprite.flipX = x < 0f;
     }
 
     private void FixedUpdate()
     {
         if (body != null)
-            body.velocity = new Vector2(input.x, input.y * isoYScale) * (moveSpeed * SpeedMultiplier);
+            body.velocity = new Vector2(input.x, input.y) * (moveSpeed * SpeedMultiplier);
     }
 
     // When frozen (e.g. a UI panel opens and this component is disabled), stop dead so the

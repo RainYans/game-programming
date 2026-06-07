@@ -21,8 +21,8 @@ public class FarmRoamerSpawner : MonoBehaviour
     [SerializeField] private Sprite roamerSprite;
 
     [Header("Roamer look & feel")]
-    [SerializeField] private float moveSpeed = 1.2f;
-    [SerializeField] private float roamerScale = 0.6f;
+    [SerializeField] private float moveSpeed = 0.5f;
+    [SerializeField] private float roamerScale = 1.0f;
     [SerializeField] private int sortingOrder = 4;
 
     private readonly Dictionary<string, FarmRoamer> roamersByUid = new Dictionary<string, FarmRoamer>();
@@ -77,12 +77,20 @@ public class FarmRoamerSpawner : MonoBehaviour
         go.transform.localScale = Vector3.one * roamerScale;
 
         var sr = go.AddComponent<SpriteRenderer>();
-        sr.sprite = roamerSprite != null ? roamerSprite : GeneratedSquare();
-        sr.color = ResolveColor(unit.strainId);
+        Sprite[] anim = Resources.LoadAll<Sprite>("MonsterAnim/" + unit.strainId);
+        Sprite still = Resources.Load<Sprite>("Monsters/" + unit.strainId);
+        if (anim != null && anim.Length > 0)
+        {
+            System.Array.Sort(anim, (x, y) => string.CompareOrdinal(x.name, y.name));
+            sr.sprite = anim[0]; sr.color = Color.white;
+        }
+        else if (still != null) { sr.sprite = still; sr.color = Color.white; }
+        else { sr.sprite = roamerSprite != null ? roamerSprite : GeneratedSquare(); sr.color = ResolveColor(unit.strainId); }
         sr.sortingOrder = sortingOrder;
 
         var roamer = go.AddComponent<FarmRoamer>();
         roamer.Init(moveSpeed, RandomPointInArea, unit.uid, ResolveName(unit.strainId), inventory);
+        if (anim != null && anim.Length > 1) roamer.SetFrames(anim, 5f);
         return roamer;
     }
 

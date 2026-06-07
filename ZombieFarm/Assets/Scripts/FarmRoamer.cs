@@ -19,6 +19,10 @@ public class FarmRoamer : MonoBehaviour
 
     private string uid;
     private Inventory inventory;
+    private Sprite[] animFrames;
+    private float animFps = 5f;
+    private int animIdx;
+    private float animTimer;
     private TextMeshPro label;
     private string displayName = "";
     private float hungerPollTimer;
@@ -49,10 +53,28 @@ public class FarmRoamer : MonoBehaviour
         RefreshHunger(force: true);
     }
 
+    /// Assign the looping walk/idle frames (the harvested monster's animation).
+    public void SetFrames(Sprite[] frames, float fps)
+    {
+        animFrames = frames;
+        animFps = fps > 0f ? fps : 5f;
+        if (sprite != null && frames != null && frames.Length > 0) sprite.sprite = frames[0];
+    }
+
     private void Update()
     {
         Wander();
+        Animate();
         PollHunger();
+    }
+
+    private void Animate()
+    {
+        if (sprite == null || animFrames == null || animFrames.Length < 2) return;
+        animTimer += Time.deltaTime;
+        float spf = 1f / animFps;
+        while (animTimer >= spf) { animTimer -= spf; animIdx++; }
+        sprite.sprite = animFrames[animIdx % animFrames.Length];
     }
 
     private void Wander()

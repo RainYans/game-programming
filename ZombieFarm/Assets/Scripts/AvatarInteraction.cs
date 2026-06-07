@@ -12,10 +12,12 @@ public class AvatarInteraction : MonoBehaviour
     [SerializeField] private GridManager gridManager;
     [SerializeField] private FarmActions farmActions;
     [SerializeField] private UIManager uiManager;
+    [SerializeField] private AvatarController avatar;
+    [SerializeField] private SpriteRenderer avatarSprite;
 
-    [Tooltip("Offset (world units) from the avatar's position to the cell it interacts with. " +
-             "Nudge downward to sample at the feet if the sprite pivot is centered.")]
-    [SerializeField] private Vector2 interactOffset = Vector2.zero;
+    [Tooltip("Fine-tune which cell is highlighted. The sample starts at the avatar's FEET " +
+             "(sprite bottom-center); nudge Y up (+) if the highlight sits a tile too low.")]
+    [SerializeField] private Vector2 interactOffset = new Vector2(0f, 0.1f);
 
     [Tooltip("How close the avatar's center must be to a building's center for E to open it.")]
     [SerializeField] private float buildingReach = 1.2f;
@@ -30,12 +32,17 @@ public class AvatarInteraction : MonoBehaviour
         if (gridManager == null) gridManager = FindFirstObjectByType<GridManager>();
         if (farmActions == null) farmActions = FindFirstObjectByType<FarmActions>();
         if (uiManager == null) uiManager = FindFirstObjectByType<UIManager>();
+        if (avatar == null) avatar = GetComponent<AvatarController>();
+        if (avatarSprite == null) avatarSprite = GetComponentInChildren<SpriteRenderer>();
     }
 
     private void Update()
     {
         if (gridManager == null) return;
 
+        // Sample the cell under the avatar. transform.position is a stable reference fixed to the
+        // character, so a single interactOffset always points at the same body part (the feet);
+        // tune interactOffset.Y in the Inspector to line the highlight up with where it stands.
         Vector3 sample = transform.position + (Vector3)interactOffset;
         sample.z = 0f;
         Vector3Int cell = gridManager.WorldToCell(sample);

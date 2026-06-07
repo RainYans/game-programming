@@ -1,23 +1,32 @@
 # Design — Presentation
 
+> ⚠️ **Direction updated (2026-06-06) — see [direction.md](direction.md).** Now **top-down
+> pixel-art**, theme **"Monster Farm"**, art = the single **Ninja Adventure** pack.
+> "isometric / cartoon / AI-generated" wording below is superseded; **"zombie" = "monster"
+> (display only)**. Logic stays valid unless it conflicts with `direction.md`.
+
 The game is **casual** in feel; the presentation should match: approachable, readable,
 pleasant — not grim survival-horror, and not AAA fidelity.
 
 ## Art Direction
 
-- **Style:** light **cartoon**. Friendly, slightly stylized engineered zombies; readable
-  silhouettes so the six strains are distinguishable at a glance; clear, non-grim ruined
-  cities.
-- **View:** 2D **isometric** throughout. Art must respect the Transparency Sort Axis
-  `(0, 1, 0)` so overlapping objects depth-sort correctly.
+- **Style:** **16-bit pixel-art** from one cohesive pack (**Ninja Adventure**). Friendly,
+  readable monster silhouettes so the six strains are distinguishable at a glance.
+- **View:** 2D **top-down (orthographic)** throughout; Y-sort via Transparency Sort Axis
+  `(0, 1, 0)`. Pixel-art settings: **FilterMode = Point**, consistent PPU, **2D Pixel Perfect
+  Camera**, no anti-aliasing.
 - **Readability first:** strain identity and **hunger state** (Full vs. Hungry) must read
   instantly on the farm and in combat — via color, icon, or a small status indicator.
 
 ## Asset Pipeline
 
-- **Source:** art is produced by the developer using **AI generation** plus sourced online
-  assets, then handed to the implementer for integration. The dev provides finished assets;
-  engineering wires them into prefabs, tilemaps, and animations.
+> The concrete production plan — art-direction decision, full asset manifest, animation specs,
+> AI workflow, prompt library, and naming/integration conventions — lives in
+> [art-pipeline.md](art-pipeline.md). This section is the high-level direction only.
+
+- **Source:** a single cohesive pack — **Ninja Adventure** (16px top-down pixel: tiles,
+  characters, monsters, 20 bosses, FX, items, UI, audio). Engineering wires the pack's assets
+  into prefabs, tilemaps, and animations. (The earlier AI-generation + Kenney plan is dropped.)
 - **Every scene needs art:** the farm base, building exteriors, the avatar, six zombie
   strains, wild-zombie enemies, combat items/effects, the city map, and combat
   stages/backgrounds. This is a large surface and a real schedule risk (see

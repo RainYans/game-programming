@@ -51,7 +51,9 @@ public class SfxManager : MonoBehaviour
     {
         if (!cache.TryGetValue(kind, out AudioClip clip))
         {
-            clip = Generate(kind);
+            // Prefer a real clip at Resources/SFX/<Kind>.ogg (drop in / swap files freely);
+            // fall back to the generated sine blip when none is present.
+            clip = Resources.Load<AudioClip>("SFX/" + kind) ?? Generate(kind);
             cache[kind] = clip;
         }
         if (clip != null && source != null)

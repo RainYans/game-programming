@@ -1,5 +1,11 @@
 # Design — Combat
 
+> ⚠️ **Structure updated (2026-06-06) — see [direction.md](direction.md).** Combat is now
+> **"clear-the-village"**: a larger **top-down** village map seeded with monsters — clear them
+> all to win; **many levels**. The **real-time squad-tactics action layer described below is
+> KEPT** (WASD-lead, loose-follow, auto-attack, select/command, field items, permadeath). The
+> old `City → Stage → Prep` structure can still back a level. "zombie" = "monster" (display).
+
 Combat is a **dedicated mode** (a separate scene), not the placeholder overlay used during
 prototyping. It's a casual **squad-tactics / stage-clear** experience: the player leads a
 small squad of their farm zombies through a fallen city, stage by stage, to reclaim it.

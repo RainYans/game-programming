@@ -29,3 +29,6 @@ memory/
 .claude/
 .mcp.json
 **/Plugins/NuGet/
+
+# Dev/MCP tooling: build scripts, screenshots, font backups, previews (not part of the game)
+tools/

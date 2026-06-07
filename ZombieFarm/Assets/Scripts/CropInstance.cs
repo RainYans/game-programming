@@ -12,6 +12,7 @@ public class CropInstance : MonoBehaviour
     private DateTime plantedAtUtc;
     private SpriteRenderer sr;
     private Stage stage = Stage.Seed;
+    private Sprite monsterArt;   // real harvested-monster sprite (Resources/Monsters/<id>), null = placeholder
 
     public CropData Data => data;
     public bool IsRipe => stage == Stage.Ripe;
@@ -24,6 +25,8 @@ public class CropInstance : MonoBehaviour
         data = cropData;
         plantedAtUtc = plantedUtc;
         if (sr == null) sr = GetComponent<SpriteRenderer>();
+        monsterArt = cropData != null ? Resources.Load<Sprite>("Monsters/" + cropData.id) : null;
+        if (monsterArt != null) sr.sprite = monsterArt;
         ApplyStage(Stage.Seed);
     }
 
@@ -41,19 +44,20 @@ public class CropInstance : MonoBehaviour
     private void ApplyStage(Stage s)
     {
         stage = s;
+        bool art = monsterArt != null;   // with real art: keep sprite, fade+grow by stage
         switch (s)
         {
             case Stage.Seed:
-                sr.color = data.seedColor;
-                transform.localScale = Vector3.one * 0.4f;
+                sr.color = art ? new Color(1f, 1f, 1f, 0.55f) : data.seedColor;
+                transform.localScale = Vector3.one * (art ? 0.5f : 0.4f);
                 break;
             case Stage.Growing:
-                sr.color = data.growingColor;
-                transform.localScale = Vector3.one * 0.7f;
+                sr.color = art ? new Color(1f, 1f, 1f, 0.8f) : data.growingColor;
+                transform.localScale = Vector3.one * (art ? 0.72f : 0.7f);
                 break;
             case Stage.Ripe:
-                sr.color = data.ripeColor;
-                transform.localScale = Vector3.one * 1.0f;
+                sr.color = art ? Color.white : data.ripeColor;
+                transform.localScale = Vector3.one * (art ? 0.92f : 1.0f);
                 break;
         }
     }

@@ -2,11 +2,59 @@
 
 ## Current Focus
 
-**Milestone 1 and Milestone 3 are complete and merged to `main`.** We now go straight at
-**Milestone 4 — toward the MVP gate** (the 7-line Definition of Done in `vision.md`). The
-M3 P1 refinements (Freeze Canister / Barbed Wire, hunger-in-combat, enemy variety polish)
-and the M2 economy depth (Lab upgrades, plot expansion) are **deferred** — only do them if
-time remains after the MVP gate is hit.
+**MVP gate is hit; the project is now in the v2 ART/VIEW PIVOT — see
+[design/direction.md](design/direction.md) (source of truth).** Switching to **top-down
+pixel-art**, theme **"Monster Farm"**, art from the single **Ninja Adventure** pack, and
+**clear-the-village** combat. A codebase audit (2026-06-06) confirms gameplay logic is
+view-agnostic, so this is a **presentation swap + ~6 small code edits + scene rebuild +
+reskin**, not a rewrite. Old saves still load.
+
+Order (per `direction.md` phases): **0** pixel pipeline + import Ninja Adventure + a
+`StyleTest` spike → **1** view flip (the ~6 edits + farm grid → rectangular + battle layout
+→ orthographic + camera/PPU) → **2** full reskin → **3** clear-the-village level(s) +
+selected new gameplay (boss / enemy variety / watering) → **4** polish. **New gameplay waits
+until the art is in.** Earlier M3-P1 / M2 economy-depth items stay deferred.
+
+### v2 pixel pivot — live progress (handoff 2026-06-06)
+
+**Art LOCKED = Cute Fantasy (Kenmi) ecosystem**, owned at `F:\unity_repo\Yanshuo\像素明亮`
+(`Cute_Fantasy` main + `_Characters`/`_Dungeons`/`_UI`/`_MilitaryCamp`/biome packs). Bright 16px
+tiles / ~32px chars. Ninja Adventure (`F:\unity_repo\Yanshuo\像素风`) kept ONLY as an audio source
+(CF ships no audio). Do NOT mix Ninja visuals (resolution/palette clash). See `design/direction.md`.
+
+**Phase 0 (pixel pipeline + spike): DONE.** Spike subset imported to `Assets/Art/CuteFantasy/`
+(Tiles, Chars/Player, Enemies: slimes/skeleton/goblin, UI_Frames), pixel-imported (Point, PPU 16,
+uncompressed) and sliced per-frame (Player/Skeleton 32px, Slime_Big 64px, Goblin 48px, FarmLand 16px).
+`StyleTest.unity` validated the bright top-down look.
+
+**Phase 1 (view flip): code DONE; Farm.unity DONE.**
+- Code: removed iso Y-squash — `AvatarController` (straight XY), `BattleAgent.IsoYScale = 1f`. Compiles
+  clean. `GridManager` needed no change (delegates to the Grid).
+- `Farm.unity`: `FarmGrid` Isometric→Rectangle (cellSize 1,1,1); `Assets/Tiles/GroundTile.asset` sprite
+  → CF `Grass_1_Middle`, `FieldTile.asset` → CF `Path_Middle` (dirt) — IsFarmCell logic intact;
+  GroundTilemap cleared + repainted 24×16 grass with a central 6×4 plot; Home/Shop/Lab/WarCamp + Avatar
+  repositioned via grid cells; Avatar sprite → CF `Player_0`; Main Camera orthographic + PixelPerfectCamera
+  (PPU 16) + transparency sort axis (0,1,0); Cinemachine brain re-enabled. Gameplay wiring preserved.
+- Deleted unused `Assets/Art/Ninja`.
+
+**NEXT (Phase 2) — the farm is intentionally bare right now (view-flip only); richness comes here:**
+1. **Buildings still Kenney** (clash) → import `Cute_Fantasy/Buildings` (Houses/Tent/Unique), swap the 4.
+2. Delete leftover Kenney art `Assets/Art/{Buildings,Props,Tiles}` after references are repointed.
+3. Roamer/crop placeholder sprites → CF (slimes/monsters; **slime Small→Med→Big = the 3 growth stages**).
+4. **Dress the farm** (CF trees/flowers/paths/fences) to the example-map quality the user wants.
+5. **Battle scene flip**: `BattleSceneSetup` iso projection (`CellWorld`, `IsoX/YAngle`, Grid Isometric)
+   → orthographic; reskin with CF + `Cute_Fantasy_Dungeons`/`_MilitaryCamp`; build "clear-the-village" levels.
+6. **Playtest** Farm (walk / plant / enter buildings) — confirm logic survived the grid/position change.
+
+**Gotchas (save the next session time):**
+- MCP is live & authorized: `unity-mcp-cli run-tool <tool> --input-file -` (CLI). Use `script-execute`
+  for bulk edit-time C# (author persisted objects — the USER asked: NO runtime scene generation).
+  `screenshot-camera` gives a fresh render; `screenshot-game-view` can return a STALE cached frame in edit mode.
+- `FarmGrid` transform is offset — position objects/camera via `grid.GetCellCenterWorld(cell)`, not literal coords.
+- `PixelPerfectCamera` type lives in assembly **`Unity.2D.PixelPerfect`** (not the URP runtime) — use that in reflection.
+- Slice sheets by per-asset frame size; CF chars ~32px, tiles 16px.
+- Strain casting is flexible = **distinct species** (slime/goblin/orc/skeleton/bombschroom…), NOT slime recolours;
+  strain **ids/data/SaveData unchanged** ("zombie"→"monster" is display-only).
 
 ## Workflow (must follow)
 
@@ -16,9 +64,13 @@ time remains after the MVP gate is hit.
   - **M (minimum):** mechanic fires, no errors, loop closes; placeholder numbers/visuals.
   - **T (target):** feedback in, balance reasonable, placeholder art acceptable.
   - **P (polish):** edge cases handled, transitions, demoable.
-- Chinese chat / English code & commits. User drives Unity; agent writes scripts (gameplay
-  + Editor one-click menus). Don't drive the editor via MCP.
-- `gh` not installed — any GitHub action goes through the web UI.
+- Chinese chat / English code & commits.
+- **MCP-driving the Unity Editor is authorized** (since 2026-06-06): the agent may create
+  scenes, import/configure assets, place GameObjects, and screenshot via `unity-mcp-cli`
+  (Unity 2022.3.62f3, MCP at `localhost:20858`). The user still does bulk file ops (e.g.
+  unzipping asset packs) by hand when given a precise list. Editor one-click menu scripts are
+  still fine where cleaner.
+- `gh` **is installed and authed** — GitHub actions can use `gh` / `tools/board` directly.
 
 ## Done — Milestone 1 (merged)
 

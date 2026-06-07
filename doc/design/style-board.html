@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zombie/Monster Farm — 美术风格对照图墙</title>
+<style>
+  :root { --bg:#15171c; --card:#1f2229; --line:#2c3038; --txt:#e7e9ee; --dim:#9aa0ab;
+          --good:#43c97a; --warn:#e7b94a; --bad:#e2585b; --accentA:#5fb0ff; --accentB:#c08bff; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--txt);
+         font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; line-height:1.6; }
+  header { padding:28px 32px; border-bottom:1px solid var(--line); background:#11131799; position:sticky; top:0; backdrop-filter:blur(6px); z-index:10;}
+  h1 { margin:0 0 6px; font-size:22px; }
+  h2 { margin:36px 0 4px; font-size:19px; padding:8px 14px; border-left:4px solid var(--accentA); background:#ffffff08;}
+  h2.b { border-left-color:var(--accentB); }
+  h2.x { border-left-color:var(--bad); }
+  .sub { color:var(--dim); font-size:14px; margin:0 0 14px; }
+  .wrap { padding:0 32px 80px; max-width:1500px; margin:0 auto; }
+  .legend span { display:inline-block; margin-right:18px; font-size:13px; color:var(--dim);}
+  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; vertical-align:middle;}
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; margin-top:12px;}
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; display:flex; flex-direction:column;}
+  .card img { width:100%; height:200px; object-fit:cover; background:#0c0d10; display:block;}
+  .card.tall img { height:240px; object-fit:contain; padding:8px; }
+  .cap { padding:10px 12px; font-size:13px; }
+  .cap b { font-size:14px; }
+  .tag { display:inline-block; font-size:11px; padding:1px 8px; border-radius:20px; margin-bottom:6px; font-weight:600;}
+  .t-good{ background:#43c97a22; color:var(--good);} .t-warn{ background:#e7b94a22; color:var(--warn);} .t-bad{ background:#e2585b22; color:var(--bad);}
+  .note { color:var(--dim); }
+  .rec { background:#43c97a12; border:1px solid #43c97a44; border-radius:10px; padding:14px 18px; margin:18px 0; }
+  .rec b { color:var(--good); }
+  .miss { background:#0c0d10; height:200px; display:flex; align-items:center; justify-content:center; color:#5a606b; font-size:13px; text-align:center; padding:14px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎨 Monster Farm — 美术风格对照图墙</h1>
+  <p class="sub">你说"看不到效果图、没概念"——这页就是给你看的。从上往下滚，对比完凭感觉告诉我你喜欢哪种。图来自你 D 盘 CraftPix、G 盘 Spine 怪物、和项目里现有资产。</p>
+  <div class="legend">
+    <span><i class="dot" style="background:var(--good)"></i>✅ 推荐用</span>
+    <span><i class="dot" style="background:var(--warn)"></i>⚠️ 凑合/对照</span>
+    <span><i class="dot" style="background:var(--bad)"></i>✕ 别碰（会让画面更乱）</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="rec">
+    <b>一句话结论：</b>你的"违和感"根源是 <b>描边之争</b>——怪物是粗黑描边手绘，地面/建筑是无描边扁平。修复办法 = 让<b>场景去贴合怪物</b>，整个游戏统一到下面【方案A 全手绘卡通】。这条路全靠现成成品图，不用画画，重活是我写工程。
+  </div>
+
+  <h2 class="x" style="border-left-color:var(--warn)">① 为什么现在"不搭" —— 把两边并排看就懂了</h2>
+  <p class="sub">左边是你现在的建筑/怪物，右边是同家族的怪物成品参考。注意：左边房子<b>没有描边</b>、是柔和3D；怪物<b>有粗黑描边</b>。这两种贴一起就会"塑料配漫画"。</p>
+  <div class="grid">
+    <div class="card tall">
+      <img src="file:///F:/unity_repo/Yanshuo/game-programming/ZombieFarm/Assets/Art/Buildings/house_type01_SW.png">
+      <div class="cap"><span class="tag t-warn">现状·建筑</span><br><b>Kenney 等距房子</b><br><span class="note">无描边、柔和3D渲染。干净，但和怪物不是一个画风。</span></div>
+    </div>
+    <div class="card tall">
+      <img src="file:///G:/unity资产/SP01_召唤与合成819个Spine/怪物spine/guaiA10a/guaiA10a.png">
+      <div class="cap"><span class="tag t-good">你的怪物·真实资产</span><br><b>Spine 怪物贴图（拆成部件的样子）</b><br><span class="note">这是图集，装上 Spine 运行时后会拼成完整、会走/会打/会死的怪物。风格 = 粗黑描边手绘。共 819 只可挑。</span></div>
+    </div>
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/Quirky%20Monsters%20Game%20Asset%20Pack%20V19.jpg">
+      <div class="cap"><span class="tag t-good">怪物风格参考</span><br><b>Quirky Monsters（拼好的样子）</b><br><span class="note">你的怪物拼好后就是这种感觉——粗描边、卡通、可爱。</span></div>
+    </div>
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/Cute%20Monsters%20Game%20Character%20Sprites%20Pack.jpg">
+      <div class="cap"><span class="tag t-good">怪物风格参考</span><br><b>Cute Monsters</b><br><span class="note">同一手绘家族，备选/补充怪物。</span></div>
+    </div>
+  </div>
+
+  <h2>【方案A · 全手绘卡通】A-1 农场底图候选</h2>
+  <p class="sub">农场不再用等距瓦片，而是一张<b>手绘草地背景</b>，上面摆地块/建筑/怪物。下面是底图候选——你最看重哪种感觉的农场？</p>
+  <div class="grid">
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/4%20Nature%20Backgrounds%20for%20RPG%20Battle.jpg">
+      <div class="cap"><span class="tag t-good">底图候选</span><br><b>4 Nature Backgrounds（四季自然）</b><br><span class="note">偏厚涂、唯美。冬/樱花/夏河/秋叶，下半部是草地，正好当农场地面。</span></div>
+    </div>
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/Cartoon%20Defense%20Game%20Assets%20Pack.jpg">
+      <div class="cap"><span class="tag t-good">底图候选</span><br><b>Cartoon Defense（绿草地+合成战场）</b><br><span class="note">本身就是塔防/合成的草地基地，最接近"农场基地"的俯视感，还自带 UI。</span></div>
+    </div>
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/RPG%202D%20Arenas%20for%20Battle%20Game.jpg">
+      <div class="cap"><span class="tag t-warn">底图候选</span><br><b>RPG 2D Arenas（草地竞技场）</b><br><span class="note">柔和厚涂草地，也能当农场/战场二用。</span></div>
+    </div>
+  </div>
+
+  <h2>【方案A】A-2 战斗背景候选</h2>
+  <p class="sub">出征战斗用手绘横版背景，怪物站在地面线上对打。这些和你的怪物<b>同款描边</b>，贴上去严丝合缝。</p>
+  <div class="grid">
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/Forest%20Battle%20Backgrounds.jpg">
+      <div class="cap"><span class="tag t-good">战斗背景</span><br><b>Forest（森林）</b><br><span class="note">粗描边手绘，和怪物最搭。</span></div>
+    </div>
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/Flying%20Island%20Battle%20Backgrounds.jpg">
+      <div class="cap"><span class="tag t-good">战斗背景</span><br><b>Flying Island（浮岛草原）</b><br><span class="note">明亮、漂亮，适合前期关卡。</span></div>
+    </div>
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/Dragon%20Dungeon%20Battle%20Backgrounds.jpg">
+      <div class="cap"><span class="tag t-good">战斗背景</span><br><b>Dragon Dungeon（熔岩洞窟）</b><br><span class="note">适合后期/Boss 关，气氛拉满。</span></div>
+    </div>
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/Clearing%20in%20the%20Forest%20Vector%20Battle%20Backgrounds.jpg">
+      <div class="cap"><span class="tag t-good">战斗背景</span><br><b>Clearing in the Forest（林间空地·矢量）</b><br><span class="note">矢量干净，多层视差。</span></div>
+    </div>
+  </div>
+
+  <h2>【方案A】A-3 UI / 商店 / 选关地图</h2>
+  <div class="grid">
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/Cartoon%20UI%20Elements%20Mini%20Kit.jpg">
+      <div class="cap"><span class="tag t-good">UI 套件</span><br><b>Cartoon UI Kit</b><br><span class="note">果冻按钮/面板/图标，手绘卡通，配怪物刚好。</span></div>
+    </div>
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/Gold%20Coins%20and%20Money%20Game%20UI%20Pack.jpg">
+      <div class="cap"><span class="tag t-good">货币/商店图标</span><br><b>Treasure Shop（金币/钞票/宝箱）</b><br><span class="note">商店、奖励、货币图标现成。</span></div>
+    </div>
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/Island%20Map%20for%20Game%20Level%20Interface%20Vector%20Pack.jpg">
+      <div class="cap"><span class="tag t-warn">选关地图</span><br><b>Island 选关地图</b><br><span class="note">出征选城市/关卡的地图界面。注：它是无描边家族，但地图是独立界面，单独看不违和。</span></div>
+    </div>
+  </div>
+
+  <h2 class="b">【方案B · 保留等距】仅供对照</h2>
+  <p class="sub">如果坚持等距瓦片农场，这是能升级到的样子。<b>注意：它们和 Kenney 一样还是"无描边扁平"</b>——比现在稍可爱，但和怪物的违和<b>依旧存在</b>。所以这条路只是"凑合"，不是"修复"。</p>
+  <div class="grid">
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/Fantasy%20Land%20Isometric%20Tileset.jpg">
+      <div class="cap"><span class="tag t-warn">等距地块</span><br><b>Fantasy Land 等距</b><br><span class="note">比 Kenney 可爱，但同属无描边家族。</span></div>
+    </div>
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/Westeros%20Isometric%20Vector%20Tileset.jpg">
+      <div class="cap"><span class="tag t-warn">等距地块</span><br><b>Westeros 等距</b><br><span class="note">同上，无描边。</span></div>
+    </div>
+  </div>
+
+  <h2 class="x">✕ 别碰：像素第三家族（会让画面更乱）</h2>
+  <p class="sub">CraftPix 里大量是像素风。单独都好看，但和你的手绘怪物是<b>第三种画风</b>，混进来只会更乱。看一眼，记住"不选这种"就行。</p>
+  <div class="grid">
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/Top-Down%20Pixel%20Art%20Slime%20Monsters%20Sprite%20Pack.jpg">
+      <div class="cap"><span class="tag t-bad">像素·别用</span><br><b>Slime Mobs（像素）</b></div>
+    </div>
+    <div class="card">
+      <img src="file:///D:/unity资源/CraftPix/House%20Constructor%20for%20Top-Down%20RPG%20Asset%20Pack.jpg">
+      <div class="cap"><span class="tag t-bad">像素·别用</span><br><b>House Constructor（像素俯视）</b></div>
+    </div>
+  </div>
+
+  <div class="rec" style="margin-top:40px;">
+    <b>看完后告诉我两件事就行：</b><br>
+    1) 整体走 <b>方案A 全手绘卡通</b>（我推荐）还是 <b>方案B 保留等距</b>？<br>
+    2) 农场底图你偏爱哪张（四季自然 / 绿草地基地 / 竞技草地）？战斗背景喜欢哪几张？<br>
+    <span class="note">挑好我就开干：先做 Spine 运行时半小时验证，再把农场场景按你选的底图搭起来。</span>
+  </div>
+
+</div>
+</body>
+</html>

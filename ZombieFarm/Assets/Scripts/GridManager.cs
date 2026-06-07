@@ -31,9 +31,14 @@ public class GridManager : MonoBehaviour
             highlightTilemap.SetTile(cell, null);
     }
 
-    public Vector3Int WorldToCell(Vector3 world) => grid.WorldToCell(world);
+    // Convert via the GROUND tilemap (not `grid`): the tilemaps sit at a non-zero local offset
+    // under FarmGrid, so the Grid component and the Tilemap disagree on cell<->world. IsFarmCell
+    // reads `tilemap`, so cell math must use the same tilemap or onFarm is always false (E dead).
+    public Vector3Int WorldToCell(Vector3 world) =>
+        tilemap != null ? tilemap.WorldToCell(world) : grid.WorldToCell(world);
 
-    public Vector3 CellCenterToWorld(Vector3Int cell) => grid.GetCellCenterWorld(cell);
+    public Vector3 CellCenterToWorld(Vector3Int cell) =>
+        tilemap != null ? tilemap.GetCellCenterWorld(cell) : grid.GetCellCenterWorld(cell);
 
     /// Only cells with a FieldTile (dirt) are plantable.
     public bool IsFarmCell(Vector3Int cell) =>

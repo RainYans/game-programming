@@ -1,5 +1,10 @@
 # Design — Zombies
 
+> ⚠️ **Now "Monsters" — see [direction.md](direction.md).** Theme pivoted to **Monster Farm**;
+> these are **monsters** at the display layer (sprites from the **Ninja Adventure** pack,
+> top-down pixel). **All strain ids, stats, passives, and data below are UNCHANGED** — only
+> names/sprites change.
+
 Engineered zombies are both the crop and the army. There are **six strains**, each defined
 by base stats and a single **passive** ability, plus a shared **hunger** system that shifts
 combat strength over time. Zombies that die in battle are **permanently lost**.
