@@ -112,7 +112,7 @@ Close the loop and make it presentable. Hit the MVP gate early in the week, then
 | Risk | Likelihood | Mitigation |
 |------|-----------|------------|
 | Combat (M3) overruns | High | It's scoped as the heaviest week; P0 is deliberately thin (1 city, 3 stages, 1 item). P1 combat can slip without breaking the MVP. |
-| Art volume exceeds time | High | Placeholders are acceptable through P0; integrate art per-system, most-seen assets first; AI-generated pipeline. |
+| Art volume exceeds time | High | Placeholders are acceptable through P0; integrate art per-system, most-seen assets first. |
 | Scope creep | High | Hard P0/P1/P2 tiers; the MVP gate is the contract; P2 stays in the Icebox. |
 | Isometric depth-sorting bugs with avatar + overlaps | Medium | Transparency Sort Axis already set; verify early in M1 with overlapping objects. |
 | Save migration as state grows | Medium | Versioned save; extend `SaveData` additively; tolerate missing fields on load. |

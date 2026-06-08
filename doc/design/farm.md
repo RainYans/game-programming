@@ -1,7 +1,7 @@
 # Design — Farm & Avatar
 
 > ⚠️ **Direction updated — see [direction.md](direction.md).** View pivoted **isometric →
-> top-down pixel** (art = **Ninja Adventure** pack); theme = **Monster Farm** ("zombie" =
+> top-down pixel** (art = **Cute Fantasy** pack); theme = **Monster Farm** ("zombie" =
 > "monster", display only). Farm logic (planting, growth, roaming, hunger) is unchanged — it's
 > reskinned and re-laid-out on a square grid, not rewritten.
 

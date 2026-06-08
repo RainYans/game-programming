@@ -1,7 +1,7 @@
 # Design — Zombies
 
 > ⚠️ **Now "Monsters" — see [direction.md](direction.md).** Theme pivoted to **Monster Farm**;
-> these are **monsters** at the display layer (sprites from the **Ninja Adventure** pack,
+> these are **monsters** at the display layer (sprites from the **Cute Fantasy** pack,
 > top-down pixel). **All strain ids, stats, passives, and data below are UNCHANGED** — only
 > names/sprites change.
 

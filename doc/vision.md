@@ -2,7 +2,7 @@
 
 > ⚠️ **Direction updated (2026-06-06) — see [design/direction.md](design/direction.md).**
 > Pivoted to **top-down pixel-art**, theme **"Monster Farm"**, art from the single
-> **Ninja Adventure** pack, and **clear-the-village** combat. "isometric / zombie / Kenney+AI"
+> **Cute Fantasy** pack, and **clear-the-village** combat. The older "isometric / zombie"
 > wording below is superseded; **"zombie" now means "monster" at the display layer (ids
 > unchanged)**. Mechanics/logic stay valid unless they conflict with `direction.md`.
 

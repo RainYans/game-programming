@@ -1,7 +1,7 @@
 # Design — Current Direction (Top-Down Pixel · Monster Farm)
 
 > **Source of truth for the v2 pivot (2026-06-06).** Where any older doc (`vision.md`,
-> `combat.md`, `presentation.md`, `art-pipeline.md`, `zombies.md`, `farm.md`, …) conflicts
+> `combat.md`, `presentation.md`, `zombies.md`, `farm.md`, …) conflicts
 > with this file, **this file wins**. Those docs carry a banner pointing here. Their
 > *mechanics/logic* remain valid unless contradicted below.
 
@@ -26,10 +26,10 @@
    **Desert/Volcano/ShroomLands** biomes + **UI** + fonts. Monster roster: 15 slimes (3 sizes ×
    5 colours), 4 skeleton types, **Bombschroom** (+ Toxic-Gas VFX), goblins/orcs/knights,
    shroomlings, snails, biome enemies — plenty for strains + wild + bosses.
-   - Source on disk: `F:\unity_repo\Yanshuo\像素明亮\` (`Cute_Fantasy`, `Cute_Fantasy_Characters`,
-     `Cute_Fantasy_Dungeons`, `Cute_Fantasy_UI`, `Cute_Fantasy_MilitaryCamp`, biome packs…).
-   - **Audio is the ONE cross-borrow:** Cute Fantasy ships NO audio, so take BGM/SFX from the
-     free **Ninja Adventure** pack (`F:\unity_repo\Yanshuo\像素风`) — audio is style-agnostic.
+   - Packs used: `Cute_Fantasy` (main) + `Cute_Fantasy_Characters`, `Cute_Fantasy_Dungeons`,
+     `Cute_Fantasy_UI`, `Cute_Fantasy_MilitaryCamp`, and the biome packs.
+   - **Audio is the ONE cross-borrow:** Cute Fantasy ships NO audio, so BGM/SFX come from the
+     free **Ninja Adventure** pack (audio only) — audio is style-agnostic.
    - **Do NOT mix Ninja Adventure visuals in** (16px-muted vs CF 32px-bright = resolution +
      palette clash). Visuals stay 100% Cute Fantasy.
    - Licenses: record Cute Fantasy (Kenmi, purchased) + Ninja Adventure (audio) in

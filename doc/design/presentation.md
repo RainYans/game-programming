@@ -1,8 +1,8 @@
 # Design — Presentation
 
 > ⚠️ **Direction updated (2026-06-06) — see [direction.md](direction.md).** Now **top-down
-> pixel-art**, theme **"Monster Farm"**, art = the single **Ninja Adventure** pack.
-> "isometric / cartoon / AI-generated" wording below is superseded; **"zombie" = "monster"
+> pixel-art**, theme **"Monster Farm"**, art = the single **Cute Fantasy** pack.
+> the older "isometric / cartoon" wording below is superseded; **"zombie" = "monster"
 > (display only)**. Logic stays valid unless it conflicts with `direction.md`.
 
 The game is **casual** in feel; the presentation should match: approachable, readable,
@@ -10,7 +10,7 @@ pleasant — not grim survival-horror, and not AAA fidelity.
 
 ## Art Direction
 
-- **Style:** **16-bit pixel-art** from one cohesive pack (**Ninja Adventure**). Friendly,
+- **Style:** **16-bit pixel-art** from one cohesive pack (**Cute Fantasy**). Friendly,
   readable monster silhouettes so the six strains are distinguishable at a glance.
 - **View:** 2D **top-down (orthographic)** throughout; Y-sort via Transparency Sort Axis
   `(0, 1, 0)`. Pixel-art settings: **FilterMode = Point**, consistent PPU, **2D Pixel Perfect
@@ -20,13 +20,12 @@ pleasant — not grim survival-horror, and not AAA fidelity.
 
 ## Asset Pipeline
 
-> The concrete production plan — art-direction decision, full asset manifest, animation specs,
-> AI workflow, prompt library, and naming/integration conventions — lives in
-> [art-pipeline.md](art-pipeline.md). This section is the high-level direction only.
+> Art direction and the asset manifest are summarized in [direction.md](direction.md); this
+> section is the high-level direction only.
 
-- **Source:** a single cohesive pack — **Ninja Adventure** (16px top-down pixel: tiles,
-  characters, monsters, 20 bosses, FX, items, UI, audio). Engineering wires the pack's assets
-  into prefabs, tilemaps, and animations. (The earlier AI-generation + Kenney plan is dropped.)
+- **Source:** a single cohesive pack — **Cute Fantasy** (16px top-down pixel: tiles,
+  characters, monsters, FX, items, UI). Sprites are sliced and wired into prefabs, tilemaps,
+  and animations. (The earlier isometric plan is superseded.)
 - **Every scene needs art:** the farm base, building exteriors, the avatar, six zombie
   strains, wild-zombie enemies, combat items/effects, the city map, and combat
   stages/backgrounds. This is a large surface and a real schedule risk (see
