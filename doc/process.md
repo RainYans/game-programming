@@ -19,14 +19,14 @@ issue breakdown in [backlog.md](backlog.md).)
 
 ## Project Layout
 
-This is a monorepo of course projects; the game lives in **`ZombieFarm/`** (alongside the
+This is a monorepo of course projects; the game lives in **`MonsterFarm/`** (alongside the
 older `2D_Game_Improvement` and `SolarSystem`). Scripts are in
-`ZombieFarm/Assets/Scripts/`.
+`MonsterFarm/Assets/Scripts/`.
 
 ## Source Control
 
 - **Repo:** https://github.com/RainYans/game-programming (private).
-- **`.gitignore`:** Unity template (configured). Local Claude/MCP tooling and the local
+- **`.gitignore`:** Unity template (configured). Local dev tooling and the local
   `memory/` directory are ignored.
 - **Git LFS:** intentionally skipped — 2D art is small; not worth the overhead. Revisit
   only if binary assets ever grow large.
@@ -39,8 +39,8 @@ older `2D_Game_Improvement` and `SolarSystem`). Scripts are in
 ## Issue Tracking
 
 - **Board:** GitHub Project (Kanban). Columns and conventions in [backlog.md](backlog.md).
-- **`gh` CLI is not installed** here — issues, sub-issues, milestones, and the board are
-  managed in the **GitHub web UI**.
+- **`gh` CLI is installed and authenticated** — issues, sub-issues, milestones, and the board can
+  be managed from the CLI (or the GitHub web UI).
 - **Milestones:** the four weekly milestones in [roadmap.md](roadmap.md).
 
 ## Testing

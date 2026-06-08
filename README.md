@@ -1,60 +1,90 @@
-# Zombie Farm (working title)
+# Monster Farm
 
-Grow engineered zombies on a survivor base's farm, raise them to fighting strength, and
-lead a squad of them to retake cities overrun by wild zombies. A casual base-builder +
-squad-tactics game built in Unity (2022.3 LTS, URP 2D).
+A casual **top-down 2D pixel** game built in Unity (2022.3 LTS, URP 2D): grow and raise a stable
+of monsters on your farm, then **lead a squad of them into monster-infested villages and clear
+them in real-time action combat.** Two connected modes — a calm farm-management loop and an
+action-brawler raid — share one squad and one save.
 
-> **Status:** In active development. The foundation loop (isometric farm, camera, crop
-> growth, inventory, battle simulator, shop, save/load) is playable. Currently building out
-> the full design: a controllable avatar, six zombie strains with a hunger system, and a
-> dedicated stage-based combat mode. See [Roadmap](doc/roadmap.md) for the four-week plan.
+> **Status:** Playable vertical slice. The farm loop (move, plant, harvest, shop, inventory,
+> save/load) and the first raid (City1 — four linear combat rooms with a hero you control
+> directly) are implemented and play end-to-end. See [Evidence](doc/evidence.md) for what
+> changed and where to find it.
 
 ## How to Run
 
-Open the `ZombieFarm/` project in Unity 2022.3 LTS and press Play. (No packaged build is
-published yet; builds will be attached to Releases once available.)
+1. Open the **`MonsterFarm/`** project in **Unity 2022.3 LTS** (URP 2D, New Input System).
+2. Open `Assets/Scenes/Farm.unity` and press **Play**.
+3. Walk to the **War Camp** building and interact to deploy a squad into the raid (City1), or open
+   `Assets/Scenes/Battle.unity` directly to jump into combat with a test squad.
 
-## Controls
+Tuned for **1920×1080**. (No standalone build is attached yet — see the build-readiness notes in
+[Evidence](doc/evidence.md).)
 
+## How to Play
+
+**Goal.** On the farm, grow monsters and gear up your squad. In a raid, **lead your squad through
+four areas and clear every enemy to reclaim the village.** You lose if your hero falls or the
+whole squad is wiped.
+
+### Farm (Farm.unity)
 | Input | Action |
 |-------|--------|
-| **WASD** | Move the avatar (farm and combat) |
-| **E / interact key** | Plant, harvest, open buildings (when near) |
-| **Left click** | Select zombies (combat) / confirm in UI |
-| **Right click** | Command selected zombies to move or attack (combat) |
-| **Number keys** | Use a carried combat item (placed at the cursor) |
-| **Mouse drag** | Box-select zombies (combat) |
-| **Scroll wheel** | Zoom camera |
-| **ESC** | Pause |
+| **WASD** | Move your avatar |
+| **E** | Plant / harvest / interact with a building when standing next to it |
+| **Mouse** | Use the shop, seed picker, deploy screen, and other panels |
 
-> Controls are still being implemented and may change as combat lands.
+Buildings: **Shop** (buy monster seeds + combat items), **War Camp** (deploy a squad → raid),
+**Home** (save / rest), **Lab**.
+
+### Raid / Battle (action-brawler)
+| Input | Action |
+|-------|--------|
+| **WASD** | Move your hero (leader) |
+| **Left Shift** | Dash |
+| **Left click** | Hero melee swing toward the cursor (arc damage + knockback) |
+| **Right click** | Command the **whole squad** — focus the enemy under the cursor, or move there |
+| **1** | Rotten Onion — repel blast (click to aim/throw) |
+| **2** | Freeze Canister — freeze enemies (click to aim/throw) |
+| **Esc** | Pause |
+
+Your monster squad auto-follows the hero and auto-engages nearby enemies; you reposition with the
+hero, swing to fight alongside them, command the squad with right-click, and spend items when a
+fight gets tough. Clearing an area opens the gate to the next; clear the final Village Square to win.
+
+## Features
+
+- **Farm loop** — WASD avatar, plant/harvest on a tile grid with cell highlight, crop growth,
+  a monster **inventory**, a **shop** (seeds + items), and **versioned save/load**.
+- **Six monster strains** — Brute, Mauler, Runner, Shaman, Spitter, Bomber — each with distinct
+  stats and a unique passive (thick hide, bloodlust, evasion, corrosion, healing aura, self-detonate)
+  plus a **hunger system** that trades attack power for vulnerability.
+- **Action-brawler raid** — a directly-controlled hero with a melee swing + dash, an auto-fighting
+  squad, throwable items, a four-room **linear level** (City1) with area-gated progression, a
+  **minimap**, and a win/lose result screen.
+- **Cohesive pixel art** — Cute Fantasy tileset with Y-sorted decor, animated monsters and water,
+  and a parchment/pixel UI.
 
 ## Documentation
 
-The design and plan live under [`doc/`](doc/):
+Design, process, and submission evidence live under [`doc/`](doc/):
 
-- **[Vision](doc/vision.md)** — premise, pillars, core loop, MVP gate
-- **[Design Bible](doc/design/)** — one document per system:
-  - [Farm & Avatar](doc/design/farm.md)
-  - [Zombies](doc/design/zombies.md)
-  - [Economy & Buildings](doc/design/economy.md)
-  - [Combat](doc/design/combat.md)
-  - [Progression](doc/design/progression.md)
-  - [Presentation](doc/design/presentation.md)
-- **[Roadmap](doc/roadmap.md)** — four-week milestone plan, scope tiers (P0/P1/P2)
-- **[Backlog](doc/backlog.md)** — epic → story → sub-issue breakdown for the Kanban board
-- **[Next Action](doc/next-action.md)** — what's being worked on right now
-- **[Process](doc/process.md)** — Git workflow and Unity technical setup
-- **[Asset Credits](doc/asset-credits.md)** — sources and licenses
-- **[Peer Feedback](doc/peer-feedback.md)** — feedback received and responses
-- **[Testing](doc/testing/)** — testing logs
+- **[Reference & Creative Contribution](doc/reference-and-contribution.md)** — what inspired the
+  game, the reference→transformation table, and what is my own
+- **[Evidence index](doc/evidence.md)** — what changed since Session 1, mapped to scenes/scripts/commits
+- **[Peer Feedback](doc/peer-feedback.md)** — feedback received and what I changed in response
+- **[Asset Credits](doc/asset-credits.md)** — art/audio sources and licenses
+- **[Vision](doc/vision.md)** · **[Design Bible](doc/design/)** · **[Roadmap](doc/roadmap.md)** ·
+  **[Testing](doc/testing/)**
 
-## Biggest Risk
+## My Contribution (solo)
 
-Scope. This is a multi-system game built solo in four weeks. Mitigation: a clearly defined
-MVP gate (see [Vision](doc/vision.md)) that stays shippable even if later scope slips, and a
-roadmap split into must-ship (P0), target (P1), and stretch (P2) tiers.
+This is a solo project: I made the **design decisions** (concept, the farm + raid loop, the six
+strains and their passives), wrote and modified the **gameplay scripts** and Unity systems, built
+the **scenes** (farm + the four-room battle level), implemented **player interaction** (planting,
+the action-brawler controls, squad command), the **UI/feedback** (HUD, panels, result screen), and
+did the **testing and post-feedback improvements** (see [Evidence](doc/evidence.md) and
+[Peer Feedback](doc/peer-feedback.md)). External art is credited in [Asset Credits](doc/asset-credits.md).
 
 ## Unity Version
 
-Unity 2022.3 LTS, URP 2D Renderer, New Input System.
+Unity **2022.3 LTS**, URP 2D Renderer, New Input System.
