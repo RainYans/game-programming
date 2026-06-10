@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public enum PageType { None, Shop }
@@ -47,8 +48,18 @@ public class UIManager : MonoBehaviour
         {
             case BuildingType.Shop: OpenShop(); break;
             case BuildingType.WarCamp:
-                if (cityMapPanel != null) cityMapPanel.Open();    // pick a city → deploy → battle scene
-                else if (deployPanel != null) deployPanel.Open(); // fallback: straight to deploy
+                if (!TutorialState.BattleTutorialDone)
+                {
+                    // The first-ever expedition routes into the dedicated combat tutorial scene
+                    // (fixed starter squad, no deploy step). Clearing it marks the tutorial done so
+                    // every later raid goes through the normal city map → deploy → battle flow.
+                    BattleHandoff.ClearDeployment();
+                    BattleHandoff.ClearResult();
+                    TutorialState.FarmOnboardDone = true; // reaching the raid finishes farm onboarding
+                    SceneManager.LoadScene(TutorialState.TutorialSceneName);
+                }
+                else if (cityMapPanel != null) cityMapPanel.Open();    // pick a city → deploy → battle
+                else if (deployPanel != null) deployPanel.Open();      // fallback: straight to deploy
                 break;
             case BuildingType.Lab: OpenLab(); break;
             case BuildingType.Home: OpenHome(); break;

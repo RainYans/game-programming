@@ -24,6 +24,17 @@ public class SaveManager : MonoBehaviour
 
     private string SavePath => Path.Combine(Application.persistentDataPath, fileName);
 
+    /// Default save location, usable from scenes that have no SaveManager instance (e.g. the main
+    /// menu deciding whether "Continue" is available, or "New Game" wiping the slot).
+    public const string DefaultFileName = "save.json";
+    public static string DefaultSavePath => Path.Combine(Application.persistentDataPath, DefaultFileName);
+    public static bool HasSave() => File.Exists(DefaultSavePath);
+    public static void DeleteSave()
+    {
+        try { if (File.Exists(DefaultSavePath)) File.Delete(DefaultSavePath); }
+        catch (Exception ex) { Debug.LogWarning($"Could not delete save: {ex.Message}"); }
+    }
+
     private void Awake()
     {
         if (wallet == null) wallet = FindFirstObjectByType<Wallet>();

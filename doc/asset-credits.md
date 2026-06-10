@@ -23,8 +23,9 @@ species. No raw asset files are redistributed outside the built game.
 
 | Asset | Source | License | Notes |
 |-------|--------|---------|-------|
-| CuteFantasyPixel (TMP SDF) | Generated from the Cute Fantasy UI pixel font (Kenmi) | Cute Fantasy asset license | Bitmap pixel font converted to a TTF and a TextMeshPro **SDF** font asset for crisp UI text *(confirm exact font source on the Cute Fantasy page)* |
-| TextMesh Pro default | Unity built-in | Unity Companion License | Fallback |
+| **Pixel Operator** | Jayvee Enaguas (HarvettFox96) — https://www.dafont.com/pixel-operator.font | **CC0 1.0** (public domain) | Main UI font (HUD, shop, tutorial, menus, dialogue). Rendered as a TextMesh Pro SDF asset; the asset file is still named `CuteFantasyPixel.asset` (regenerated in place from the TTF so existing references keep working) |
+| **Alagard** | Pix3M / Hewett Tsoi — https://www.dafont.com/alagard.font (also on OpenGameArt) | Free for personal & commercial use, **credit the author** (distributed as CC-BY on OpenGameArt) | Fantasy display font for titles + the storybook intro narration (`Alagard.asset`) |
+| TextMesh Pro default (LiberationSans) | Unity built-in | Unity Companion License | TMP fallback glyphs |
 
 ## Audio
 

@@ -45,8 +45,8 @@ older `2D_Game_Improvement` and `SolarSystem`). Scripts are in
 
 ## Testing
 
-- Manual in-editor verification is the baseline; the deterministic `BattleSimulator` can be
-  unit-tested.
+- Manual in-editor verification is the baseline; combat balance is tuned and checked through
+  in-editor playtests (see [`testing/`](testing/)).
 - Keep a short **testing log per milestone** under [`testing/`](testing/) (what was tested,
   what failed, what changed). `week-1.md` is the existing example.
 

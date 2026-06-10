@@ -15,6 +15,7 @@ public class BattleManager : MonoBehaviour
     [Header("Scene refs")]
     [SerializeField] private Transform leader;
     [SerializeField] private GameObject resultPanel; // win/lose card (shown on End)
+    [SerializeField] private TMP_Text resultHeadline; // big VICTORY / DEFEAT line (optional)
     [SerializeField] private TMP_Text resultLabel;
     [SerializeField] private GameObject returnButton;
     [SerializeField] private string farmSceneName = "Farm";
@@ -22,6 +23,10 @@ public class BattleManager : MonoBehaviour
     [Tooltip("Optional fallback for combat tuning when played directly (no deployment). " +
              "In the real flow the deploy screen carries the GameConfig via BattleHandoff.")]
     [SerializeField] private GameConfig config;
+
+    [Tooltip("Training-tutorial sandbox: skip auto squad/stage/area spawning and win-loss checks — " +
+             "a CombatTutorialController spawns units on demand and drives completion.")]
+    [SerializeField] private bool sandboxMode;
 
     [Header("Rooms (one per stage)")]
     [Tooltip("One Room per mission stage. Room 0 hosts the squad and stage 0's enemies. " +
@@ -95,6 +100,8 @@ public class BattleManager : MonoBehaviour
             leaderUnit = leader.GetComponent<LeaderCombatant>();
             if (leaderUnit != null) leaderUnit.Bind(this);
         }
+
+        if (sandboxMode) return; // a CombatTutorialController spawns units + drives completion
 
         if (AreaMode)
         {
@@ -202,6 +209,33 @@ public class BattleManager : MonoBehaviour
         (team == Team.Player ? players : enemies).Add(agent);
     }
 
+    /// Spawn a single unit at a world point (used by the training tutorial to stage one mechanic at
+    /// a time). `dummy` makes an enemy stand still and never fight back — a safe practice target.
+    public BattleAgent SpawnUnit(ZombieData data, Team team, Vector3 pos, bool dummy = false)
+    {
+        if (data == null) return null;
+        var go = new GameObject($"Agent_{team}_{data.id}");
+        go.transform.position = pos;
+        go.transform.localScale = Vector3.one * agentScale;
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = agentSprite != null ? agentSprite : GeneratedSquare();
+        sr.sortingOrder = sortingOrder;
+        var agent = go.AddComponent<BattleAgent>();
+        agent.Init(this, data, team, leader, string.Empty);
+        if (dummy) agent.SetDummy(true);
+        (team == Team.Player ? players : enemies).Add(agent);
+        return agent;
+    }
+
+    /// Remove every living unit on a side (training tutorial: clear the allies before the item demo).
+    public void ClearTeam(Team team)
+    {
+        var list = team == Team.Player ? players : enemies;
+        for (int i = list.Count - 1; i >= 0; i--)
+            if (list[i] != null) Destroy(list[i].gameObject);
+        list.Clear();
+    }
+
     /// Nearest living opponent of `asker` within `range`, or null.
     public BattleAgent NearestEnemyOf(BattleAgent asker, float range)
     {
@@ -236,7 +270,7 @@ public class BattleManager : MonoBehaviour
 
     private void CheckProgress()
     {
-        if (ended) return;
+        if (ended || sandboxMode) return;
         if (AliveCount(players) == 0) { End(false); return; }
         if (!AreaMode && AliveCount(enemies) == 0) StageCleared();
     }
@@ -260,14 +294,20 @@ public class BattleManager : MonoBehaviour
         int reward = won && activeMission != null ? activeMission.rewardAmount : 0;
         BattleHandoff.SetResult(won, reward, new List<string>(casualties));
 
-        string msg = won
-            ? $"City reclaimed!  +{reward} resources" + CasualtyNote()
-            : "Defeat — squad wiped.";
-        if (resultLabel != null) resultLabel.text = msg;
+        if (resultHeadline != null)
+        {
+            resultHeadline.text = won ? "VICTORY" : "DEFEAT";
+            resultHeadline.color = won ? new Color(0.20f, 0.52f, 0.24f) : new Color(0.70f, 0.21f, 0.18f);
+        }
+        // The headline carries the win/lose verdict; the body holds the reward + casualty detail.
+        string body = won
+            ? $"City reclaimed!\n+{reward} resources" + CasualtyNote()
+            : "Your squad was wiped out.\nRegroup and try again.";
+        if (resultLabel != null) resultLabel.text = body;
         if (resultPanel != null) resultPanel.SetActive(true);
         if (returnButton != null) returnButton.SetActive(true);
         SfxManager.Play(won ? SfxKind.Win : SfxKind.Lose);
-        Debug.Log($"[BattleManager] {msg}");
+        Debug.Log($"[BattleManager] {(won ? "VICTORY" : "DEFEAT")} — {body}");
     }
 
     private string CasualtyNote() => casualties.Count > 0 ? $"  (lost {casualties.Count})" : string.Empty;

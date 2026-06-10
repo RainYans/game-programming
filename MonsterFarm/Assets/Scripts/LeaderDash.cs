@@ -16,6 +16,9 @@ public class LeaderDash : MonoBehaviour
     private float dashTimer;
     private float cooldownTimer;
 
+    /// Number of dashes performed. Read by the combat tutorial to advance the "Shift to dash" step.
+    public int DashCount { get; private set; }
+
     private void Awake() => controller = GetComponent<AvatarController>();
 
     private void Update()
@@ -36,6 +39,7 @@ public class LeaderDash : MonoBehaviour
             dashTimer = dashDuration;
             cooldownTimer = dashCooldown;
             controller.SpeedMultiplier = dashMultiplier;
+            DashCount++;
             SfxManager.Play(SfxKind.Dash);
         }
     }

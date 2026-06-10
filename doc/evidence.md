@@ -41,17 +41,19 @@
 - **Must-have (built first, done):** WASD avatar; plant/harvest; monster inventory; deploy → raid;
   squad + hero real-time combat; area clear → gate → win/lose; save/load; clear controls + goal.
 - **Should-have (done):** six strains with passives; hunger system; shop (seeds + items); themed
-  four-room level; HUD + minimap + result screen; cohesive art + animation.
-- **Could-have (only if the core holds):** more cities (City2+), a boss, audio polish, a tutorial
-  room, a standalone build.
+  four-room level; HUD + minimap + result screen; cohesive art + animation; first-launch onboarding
+  + a dedicated combat tutorial scene.
+- **Could-have (only if the core holds):** more cities (City2+), a boss, audio polish, a standalone
+  build.
 - **Cut first (dropped/deferred to protect the slice):** isometric view (cut), RTS micro (cut),
   open-world farm/seasons (cut), boss + packaged build (deferred this pass).
 
 ## One concrete next action
 
-**Add a short tutorial first room (or first-area prompt) that teaches the core mechanic**
-(move → swing → command → clear), since a strong first level should teach the mechanic
-(per peer feedback). Runner-up next actions: produce a Windows build; add City2.
+**Produce a packaged Windows build** (add the scenes to Build Settings in order, build, and
+smoke-test the full loop from a fresh save). The in-game tutorial earlier peer feedback asked for is
+now **done** (`Tutorial.unity` + `FarmTutorialController` / `CombatTutorialController`). Runner-up
+next actions: a `GameConfig` balancing pass; add City2 from the City-1 template.
 
 ## Build readiness checklist (build deferred this pass)
 

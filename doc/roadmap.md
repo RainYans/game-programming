@@ -20,6 +20,11 @@ tested. Do not start P2 at all until the P0 MVP gate is met end-to-end.
 
 These are implemented and merged, and the four-week plan builds on them:
 
+> **Pivot note:** this lists the foundation as it stood at the *start* of the four-week plan. Two
+> pieces were later replaced — the **isometric** view → **top-down** (see [vision.md](vision.md)),
+> and the prototype **`BattleSimulator` / `BattlePlayer`** → the real-time
+> **`BattleManager` / `BattleAgent`** combat. The rest still stand.
+
 - Isometric tilemap + `GridManager`; `CameraController` (pan/zoom); tile interaction.
 - `CropData` / `CropInstance` real-time growth; `FarmActions` (input-agnostic); `Inventory`.
 - `BattleSimulator` (deterministic) + `BattlePlayer` (replay) — prototype combat.

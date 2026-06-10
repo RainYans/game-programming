@@ -10,13 +10,13 @@ The farm is the home base and the hub of the game. The player controls an avatar
 
 ## Camera & View
 
-- **Isometric** 2D view (unchanged from the foundation). URP 2D, Transparency Sort Mode =
-  Custom Axis `(0, 1, 0)` so taller objects sort correctly.
+- **Top-down** 2D view (pivoted from the original isometric foundation). URP 2D, Transparency
+  Sort Mode = Custom Axis `(0, 1, 0)` so taller objects sort correctly.
 - Camera follows the avatar; scroll wheel zooms within clamped bounds.
 
 ## Avatar
 
-- **Movement:** WASD, in isometric space. The camera follows.
+- **Movement:** WASD, in top-down space. The camera follows.
 - **Interaction:** the avatar must be **near** a target to act on it. A context interact
   key (E) triggers the relevant action — plant/harvest a plot, open a building.
 - **Why an avatar:** it turns the farm from a menu into a place and makes positioning part

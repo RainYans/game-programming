@@ -65,6 +65,14 @@ public class BattleCommandController : MonoBehaviour
     public int OnionsLeft => onionsAvailable;
     public int FreezesLeft => freezesAvailable;
 
+    /// How many times the player has issued a whole-squad right-click order. Read by the tutorial
+    /// to advance the "right-click to command your squad" step.
+    public int CommandCount { get; private set; }
+
+    /// How many thrown items actually landed on at least one enemy. The tutorial requires a HIT
+    /// (not just a throw) to clear the item step.
+    public int ItemsHitCount { get; private set; }
+
     private readonly List<HudEntry> squadHud = new List<HudEntry>();
     private bool squadHudBuilt;
 
@@ -213,12 +221,15 @@ public class BattleCommandController : MonoBehaviour
     {
         if (manager == null) return;
         BattleAgent enemyAtClick = NearestAgentIn(manager.Enemies, worldPos, clickAgentRadius * 1.6f);
+        bool issued = false;
         foreach (BattleAgent p in manager.Players)
         {
             if (p == null || !p.IsAlive) continue;
             if (enemyAtClick != null) p.SetCommandTarget(enemyAtClick);
             else p.SetMoveCommand(worldPos);
+            issued = true;
         }
+        if (issued) CommandCount++;
     }
 
     private static BattleAgent NearestAgentIn(IReadOnlyList<BattleAgent> list, Vector3 worldPos, float radius)
@@ -288,12 +299,14 @@ public class BattleCommandController : MonoBehaviour
                 if (onionsAvailable <= 0) return;
                 onionsAvailable--;
                 BattleHandoff.OnionsUsed++; // consumed on return (BattleResultApplier removes it)
+                int onionHits = 0;
                 foreach (BattleAgent e in manager.Enemies)
                 {
                     if (e == null || !e.IsAlive) continue;
                     if (((Vector2)(e.transform.position - worldPos)).sqrMagnitude <= onionRadius * onionRadius)
-                        e.Repel(worldPos, onionRepelDistance, onionRepelDuration);
+                        { e.Repel(worldPos, onionRepelDistance, onionRepelDuration); onionHits++; }
                 }
+                if (onionHits > 0) ItemsHitCount++;
                 StartCoroutine(BlastEffect(worldPos, onionRadius, OnionBlastColor));
                 UpdateOnionLabel();
                 if (onionsAvailable <= 0) SetItem(Item.None);
@@ -303,12 +316,14 @@ public class BattleCommandController : MonoBehaviour
                 if (freezesAvailable <= 0) return;
                 freezesAvailable--;
                 BattleHandoff.FreezesUsed++; // consumed on return (BattleResultApplier removes it)
+                int freezeHits = 0;
                 foreach (BattleAgent e in manager.Enemies)
                 {
                     if (e == null || !e.IsAlive) continue;
                     if (((Vector2)(e.transform.position - worldPos)).sqrMagnitude <= freezeRadius * freezeRadius)
-                        e.Freeze(freezeDuration);
+                        { e.Freeze(freezeDuration); freezeHits++; }
                 }
+                if (freezeHits > 0) ItemsHitCount++;
                 StartCoroutine(BlastEffect(worldPos, freezeRadius, FreezeBlastColor));
                 UpdateFreezeLabel();
                 if (freezesAvailable <= 0) SetItem(Item.None);

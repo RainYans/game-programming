@@ -34,6 +34,10 @@ public class LeaderCombat : MonoBehaviour
     private bool swinging;
     private static Sprite slashSprite;
 
+    /// Number of swings that actually connected with an enemy. Read by the tutorial to advance the
+    /// "left-click to attack" step only once the player has truly landed a hit.
+    public int SwingHitCount { get; private set; }
+
     private void Awake()
     {
         manager = FindFirstObjectByType<BattleManager>();
@@ -106,6 +110,7 @@ public class LeaderCombat : MonoBehaviour
             e.Repel(transform.position, knockback, 0.18f);
             hitAny = true;
         }
+        if (hitAny) SwingHitCount++;
 
         SpawnSlash(dir);
         if (hitAny) SfxManager.Play(SfxKind.Hit);

@@ -48,6 +48,7 @@ public class BattleAgent : MonoBehaviour
 
     private BattleAgent commandedTarget;
     private Vector3? commandedMove;
+    private bool dummy; // training target: stands still, never attacks
 
     private Vector3 fleeTarget;
     private float fleeTimer;
@@ -156,6 +157,10 @@ public class BattleAgent : MonoBehaviour
         if (selectionRing != null) selectionRing.enabled = s && IsAlive;
     }
 
+    /// Training dummy: the agent stands still and never attacks, but still takes damage and reacts
+    /// to Freeze / Rotten Onion. Used by the combat tutorial as a safe practice target.
+    public void SetDummy(bool d) => dummy = d;
+
     public void SetCommandTarget(BattleAgent target)
     {
         if (Team != Team.Player) return;
@@ -236,6 +241,10 @@ public class BattleAgent : MonoBehaviour
             transform.position += (Vector3)(lungeDir * sign * (LungeSpeed * Time.deltaTime));
             return;
         }
+
+        // Training dummy: never engages, moves, or attacks — just stands and takes hits. (Frozen,
+        // flee/knockback, and lunge above still run so item effects read clearly.)
+        if (dummy) return;
 
         // Shaman aura tick (passive — runs whether engaged or not).
         if (passive == Passive.Aura) TickAura();
