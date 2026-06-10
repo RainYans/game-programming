@@ -48,10 +48,32 @@ fiddly select-then-command micro from the early combat.
 raid using one shared squad and save** — you grow the exact monsters you then fight beside, and you
 are an active fighter, not a spectator of an auto-battle.
 
-**What is my own creative contribution?** All design (concept, loops, strains/passives, hunger,
-combat feel, level layout), all the scripts/systems, the scene construction, and the iteration
-driven by testing and feedback. The art is the only external part, and it is credited.
+**What is my own creative contribution?** The **design and direction** are entirely mine — the
+concept, the core loops, the six strains and their passives, the hunger and permadeath systems, the
+combat feel, and the level layout — as is all the **Unity construction** (scene building, tilemaps,
+level layout, UI) and the **integration, debugging, and iteration** driven by playtesting and
+feedback. For the **scripting**, I worked with an AI coding assistant: I decided what each system
+needed and how it should be structured, directed the implementation, then reviewed, modified, and
+wired the code into the project — and I understand it well enough to explain and extend any of it.
+The **art** is the only fully external creative asset (Cute Fantasy pack, licensed and credited).
 
 **Where is the evidence?** Scenes (`Farm.unity`, `Battle.unity`), the scripts in
 the project report, the GitHub commit history and the change log in
 [evidence.md](evidence.md).
+
+## Use of AI
+
+I'm open about how the project was built. The division of work:
+
+- **Mine (design + build + judgement):** every design and architecture decision — which systems to
+  build, how they fit together, the data model (ScriptableObjects for strains/crops/missions, a
+  single `GameConfig`), the cross-scene data flow, and the combat/economy tuning. All the Unity
+  work — scene and level construction, tilemaps, UI layout, and wiring every component — plus the
+  testing-and-iteration loop driven by playtesting and peer feedback.
+- **AI-assisted (implementation):** I used an AI coding assistant to help turn those decisions into
+  C#. I directed what to write, then reviewed, modified, debugged, and integrated the result. I can
+  open any script and explain what each part does and why it's structured that way.
+
+In short, the AI accelerated *writing the code*; the *design, structure, decisions, Unity build, and
+the finished game* are mine. The only external creative asset is the Cute Fantasy art, credited in
+[asset-credits.md](asset-credits.md).
