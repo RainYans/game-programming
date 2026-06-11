@@ -23,12 +23,12 @@ set covers six tactical roles:
 
 | # | Strain (working name) | Role | HP | Attack | Speed | Range | Passive |
 |---|------------------------|------|----|--------|-------|-------|---------|
-| 1 | **Brute** (壮尸) | Tank / front line | High | Low | Slow | Melee | **Thick Hide** — flat damage reduction taken |
-| 2 | **Mauler** (猛尸) | Main damage | Med | High | Med | Melee | **Bloodlust** — consecutive hits on the same target ramp damage |
-| 3 | **Runner** (疾尸) | Skirmisher | Low | Med | Fast | Melee | **Evasion / first strike** — high dodge or strikes first on engage |
-| 4 | **Spitter** (吐尸) | Ranged attrition | Low | Med | Med | Ranged | **Corrosion** — hits have a chance to lower the target's defense |
-| 5 | **Shaman** (巫尸) | Support | Low | Low | Med | — | **Aura** — slowly heals / buffs nearby allied zombies |
-| 6 | **Bomber** (爆尸) | Burst / trade | Med | Med | Med | Melee | **Self-Detonate** — explodes for area damage on death |
+| 1 | **Brute** | Tank / front line | High | Low | Slow | Melee | **Thick Hide** — flat damage reduction taken |
+| 2 | **Mauler** | Main damage | Med | High | Med | Melee | **Bloodlust** — consecutive hits on the same target ramp damage |
+| 3 | **Runner** | Skirmisher | Low | Med | Fast | Melee | **Evasion / first strike** — high dodge or strikes first on engage |
+| 4 | **Spitter** | Ranged attrition | Low | Med | Med | Ranged | **Corrosion** — hits have a chance to lower the target's defense |
+| 5 | **Shaman** | Support | Low | Low | Med | — | **Aura** — slowly heals / buffs nearby allied zombies |
+| 6 | **Bomber** | Burst / trade | Med | Med | Med | Melee | **Self-Detonate** — explodes for area damage on death |
 
 ### Starting vs. Unlockable
 

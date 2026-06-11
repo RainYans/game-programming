@@ -27,7 +27,7 @@
 | Report explains decisions | the project report |
 | Credits included | [asset-credits.md](asset-credits.md) |
 | Contribution is clear | the project report, [reference-and-contribution.md](reference-and-contribution.md) |
-| Unity scene | `Farm.unity`, `Battle.unity` (four hand-built rooms) |
+| Unity scene | `Farm.unity`, `Battle.unity` (four distinct rooms, built with my editor tools + manual layout) |
 | Playable feature | action-brawler raid (`LeaderCombat` + `BattleManager` area mode) |
 | Script / system | scripts table in the project report |
 | Level-design change | `Battle.unity` four-room rebuild |

@@ -22,13 +22,27 @@ Thumbs.db
 # Unity asset meta files (keep these)
 # *.meta — do NOT ignore, Unity needs them
 
-# Claude Code local memory (not part of the project)
+# Local-only files (not part of the game)
 memory/
-
-# Claude Code / MCP local tooling (not part of the game)
 .claude/
 .mcp.json
 **/Plugins/NuGet/
-
-# Dev/MCP tooling: build scripts, screenshots, font backups, previews (not part of the game)
+**/Plugins/NuGet.meta
 tools/
+
+# ── Cute Fantasy art (Kenmi) — licensed; redistribution forbidden, kept LOCAL only ──
+# The license bars hosting the asset files anywhere downloadable, incl. a public repo
+# (see doc/asset-credits.md). Import from https://kenmi-art.itch.io/cute-fantasy-rpg
+# into Assets/Art/CuteFantasy/ to build from source.
+MonsterFarm/Assets/Art/CuteFantasy/Packs/
+MonsterFarm/Assets/Art/CuteFantasy/**/*.png
+MonsterFarm/Assets/Resources/MonsterAnim/*.png
+MonsterFarm/Assets/Resources/Monsters/*.png
+MonsterFarm/Assets/Art/MonsterIcons/*.png
+MonsterFarm/Assets/Art/UIIcons/*.png
+MonsterFarm/Assets/Art/Menu/*.png
+MonsterFarm/Assets/Tiles/CobbleSrc.png
+MonsterFarm/Assets/Tiles/HedgeWall.png
+MonsterFarm/Assets/Tiles/PavementSrc.png
+MonsterFarm/Assets/Tiles/WaterSrc.png
+MonsterFarm/Assets/Art/BattleDecor/*.png

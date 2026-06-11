@@ -24,20 +24,20 @@ The Shop sells two things:
 ### 2. Combat Items
 
 Items are **field-control tools**, not raw damage — consistent with the combat pillar
-(see [combat.md](combat.md)). Three for v1:
+(see [combat.md](combat.md)). Two shipped for v1 (Barbed Wire is designed but deferred to P1):
 
 | Item | Type | Effect |
 |------|------|--------|
-| **Rotten Onion** (洋葱) | Thrown, area | The stench **repels / drives wild zombies away** from the target area — clears space, breaks a push. |
-| **Freeze Canister** (冷冻罐) | Thrown, area | **Freezes** wild zombies in the area for a short time (and may increase damage taken). |
-| **Barbed Wire** (铁丝网) | Deployed, placed | **Slows** wild zombies crossing it; used to reroute the horde into a kill zone. |
+| **Rotten Onion** | Thrown, area | The stench **repels / drives wild zombies away** from the target area — clears space, breaks a push. |
+| **Freeze Canister** | Thrown, area | **Freezes** wild zombies in the area for a short time (and may increase damage taken). |
+| **Barbed Wire** *(P1 — not in this build)* | Deployed, placed | **Slows** wild zombies crossing it; used to reroute the horde into a kill zone. |
 
 - Items are **placed at a target area** in combat — they do **not** require selecting
   zombies first.
 - Two more consumables come from the farming/hunger theme and exist in the design but are
   lower priority:
-  - **Fertilizer** (肥料) — speeds up crop growth (used on the farm, not in combat).
-  - **Hunger Tonic** (饥饿药剂) — re-applies the Hungry (strong) state to your squad mid-
+  - **Fertilizer** — speeds up crop growth (used on the farm, not in combat).
+  - **Hunger Tonic** — re-applies the Hungry (strong) state to your squad mid-
     battle.
 
 > **Stretch item pool (P2, not built for v1):** UV lamp, noise maker, pheromone spray,

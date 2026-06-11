@@ -4,8 +4,8 @@ How work is broken down for the GitHub Project (Kanban) board, and the current b
 breakdown follows standard Agile sizing: a **Story** is a vertical slice (≈1–3 days) that
 delivers observable value; sub-issues are the technical tasks inside a story.
 
-> `gh` CLI is not installed on this machine — issues, sub-issues, and the board are managed
-> in the **GitHub web UI**. This file is the source list to populate it from.
+> Issues, sub-issues, and the board are managed in the **GitHub web UI** (Issues + Projects).
+> This file is the source list to populate it from.
 
 ## Hierarchy → GitHub mapping
 

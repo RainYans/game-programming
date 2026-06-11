@@ -25,7 +25,7 @@ older `2D_Game_Improvement` and `SolarSystem`). Scripts are in
 
 ## Source Control
 
-- **Repo:** https://github.com/RainYans/game-programming (private).
+- **Repo:** https://github.com/RainYans/game-programming
 - **`.gitignore`:** Unity template (configured). Local dev tooling and the local
   `memory/` directory are ignored.
 - **Git LFS:** intentionally skipped — 2D art is small; not worth the overhead. Revisit
@@ -39,8 +39,8 @@ older `2D_Game_Improvement` and `SolarSystem`). Scripts are in
 ## Issue Tracking
 
 - **Board:** GitHub Project (Kanban). Columns and conventions in [backlog.md](backlog.md).
-- **`gh` CLI is installed and authenticated** — issues, sub-issues, milestones, and the board can
-  be managed from the CLI (or the GitHub web UI).
+- **Issues, sub-issues, milestones, and the board** are managed through the GitHub web UI
+  (Issues + Projects).
 - **Milestones:** the four weekly milestones in [roadmap.md](roadmap.md).
 
 ## Testing
@@ -53,27 +53,21 @@ older `2D_Game_Improvement` and `SolarSystem`). Scripts are in
 ## Day-to-day Kanban moves
 
 Keep [Project #1](https://github.com/users/RainYans/projects/1) in sync as work happens.
-The columns are `Backlog → Ready → In progress → In review → Done`. The helpers live in
-[`tools/board/`](../tools/board/).
+The columns are `Backlog → Ready → In progress → In review → Done`.
 
-| When | Command |
+| When | Move on the board |
 |---|---|
-| Starting a Story | `bash tools/board/board.sh move <issue#> in-progress` |
-| Pausing / blocked | `bash tools/board/board.sh move <issue#> backlog` |
-| PR opened, waiting on review | `bash tools/board/board.sh move <issue#> in-review` |
-| Finished + merged | `gh issue close <issue#> -c "shipped in <commit>"` &nbsp;*(the "Item closed → Done" workflow moves the card)* |
-| Spawn a Task under a Story | `gh issue create --title "Task — XXX" --label Task,system/X --body "..."` then `bash tools/board/board.sh link <story#> <task#>` |
-| Brand-new Story | `gh issue create --title "Story — XXX" --label Story,P0,system/X --milestone "M4 — Progression & Polish"` &nbsp;*(auto-add workflow lands it in Backlog; sub-link it to its Epic if applicable)* |
-
-Project ID and Status-field option IDs are hardcoded in
-[`tools/board/board.sh`](../tools/board/board.sh) and
-[`tools/board/set-status.sh`](../tools/board/set-status.sh) — refer there if a deeper
-GraphQL call is needed.
+| Starting a Story | Drag the card from **Ready** to **In progress** |
+| Pausing / blocked | Drag the card back to **Backlog** |
+| PR opened / self-review | Drag the card to **In review** |
+| Finished + merged | Close the issue — the "Item closed → Done" automation moves the card to **Done** |
+| Spawn a Task under a Story | Open a new **Task** issue (`Task` + `system/X`) and link it as a sub-issue of the Story |
+| Brand-new Story | Open a new **Story** issue (`Story`, `P0/P1`, `system/X`, milestone); the auto-add workflow lands it in **Backlog** |
 
 ## Definition of Done — Per-Chunk Tiers
 
-Before writing code for any new chunk, acceptance criteria are declared in three tiers and
-the user picks which to ship. This is the planning vocabulary; it sits *underneath* the
+Before writing code for any new chunk, I declare acceptance criteria in three tiers and decide
+which to ship. This is the planning vocabulary; it sits *underneath* the
 issue-closing DoD in [backlog.md](backlog.md).
 
 - **M (minimum):** mechanic fires, no errors, the loop closes; placeholder numbers /
@@ -82,9 +76,8 @@ issue-closing DoD in [backlog.md](backlog.md).
   art is acceptable.
 - **P (polish):** edge cases handled, transitions in place, demoable.
 
-State the chunk's **M / T / P** explicitly **before** writing code, get an explicit pick
-from the user, and ship at that tier. This avoids the recurring "I called it done, the user
-feels it isn't" mismatch.
+I state the chunk's **M / T / P** explicitly **before** writing code and ship at that tier, so
+"done" means a tier I picked up front rather than a moving target.
 
 ## Releases
 

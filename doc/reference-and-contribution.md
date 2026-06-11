@@ -55,7 +55,9 @@ level layout, UI) and the **integration, debugging, and iteration** driven by pl
 feedback. For the **scripting**, I worked with an AI coding assistant: I decided what each system
 needed and how it should be structured, directed the implementation, then reviewed, modified, and
 wired the code into the project — and I understand it well enough to explain and extend any of it.
-The **art** is the only fully external creative asset (Cute Fantasy pack, licensed and credited).
+The **external creative assets** are the Cute Fantasy art (Kenmi), the UI/title fonts (Pixel
+Operator, Alagard), and the SFX (Ninja Adventure) — all licensed and credited in
+[asset-credits.md](asset-credits.md); everything else is my own.
 
 **Where is the evidence?** Scenes (`Farm.unity`, `Battle.unity`), the scripts in
 the project report, the GitHub commit history and the change log in
@@ -68,12 +70,20 @@ I'm open about how the project was built. The division of work:
 - **Mine (design + build + judgement):** every design and architecture decision — which systems to
   build, how they fit together, the data model (ScriptableObjects for strains/crops/missions, a
   single `GameConfig`), the cross-scene data flow, and the combat/economy tuning. All the Unity
-  work — scene and level construction, tilemaps, UI layout, and wiring every component — plus the
-  testing-and-iteration loop driven by playtesting and peer feedback.
+  work — scene and level construction, tilemaps, UI layout, and component wiring (much of it via my
+  own `Assets/Editor/*Setup.cs` tools — see the note below) — plus the testing-and-iteration loop
+  driven by playtesting and peer feedback.
 - **AI-assisted (implementation):** I used an AI coding assistant to help turn those decisions into
   C#. I directed what to write, then reviewed, modified, debugged, and integrated the result. I can
   open any script and explain what each part does and why it's structured that way.
 
+**On the Unity scenes:** the `Assets/Editor/*Setup.cs` files are my own editor tools (AI-assisted to
+write, like the rest of the C#). Early in development they scaffolded scenes with **placeholders to
+validate that the game loop was feasible**; the scenes in the final build were then constructed with
+those tools, plus manual layout and tuning. So scene construction is **tool-assisted but
+design-directed**, not hand-placed object by object — the tools, the layout, and the result are mine.
+
 In short, the AI accelerated *writing the code*; the *design, structure, decisions, Unity build, and
-the finished game* are mine. The only external creative asset is the Cute Fantasy art, credited in
+the finished game* are mine. The external creative assets are the Cute Fantasy art, the fonts (Pixel
+Operator, Alagard), and the SFX (Ninja Adventure) — all licensed and credited in
 [asset-credits.md](asset-credits.md).

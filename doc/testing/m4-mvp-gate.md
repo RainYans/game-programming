@@ -2,13 +2,14 @@
 
 **Status:** in progress. Covers the M4 work that closed the MVP gate (hunger-in-combat,
 buyable combat items, city-selection map) plus the balancing pass, the over-hunger trade-off,
-and the dead-code cleanup. Fill in PASS/FAIL after running each case in-editor.
+and the dead-code cleanup. The dead-code cleanup is **verified** (below); the gameplay cases are
+the in-editor test checklist — run each and mark PASS/FAIL before submission.
 
 ## Editor setup to run first (Farm scene open, then Ctrl+S)
 
-- `Tools > Zombie Farm > Setup Item Shop` — adds `ItemInventory` to Systems, registers Rotten
+- `Tools > Monster Farm > Setup Item Shop` — adds `ItemInventory` to Systems, registers Rotten
   Onion + Freeze Canister in `GameConfig.itemCatalog`, wires item refs.
-- `Tools > Zombie Farm > Setup City Map` — builds `CityMapPanel`, adds `CityProgress`, routes
+- `Tools > Monster Farm > Setup City Map` — builds `CityMapPanel`, adds `CityProgress`, routes
   the WarCamp through the map.
 
 ## What to test
@@ -41,12 +42,11 @@ and the dead-code cleanup. Fill in PASS/FAIL after running each case in-editor.
       identical to before the refactor).
 
 ### Dead-code cleanup
-- [ ] Project compiles after deleting `DeployController` / `BattlePlayer` / `BattleSimulator`
-      / `BattleUnitView` (scripts + the `BattleUnitView`/`BattileUnitView` prefabs + old
-      `BasicZombie` / `BasicSeed` assets — all removed on disk).
-- [ ] `Tools > Zombie Farm > Clean Missing Scripts (open scene)` run on the Farm scene: it
-      strips the now-dead DeployController + BattlePlayer components that were on the **Systems**
-      object (Systems itself and its live components stay). No "missing script" warnings remain.
+- [x] `DeployController` / `BattlePlayer` / `BattleSimulator` / `BattleUnitView` (scripts + the
+      `BattleUnitView`/`BattileUnitView` prefabs + old `BasicZombie` / `BasicSeed` assets) are
+      **removed from disk**, and no script references to them remain (verified by search).
+- [ ] `Tools > Monster Farm > Clean Missing Scripts (open scene)` on the Farm scene — confirm no
+      "missing script" warnings remain on the **Systems** object (needs an in-editor pass).
 
 ## What failed / changed
 

@@ -20,6 +20,13 @@ action-brawler raid — share one squad and one save.
 Tuned for **1920×1080**. (No standalone build is attached yet — see the build-readiness notes in
 [Evidence](doc/evidence.md).)
 
+> **Art assets are not in this repo (licensing).** The **Cute Fantasy** pixel art (by Kenmi) is
+> licensed, and its terms forbid redistributing the files, so the art is **kept local and not
+> committed** here. To build from source, download the packs from
+> [kenmi-art.itch.io/cute-fantasy-rpg](https://kenmi-art.itch.io/cute-fantasy-rpg) and import them
+> into `MonsterFarm/Assets/Art/CuteFantasy/`. Fonts (Pixel Operator, Alagard) and SFX (Ninja
+> Adventure) are CC0/free and **are** included. See [Asset Credits](doc/asset-credits.md).
+
 ## How to Play
 
 **Goal.** On the farm, grow monsters and gear up your squad. In a raid, **lead your squad through
@@ -34,7 +41,7 @@ whole squad is wiped.
 | **Mouse** | Use the shop, seed picker, deploy screen, and other panels |
 
 Buildings: **Shop** (buy monster seeds + combat items), **War Camp** (deploy a squad → raid),
-**Home** (save / rest), **Lab**.
+**Home** (save). *(A Lab for strain upgrades is planned — not in this build.)*
 
 ### Raid / Battle (action-brawler)
 | Input | Action |
@@ -78,12 +85,16 @@ Design, process, and submission evidence live under [`doc/`](doc/):
 
 ## My Contribution (solo)
 
-This is a solo project: I made the **design decisions** (concept, the farm + raid loop, the six
-strains and their passives), wrote and modified the **gameplay scripts** and Unity systems, built
-the **scenes** (farm + the four-room battle level), implemented **player interaction** (planting,
-the action-brawler controls, squad command), the **UI/feedback** (HUD, panels, result screen), and
-did the **testing and post-feedback improvements** (see [Evidence](doc/evidence.md) and
-[Peer Feedback](doc/peer-feedback.md)). External art is credited in [Asset Credits](doc/asset-credits.md).
+This is a solo project. The **design and direction** are mine (concept, the farm + raid loop, the
+six strains and their passives, hunger/permadeath, combat feel, level layout). The **gameplay
+scripts** were written **with an AI coding assistant under my direction** — I decided what each
+system needed, then reviewed, modified, and integrated the code, and can explain any of it (see
+[Use of AI](doc/reference-and-contribution.md#use-of-ai)). I built the **scenes** (farm + the
+four-room battle level) using my own `Assets/Editor/*Setup.cs` scaffolding tools plus manual layout,
+implemented **player interaction** (planting, the action-brawler controls, squad command) and the
+**UI/feedback** (HUD, panels, result screen), and did the **testing and post-feedback improvements**
+(see [Evidence](doc/evidence.md) and [Peer Feedback](doc/peer-feedback.md)). External assets (art,
+fonts, audio) are licensed and credited in [Asset Credits](doc/asset-credits.md).
 
 ## Unity Version
 

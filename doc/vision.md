@@ -84,7 +84,7 @@ If time runs short, the game is still shippable when this end-to-end slice works
 - At least **3 starting strains**, each visibly different in battle.
 - Hunger affects combat strength.
 - A shop that sells seeds and at least one combat item; a single currency.
-- **One city** with a short sequence of combat stages and a between-stage prep phase.
+- **One city** played as a short sequence of **area-gated combat rooms** (clear an area to open the gate to the next).
 - Squad deployment, control-item usage, permadeath, a win/lose result, and a reward.
 - Save and load the whole state.
 
