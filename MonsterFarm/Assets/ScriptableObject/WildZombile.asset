@@ -14,6 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: wild
   displayName: Wile Zombile
-  maxHp: 8
-  attack: 2
+  role: 
+  backstory: 
+  maxHp: 28
+  attack: 4
+  moveSpeed: 3.2
+  range: 0
+  displayScale: 1
+  passive: 0
+  unlockedAtStart: 1
   color: {r: 0.7735849, g: 0.1999842, b: 0.13501246, a: 1}

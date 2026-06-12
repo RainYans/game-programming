@@ -19,16 +19,38 @@
 .DS_Store
 Thumbs.db
 
+# Unity API updater log
+**/UpgradeLog.htm
+
 # Unity asset meta files (keep these)
 # *.meta — do NOT ignore, Unity needs them
 
-# Claude Code local memory (not part of the project)
+# Local-only files (not part of the game)
 memory/
-
-# Claude Code / MCP local tooling (not part of the game)
 .claude/
 .mcp.json
 **/Plugins/NuGet/
-
-# Dev/MCP tooling: build scripts, screenshots, font backups, previews (not part of the game)
+**/Plugins/NuGet.meta
 tools/
+
+# ── Cute Fantasy art (Kenmi) — licensed; redistribution forbidden, kept LOCAL only ──
+# The license bars hosting the asset files anywhere downloadable, incl. a public repo
+# (see doc/asset-credits.md). Import from https://kenmi-art.itch.io/cute-fantasy-rpg
+# into Assets/Art/CuteFantasy/ to build from source.
+# Entire CF art subfolders are kept local; only my own Art/ring.png stays tracked.
+MonsterFarm/Assets/Art/CuteFantasy/
+MonsterFarm/Assets/Art/Buildings/
+MonsterFarm/Assets/Art/Props/
+MonsterFarm/Assets/Art/Tiles/
+MonsterFarm/Assets/Art/BattleDecor/
+MonsterFarm/Assets/Art/MonsterIcons/
+MonsterFarm/Assets/Art/UIIcons/
+MonsterFarm/Assets/Art/Menu/
+MonsterFarm/Assets/Art/CityThumbs/
+# CF-derived sprites loaded at runtime + tilemap source images
+MonsterFarm/Assets/Resources/MonsterAnim/
+MonsterFarm/Assets/Resources/Monsters/
+MonsterFarm/Assets/Tiles/CobbleSrc.png
+MonsterFarm/Assets/Tiles/HedgeWall.png
+MonsterFarm/Assets/Tiles/PavementSrc.png
+MonsterFarm/Assets/Tiles/WaterSrc.png

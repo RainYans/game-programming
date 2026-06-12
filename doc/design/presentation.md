@@ -26,8 +26,8 @@ pleasant — not grim survival-horror, and not AAA fidelity.
 - **Source:** a single cohesive pack — **Cute Fantasy** (16px top-down pixel: tiles,
   characters, monsters, FX, items, UI). Sprites are sliced and wired into prefabs, tilemaps,
   and animations. (The earlier isometric plan is superseded.)
-- **Every scene needs art:** the farm base, building exteriors, the avatar, six zombie
-  strains, wild-zombie enemies, combat items/effects, the city map, and combat
+- **Every scene needs art:** the farm base, building exteriors, the avatar, six monster
+  strains, wild-monster enemies, combat items/effects, the city map, and combat
   stages/backgrounds. This is a large surface and a real schedule risk (see
   [roadmap.md](roadmap.md)).
 - **Coverage strategy:** placeholder shapes remain acceptable until a system is functional;
@@ -38,7 +38,7 @@ pleasant — not grim survival-horror, and not AAA fidelity.
 
 ## Animation
 
-- **Minimum viable:** avatar walk; zombie idle/walk/attack/death; basic crop growth-stage
+- **Minimum viable:** avatar walk; monster idle/walk/attack/death; basic crop growth-stage
   swaps; item effects (freeze, repel, slow).
 - Attack/death animations matter most in combat (they carry the satisfaction). Crop and farm
   animation can stay simple.
@@ -47,7 +47,7 @@ pleasant — not grim survival-horror, and not AAA fidelity.
 
 - **Style:** **casual / light** — gentle ambient base music, soft UI clicks, satisfying but
   non-violent combat cues.
-- **Minimum SFX set:** plant, harvest, purchase, deploy, item use, hit, zombie death,
+- **Minimum SFX set:** plant, harvest, purchase, deploy, item use, hit, monster death,
   win/lose.
 - Audio is a late pass (polish week); the game must be fully playable silent first.
 

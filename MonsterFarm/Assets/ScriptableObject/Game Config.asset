@@ -30,7 +30,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fcd2fab468461da459fc662a74d0398a, type: 2}
   - {fileID: 11400000, guid: 27d653f5284b3584c9a088d53c73bc20, type: 2}
   - {fileID: 11400000, guid: 30235bc2f5a6c88499b56f2f9debf287, type: 2}
-  squadCap: 4
+  squadCap: 6
+  labBaseCost: 60
+  labCostStep: 60
+  labMaxLevel: 3
+  labStatStepPct: 0.12
   combat:
     aggroRange: 4
     meleeReach: 0.7

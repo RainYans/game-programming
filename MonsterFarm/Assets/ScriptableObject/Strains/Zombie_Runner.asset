@@ -15,10 +15,13 @@ MonoBehaviour:
   id: runner
   displayName: Runner
   role: Skirmisher
-  maxHp: 10
-  attack: 4
-  moveSpeed: 4.2
+  backstory: A goblin sprout that never learned to sit still. It darts through the
+    Wildbloom like wind through wheat, slipping past blows before they ever land.
+  maxHp: 26
+  attack: 5
+  moveSpeed: 4.5
   range: 0
+  displayScale: 1
   passive: 3
   unlockedAtStart: 1
   color: {r: 0.85, g: 0.8, b: 0.25, a: 1}

@@ -9,7 +9,7 @@
 
 ## 1. Locked decisions
 
-1. **Theme = "Monster Farm" (怪物农场).** The post-apocalyptic *zombie* fiction is dropped.
+1. **Theme = "Monster Farm".** The post-apocalyptic *zombie* fiction is dropped.
    You grow **monsters** on a farm and lead a squad to clear **monster-infested villages**.
    - The 6 strain ids (`brute / mauler / runner / spitter / shaman / bomber`), the wild
      variants, `SaveData` fields, and all ScriptableObject assets are **UNCHANGED**.
@@ -28,10 +28,13 @@
    shroomlings, snails, biome enemies — plenty for strains + wild + bosses.
    - Packs used: `Cute_Fantasy` (main) + `Cute_Fantasy_Characters`, `Cute_Fantasy_Dungeons`,
      `Cute_Fantasy_UI`, `Cute_Fantasy_MilitaryCamp`, and the biome packs.
-   - **Audio is the ONE cross-borrow:** Cute Fantasy ships NO audio, so BGM/SFX come from the
-     free **Ninja Adventure** pack (audio only) — audio is style-agnostic.
+   - **Audio is the ONE cross-borrow:** Cute Fantasy ships NO audio, so SFX come from the
+     free **Ninja Adventure** pack (audio only) — audio is style-agnostic. *(The final build ships
+     both SFX (Ninja Adventure) and per-scene background music — three CC0 OpenGameArt tracks via
+     `MusicManager`; all credited in [asset-credits.md](../asset-credits.md).)*
    - **Do NOT mix Ninja Adventure visuals in** (16px-muted vs CF 32px-bright = resolution +
-     palette clash). Visuals stay 100% Cute Fantasy.
+     palette clash). Game art stays 100% Cute Fantasy (aside from a few trivial engine-drawn UI
+     primitives like the cell-highlight).
    - Licenses: record Cute Fantasy (Kenmi, purchased) + Ninja Adventure (audio) in
      [asset-credits.md](../asset-credits.md).
 
@@ -56,9 +59,9 @@ coupling is tiny and localized:
 
 | Where | Change |
 |---|---|
-| `Assets/Scripts/AvatarController.cs` (~L19, L60) | `isoYScale = 0.5` → `1.0` (stop squashing Y movement) |
-| `Assets/Scripts/BattleAgent.cs` (~L75, L274) | remove `IsoYScale` const + `dir.y *= IsoYScale` |
-| `Assets/Scripts/GridManager.cs` + the scene `Grid` | `CellLayout.Isometric → Rectangle`, `cellSize (1,0.5,1) → (1,1,1)` |
+| `Assets/Scripts/Farm/AvatarController.cs` (~L19, L60) | `isoYScale = 0.5` → `1.0` (stop squashing Y movement) |
+| `Assets/Scripts/Combat/BattleAgent.cs` (~L75, L274) | remove `IsoYScale` const + `dir.y *= IsoYScale` |
+| `Assets/Scripts/Farm/GridManager.cs` + the scene `Grid` | `CellLayout.Isometric → Rectangle`, `cellSize (1,0.5,1) → (1,1,1)` |
 | `Assets/Editor/BattleSceneSetup.cs` (~L164-183, L212-221) | replace `CellWorld()` iso projection + `IsoX/YAngle` wall angles with orthographic; sort order |
 | `Assets/Editor/FarmMapSetup.cs` | iso diamond layout → rectangular field |
 | Farm/Battle **Camera** Transparency Sort Axis `(0,1,0)` | **KEEP** — top-down also sorts by Y |
@@ -84,7 +87,7 @@ a gameplay rewrite. Old saves still load (crop/unit positions are grid-agnostic)
 | VFX (gas / weather / impacts) | `Cute_Fantasy/Enemies/Bombschroom/Toxic_Gas_Cloud_VFX`, `Cute_Fantasy/Weather effects` |
 | Full UI (HUD / panels / bars / icons / ribbons) | `Cute_Fantasy_UI/UI` (UI_ALL / Bars / Buttons / Frames / Icons / Pop_Up / Ribbons / Sliders) + fonts |
 | Animals / crops / trees / decor | `Cute_Fantasy/Animals`, `Crops`, `Trees`, `Outdoor decoration` |
-| SFX / music (ONLY cross-borrow) | **Ninja Adventure** `Audio/` (Cute Fantasy ships none) |
+| SFX + BGM (cross-borrow) | **Ninja Adventure** `Audio/` SFX (Cute Fantasy ships none) + three **CC0 OpenGameArt** music tracks via `MusicManager` |
 
 ---
 
@@ -92,7 +95,7 @@ a gameplay rewrite. Old saves still load (crop/unit positions are grid-agnostic)
 
 | Phase | Work | Est. |
 |---|---|---|
-| **0 — Pipeline + spike** | Pixel pipeline (PPU/Point/Pixel-Perfect Camera) · import Ninja Adventure · a throwaway `StyleTest` scene with one monster + a tile patch + one UI panel, verified in top-down | 0.5 d |
+| **0 — Pipeline + spike** | Pixel pipeline (PPU/Point/Pixel-Perfect Camera) · import Ninja Adventure · a throwaway `StyleTest` scene (since removed) with one monster + a tile patch + one UI panel, verified in top-down | 0.5 d |
 | **1 — View flip** | the ~6 code edits · farm `Grid` → rectangular · battle layout → orthographic · camera/PPU · both scenes run with placeholder art | 2–3 d |
 | **2 — Full reskin** | avatar · 6 strains · wild enemies · crop stages · buildings · ground · UI · FX · SFX, all from the pack | 3–4 d |
 | **3 — Combat v2 + picks of new gameplay** | clear-the-village level(s) · a boss · enemy variety · watering layer · balance | 2 d |

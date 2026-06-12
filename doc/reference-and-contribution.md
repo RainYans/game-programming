@@ -1,7 +1,7 @@
 # Reference, Inspiration & Creative Contribution
 
 *Honest account of what inspired Monster Farm, what was borrowed, and what is my own. Pairs with
-the project report and the evidence in [evidence.md](evidence.md).*
+the evidence in [evidence.md](evidence.md).*
 
 ## How the idea started (honest origin)
 
@@ -17,22 +17,28 @@ lead-your-squad action raid**, not a clone of any single title.
 
 ## Reference Transformation Table
 
-| Inspiration / reference | What I borrowed | What I changed / added / removed | Result in Monster Farm |
+I worked from **one game reference** plus the licensed art set; everything else is my own design.
+
+| Reference | What I borrowed | What I changed / added / removed | Result in Monster Farm |
 |---|---|---|---|
-| **Farm-sim loop** (Stardew-Valley-style planting/harvest, shop, day-to-day base) | The calm tile-grid plant→grow→harvest loop, a shop, and an inventory | Removed seasons/relationships/large open farm; the "crops" are **monsters you raise to fight**, not produce to sell | A compact farm that exists to **feed a combat squad**, giving the cosy loop real stakes |
-| **"Grow creatures, then send them to battle"** (creature-raising / monster-collector idea, the original Zombie-Farm pitch) | The core fantasy of owning and raising your own fighters | Turned vague "zombies" into **six distinct strains with unique passives** + a hunger risk system | Squad identity: *which* monsters you bring changes the fight, not just the numbers |
-| **Lead-a-squad action games** (e.g. Pikmin / Overlord — a hero who commands little units) | One directly-controlled leader + a following squad that fights | Added a real **hero melee attack** (swing, dash, items), simplified command to **right-click the whole squad** (no RTS selection), made the squad auto-fight | An action-brawler where the player both **fights and commands**, instead of pure auto-battle or pure RTS |
-| **Top-down clear-the-area level design** (room-by-room dungeon/level pacing) | Linear "one screen, one scene" rooms with gated progression | Each room is a **distinct theme** (farm / river+bridge / hedge garden / village square); gates open on clear; minimap | City1 reads as a short, escalating raid rather than one flat arena |
-| **Cute Fantasy art set** (kenmi-art, see [asset-credits.md](asset-credits.md)) | Tiles, character/monster sprites, props, UI frames | Sliced/recombined into **RuleTiles, animated monster strips, themed decor prefabs, and a parchment HUD**; mapped each strain to a species; built the levels | A single cohesive pixel look across farm + raid (the art is licensed and credited; the *game* built from it is mine) |
+| **Zombie Farm** (the casual "grow zombies on a farm" game) — my one game reference | The core fantasy of **growing your own fighters on a farm**, like crops | Re-themed zombies → **monsters**; turned a pure farm/management game into a **farm-sim + real-time action raid** where you *lead the monsters you grew into battle*; added **six strains with unique passives**, a **hunger risk** system, and **permadeath** | A grow-then-fight hybrid where the farm exists to feed a squad you actively fight beside — not a farming game, not a clone |
+| **Cute Fantasy** art set (kenmi-art, see [asset-credits.md](asset-credits.md)) — the licensed visuals | Tiles, character/monster sprites, props, UI frames | Sliced/recombined into **RuleTiles, animated monster strips, themed decor prefabs, and a parchment HUD**; mapped each strain to a species; built every scene + level | A single cohesive pixel look across farm + raid — the art is licensed/credited, but the *game* built from it is mine |
+
+**Everything else is my own, not taken from a specific title.** The real-time action combat, the
+lead-the-squad controls (left-click hero swing / right-click command-all), the four-room level
+pacing, and the economy/hunger tuning I designed **myself by iterating on what felt fun** — drawing
+on broadly familiar genre conventions (farm management; action games with a hero + helpers) rather
+than studying any particular game. That originality is what makes it read differently from the
+typical farming / RPG projects built on this same art set.
 
 ## Creative Contribution Statement
 
 **What inspired my game?** The idea of *growing your fighters like crops* (a "zombie farm" planting
 loop), then leading them into battle.
 
-**What did I borrow as inspiration?** The calm farm-sim loop (plant/harvest/shop/inventory), the
-creature-raising fantasy, and the lead-a-squad action pattern — plus the Cute Fantasy art set for
-all visuals (licensed + credited).
+**What did I borrow as inspiration?** One game — **Zombie Farm** (the casual "grow zombies on a
+farm" game) — for the grow-your-fighters-on-a-farm fantasy, plus the **Cute Fantasy** art set for
+all visuals (licensed + credited). The rest of the design I worked out myself, by feel.
 
 **What did I change?** Re-themed the whole game (zombies → monsters), replaced RTS-style combat
 micro with an action-brawler scheme, and rebuilt the battle into a four-room linear raid.
@@ -44,21 +50,26 @@ combat, and a full themed HUD + result screen.
 **What did I remove?** Seasons/relationships/large open-world farming, isometric view, and the
 fiddly select-then-command micro from the early combat.
 
-**What makes my version different?** It **fuses a cosy farm-raising loop with a hands-on action
-raid using one shared squad and save** — you grow the exact monsters you then fight beside, and you
-are an active fighter, not a spectator of an auto-battle.
+**What makes my version different?** Most farming games, you grow crops to **sell**; here you grow
+monsters to **fight** — and you pick up a sword and fight **beside** them. The hook no other game on
+this art set has: the monsters you spend time raising are the **exact ones you can lose forever** in
+a raid (permadeath). Because you're risking units you're genuinely attached to, **caring about your
+monsters becomes a real mechanic, not just flavour** — every deploy is a true decision. The same
+squad and save carry over from the cosy farm into the hands-on raid, and you're an active fighter,
+not a spectator of an auto-battle.
 
 **What is my own creative contribution?** The **design and direction** are entirely mine — the
 concept, the core loops, the six strains and their passives, the hunger and permadeath systems, the
-combat feel, and the level layout — as is all the **Unity construction** (scene building, tilemaps,
-level layout, UI) and the **integration, debugging, and iteration** driven by playtesting and
-feedback. For the **scripting**, I worked with an AI coding assistant: I decided what each system
-needed and how it should be structured, directed the implementation, then reviewed, modified, and
-wired the code into the project — and I understand it well enough to explain and extend any of it.
-The **art** is the only fully external creative asset (Cute Fantasy pack, licensed and credited).
+combat feel, and the level layout. I **designed every scene** and reworked and hand-tuned them, and
+ran the whole **testing-and-iteration loop** off playtests and peer feedback. For the **scripting**,
+I worked with an AI coding assistant: I decided what each system needed and how it should be
+structured, directed the implementation, then reviewed, modified, debugged, and integrated it. The
+**external creative assets** are the Cute Fantasy art (Kenmi), the UI/title fonts (Pixel Operator,
+Alagard), and the SFX (Ninja Adventure) — all licensed and credited in
+[asset-credits.md](asset-credits.md); everything else is my own.
 
-**Where is the evidence?** Scenes (`Farm.unity`, `Battle.unity`), the scripts in
-the project report, the GitHub commit history and the change log in
+**Where is the evidence?** Scenes (`Farm.unity`, `Battle.unity`), the scripts (organised by
+system under `Assets/Scripts/`), the GitHub commit history and the change log in
 [evidence.md](evidence.md).
 
 ## Use of AI
@@ -67,13 +78,23 @@ I'm open about how the project was built. The division of work:
 
 - **Mine (design + build + judgement):** every design and architecture decision — which systems to
   build, how they fit together, the data model (ScriptableObjects for strains/crops/missions, a
-  single `GameConfig`), the cross-scene data flow, and the combat/economy tuning. All the Unity
-  work — scene and level construction, tilemaps, UI layout, and wiring every component — plus the
-  testing-and-iteration loop driven by playtesting and peer feedback.
-- **AI-assisted (implementation):** I used an AI coding assistant to help turn those decisions into
-  C#. I directed what to write, then reviewed, modified, debugged, and integrated the result. I can
-  open any script and explain what each part does and why it's structured that way.
+  single `GameConfig`), the cross-scene data flow, and the combat/economy tuning; the **scene design,
+  layout, and hand-tuning** (see the note below); and the whole **testing-and-iteration loop** driven
+  by playtests and peer feedback.
+- **AI-assisted (implementation):** I used an AI assistant to help turn those decisions into C# and
+  to build basic scene content faster. The real work is in **directing** it — deciding what to build,
+  judging whether the result is actually right, fixing it when it isn't, integrating the pieces into
+  one coherent game, and iterating from playtests. AI sped up the implementation; the design, the
+  decisions, the debugging, and the polish are mine.
+
+**On the Unity scenes:** I designed each scene first — what it contains, the layout, how it should
+look and play. I used AI to build a **basic version** quickly, then **reworked and hand-tuned it
+myself:** the actual layout, positioning, spacing, sizing, and the many rounds of fine-tuning that
+make a scene read and play right are manual work — AI can get you a rough frame, not the feel. So
+scene construction is **AI-assisted at the basic stage, but designed and hand-tuned by me** — the
+design and the finished result are mine.
 
 In short, the AI accelerated *writing the code*; the *design, structure, decisions, Unity build, and
-the finished game* are mine. The only external creative asset is the Cute Fantasy art, credited in
+the finished game* are mine. The external creative assets are the Cute Fantasy art, the fonts (Pixel
+Operator, Alagard), and the SFX (Ninja Adventure) — all licensed and credited in
 [asset-credits.md](asset-credits.md).

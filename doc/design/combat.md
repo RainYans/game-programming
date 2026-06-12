@@ -6,15 +6,22 @@
 > KEPT** (WASD-lead, loose-follow, auto-attack, select/command, field items, permadeath). The
 > old `City → Stage → Prep` structure can still back a level. "zombie" = "monster" (display).
 
+> **🔧 Build note (final submission).** The shipped combat is a simpler **action-brawler** than the
+> design below. What actually changed: **no Prep-between-stages phase**; **no drag-box select** —
+> controls became **left-click = hero swing** and **right-click = command the whole squad**; the level
+> is a **four-room linear raid** (Farm Outskirts → River+Bridge → Hedge Garden → Village Square), not a
+> stage/prep sequence; items shipped as **Rotten Onion + Freeze Canister** only (Barbed Wire cut). See
+> [evidence.md](../evidence.md) and the [README](../../README.md) — where this doc differs, **the build
+> is authoritative**.
+
 Combat is a **dedicated mode** (a separate scene), not the placeholder overlay used during
 prototyping. It's a casual **squad-tactics / stage-clear** experience: the player leads a
-small squad of their farm zombies through a fallen city, stage by stage, to reclaim it.
+small squad of their farm monsters through a fallen city, stage by stage, to reclaim it.
 The design goal is **high agency through positioning and control**, not micro-management.
 
-Reference points: **Pikmin** (lead a squad with a controllable leader, send detachments),
-**Bad North** (minimal isometric squad tactics with permadeath), and the **pre-engagement
-prep** beat of tactical games like Ready or Not — borrowing the "set up before you breach"
-layer, **not** their micro depth.
+The squad-tactics framing — a controllable leader with a following squad, permadeath, and a brief
+"set up before you commit" beat — draws on **broadly familiar genre conventions rather than any one
+title**; I worked out the specifics myself, by feel, for what reads clearly and plays fast.
 
 ## Structure: City → Stages → Prep
 
@@ -36,27 +43,27 @@ city 1: **3–4 stages** (linear path).
 
 Quiet, non-real-time. Before each stage the player can:
 
-- See a **preview of the upcoming enemies** (which wild zombies, roughly how many).
+- See a **preview of the upcoming enemies** (which wild monsters, roughly how many).
 - **Choose the squad / formation** for this stage (within a squad-size cap — TBD, ~3–4 to
   start, finalized against level design).
-- Make **hunger trade-offs**: feed a zombie to refill (safer but weaker) or keep it Hungry
+- Make **hunger trade-offs**: feed a monster to refill (safer but weaker) or keep it Hungry
   (stronger but risks over-hunger); decide whether to use a Hunger Tonic.
 - This is where the game's "thinking" happens — every meaningful decision is here.
 
 ## Action Phase (the real-time layer)
 
-The player controls the **avatar (leader)** and a squad of zombies.
+The player controls the **avatar (leader)** and a squad of monsters.
 
 ### Controls
 
-- **WASD** — move the leader; the camera follows. **Zombies loosely follow the leader by
+- **WASD** — move the leader; the camera follows. **Monsters loosely follow the leader by
   default** and **auto-attack** enemies in range (passives trigger automatically). Doing
   nothing still results in the squad tagging along and fighting — no forced micro.
-- **Left click / drag-box** — select one or a group of zombies.
+- **Left click / drag-box** — select one or a group of monsters.
 - **Right click** — command the selection: click an enemy = attack it; click ground = move
   there. (This avoids overloading left-click with multiple meanings.)
 - **Number key → left click** — use a carried **combat item**, placed at the cursor area
-  (items do **not** require selecting zombies).
+  (items do **not** require selecting monsters).
 
 So the leader's positioning is itself a tactic (lead the squad into or out of a fight),
 while the mouse is for precise detachment and focus-fire.
@@ -72,22 +79,26 @@ dangerous target, pull back a wounded unit. It is intentionally **not** a hardco
 The three v1 items (full details in [economy.md](economy.md)) are the heart of the action
 layer — they **change the situation** rather than just dealing damage:
 
-- **Rotten Onion** — repels/scatters wild zombies away from an area.
-- **Freeze Canister** — freezes wild zombies in an area.
+- **Rotten Onion** — repels/scatters wild monsters away from an area.
+- **Freeze Canister** — freezes wild monsters in an area.
 - **Barbed Wire** — slows and reroutes the horde.
 
 The leader carries item(s) into a stage; using one is a timed, positional decision.
 
 ## Hunger in Combat
 
-- Zombies **eat the wild zombies they kill**, drifting from Hungry (strong) toward Full
+> **Build note (final).** In the shipped build, hunger is **set at deploy time** (a Hungry unit deals
+> and takes more damage) and does **not** drift via eating during a fight; the **Hunger Tonic** item
+> was **cut**. The eating-drift model below is the original design.
+
+- Monsters **eat the wild monsters they kill**, drifting from Hungry (strong) toward Full
   (weaker) over a stage — so a long fight naturally wears down your edge.
 - **Hunger Tonic** snaps the squad back to Hungry (strong) as an emergency spike.
 - See [zombies.md](zombies.md) for the full hunger model and the over-hunger open question.
 
 ## Casualties (Permadeath)
 
-Zombies that die in a stage are **permanently lost** — removed from the farm roster. This is
+Monsters that die in a stage are **permanently lost** — removed from the farm roster. This is
 the core risk: a hungry, upgraded squad clears stages fast but a wipe is a real setback.
 No mid-battle revives.
 
@@ -96,7 +107,7 @@ No mid-battle revives.
 - **Win** (clear all stages): reclaim the city, large currency reward, may satisfy tasks
   and unlock the next city node.
 - **Lose** (squad wiped or retreat): keep any partial progress per design (TBD — likely
-  no stage checkpoints in v1; a lost raid is a lost raid), surviving zombies return home.
+  no stage checkpoints in v1; a lost raid is a lost raid), surviving monsters return home.
 
 ## Relationship to the Foundation
 

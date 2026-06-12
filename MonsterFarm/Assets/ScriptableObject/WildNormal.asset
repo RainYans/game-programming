@@ -15,10 +15,12 @@ MonoBehaviour:
   id: wild_normal
   displayName: Wild Zombie
   role: Grunt
-  maxHp: 8
-  attack: 2
-  moveSpeed: 2
+  backstory: 
+  maxHp: 28
+  attack: 4
+  moveSpeed: 3.2
   range: 0
+  displayScale: 1
   passive: 0
   unlockedAtStart: 0
   color: {r: 0.55, g: 0.3, b: 0.3, a: 1}

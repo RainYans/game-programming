@@ -21,7 +21,7 @@
 | Squad + enemies felt **too slow** to keep up with the hero | Unit speed scale 0.6 → 1.1; hero 3 → 2.8 |
 | Squad cards rendered tiny regardless of size | Found a leftover **scale 0.114** on the SquadHud container; reset to 1 |
 | Drag/selection box didn't line up with the cursor | Canvas had switched to scale-with-screen-size; fixed by converting screen→canvas space |
-| Item buttons were unclear ("看不懂") | Added onion/ice icons, hotkey + count badges, names; dropped the heavy plaque |
+| Item buttons were unclear | Added onion/ice icons, hotkey + count badges, names; dropped the heavy plaque |
 | Bridge looked wrong | The bridge sheet was a tileset placed whole; cropped a clean stone deck instead |
 | No end screen | Added a win/lose result card (dim + parchment card + message + Return-to-Farm) |
 

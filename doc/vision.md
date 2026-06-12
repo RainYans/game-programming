@@ -46,17 +46,17 @@ loops (grid, camera, crop growth, inventory, a battle simulator, shop, save) are
 implemented; this design layers real systems on top of that foundation:
 
 - a **controllable avatar** that walks the farm (the original click-only model is retired),
-- **six zombie strains** with stats, passive abilities, and a hunger mechanic,
+- **six monster strains** with stats, passive abilities, and a hunger mechanic,
 - a **dedicated combat mode** with stage-based, squad-tactics gameplay (not the placeholder
   overlay used during prototyping).
 
 ## Design Pillars
 
 1. **The farm is a place, not a menu.** You walk a character through the base to plant,
-   harvest, shop, and deploy. Grown zombies roam the farm and become your army.
+   harvest, shop, and deploy. Grown monsters roam the farm and become your army.
 2. **Outsmart the horde, don't out-damage it.** Combat in a **top-down view** is won by
    control — repelling, freezing, slowing, and rerouting wild monsters — not by raw numbers.
-3. **Every zombie is a risk.** Zombies are permanently lost if they die in battle, and a
+3. **Every monster is a risk.** Monsters are permanently lost if they die in battle, and a
    hunger system means a squad's strength shifts over time. Deployment is a real decision.
 4. **Casual to hold, deep to master.** Easy moment-to-moment input (WASD + mouse); the
    depth lives in preparation: which strains to raise, when they're hungriest, what to bring.
@@ -84,16 +84,10 @@ If time runs short, the game is still shippable when this end-to-end slice works
 - At least **3 starting strains**, each visibly different in battle.
 - Hunger affects combat strength.
 - A shop that sells seeds and at least one combat item; a single currency.
-- **One city** with a short sequence of combat stages and a between-stage prep phase.
+- **One city** played as a short sequence of **area-gated combat rooms** (clear an area to open the gate to the next).
 - Squad deployment, control-item usage, permadeath, a win/lose result, and a reward.
 - Save and load the whole state.
 
 Everything beyond this gate (lab upgrades, plot expansion, all three items, the full task
 system, cities 2–3, the branching map, art and audio polish) is **target** or **stretch**
 scope — see [roadmap.md](roadmap.md).
-
-## Audience & Purpose
-
-Solo developer; a course deliverable built over four weeks alongside an internship. Quality
-bar: a polished, readable, **casual** game — cartoon art, light audio, clean UI. Not AAA
-fidelity, but cohesive and pleasant to play.

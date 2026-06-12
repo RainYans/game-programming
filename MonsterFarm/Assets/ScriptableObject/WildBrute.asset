@@ -15,10 +15,12 @@ MonoBehaviour:
   id: wild_brute
   displayName: Wild Brute
   role: Bruiser
-  maxHp: 18
-  attack: 4
-  moveSpeed: 1.4
+  backstory: 
+  maxHp: 52
+  attack: 6
+  moveSpeed: 2.8
   range: 0
+  displayScale: 1
   passive: 0
   unlockedAtStart: 0
   color: {r: 0.4, g: 0.2, b: 0.2, a: 1}

@@ -1,8 +1,27 @@
 # Roadmap
 
+> **🔧 Read this first — the plan vs. the final build (so it isn't misread).** This page is the
+> **original four-week plan**. It deliberately uses hard **P0 / P1 / P2 tiers**: the contract was
+> that the **P0 core ships solid even if later work has to be cut**. That is exactly what happened,
+> and the gaps below are **intentional scope decisions, not abandoned or unfinished work**:
+>
+> - **P0 shipped and is solid** — the whole loop (farm → grow → deploy → raid → clear → reward →
+>   spend) plays end-to-end. On top of it, several *could-have* items also landed: per-scene audio,
+>   the Lab, a boss, and cities 2–3.
+> - **A few P1 items were deliberately cut** to keep quality high rather than ship them half-built:
+>   the **task system**, **plot expansion**, and the **branching** city map (the map is **linear**
+>   instead — clear one city to unlock the next).
+> - **Combat was redesigned, not dropped.** The planned **City → Stage → Prep / RTS-select**
+>   structure was replaced — directly in response to playtest feedback — with a tighter **four-room
+>   action-brawler** raid. That is an improvement driven by testing, logged in
+>   [peer-feedback.md](peer-feedback.md).
+>
+> The game **as actually delivered** is documented in [evidence.md](evidence.md). Where this plan and
+> the build differ, the three points above are the reason — by design.
+
 A four-week plan to build the full game described in [vision.md](vision.md) and the
 [design bible](design/) on top of the existing foundation. Time is the dominant constraint
-(solo, alongside an internship), so scope is split into tiers and the plan stays shippable
+(solo, on a tight timeline), so scope is split into tiers and the plan stays shippable
 even if later work slips.
 
 ## Scope Tiers

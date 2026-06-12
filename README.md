@@ -20,6 +20,20 @@ action-brawler raid — share one squad and one save.
 Tuned for **1920×1080**. (No standalone build is attached yet — see the build-readiness notes in
 [Evidence](doc/evidence.md).)
 
+> **Art assets are not in this repo (licensing).** The **Cute Fantasy** pixel art (by Kenmi) is
+> licensed, and its terms forbid redistributing the files, so the art is **kept local and not
+> committed** here. To build from source, download the packs from
+> [kenmi-art.itch.io/cute-fantasy-rpg](https://kenmi-art.itch.io/cute-fantasy-rpg) and import them
+> into `MonsterFarm/Assets/Art/CuteFantasy/`. Fonts (Pixel Operator, Alagard), SFX (Ninja Adventure),
+> and music (three CC0 OpenGameArt tracks) are free/CC0 and **are** included. See
+> [Asset Credits](doc/asset-credits.md).
+
+## Screenshots
+
+| Farm | Raid |
+|------|------|
+| ![Farm](doc/screenshots/farm.png) | ![Raid](doc/screenshots/battle.png) |
+
 ## How to Play
 
 **Goal.** On the farm, grow monsters and gear up your squad. In a raid, **lead your squad through
@@ -32,9 +46,14 @@ whole squad is wiped.
 | **WASD** | Move your avatar |
 | **E** | Plant / harvest / interact with a building when standing next to it |
 | **Mouse** | Use the shop, seed picker, deploy screen, and other panels |
+| **Esc** | Options menu — master / music / SFX volume, **key rebinding**, return to menu, quit |
 
-Buildings: **Shop** (buy monster seeds + combat items), **War Camp** (deploy a squad → raid),
-**Home** (save / rest), **Lab**.
+Buildings: **Shop** (buy monster seeds + combat items), **Lab** (spend resources to permanently
+upgrade a strain's HP + attack), **War Camp** (deploy a squad → raid; at the south fence), **Home**
+(save).
+
+> **Keyboard controls are rebindable** — open **Esc → Controls** to remap movement, interact, and
+> dash; bindings are saved across sessions and can be reset to defaults.
 
 ### Raid / Battle (action-brawler)
 | Input | Action |
@@ -57,10 +76,15 @@ fight gets tough. Clearing an area opens the gate to the next; clear the final V
   a monster **inventory**, a **shop** (seeds + items), and **versioned save/load**.
 - **Six monster strains** — Brute, Mauler, Runner, Shaman, Spitter, Bomber — each with distinct
   stats and a unique passive (thick hide, bloodlust, evasion, corrosion, healing aura, self-detonate)
-  plus a **hunger system** that trades attack power for vulnerability.
+  plus a **hunger system** that trades attack power for vulnerability; an in-game **Bestiary** codex
+  lists every strain's stats, passive, and backstory.
 - **Action-brawler raid** — a directly-controlled hero with a melee swing + dash, an auto-fighting
-  squad, throwable items, a four-room **linear level** (City1) with area-gated progression, a
-  **minimap**, and a win/lose result screen.
+  squad (units collide + separate and respect walls), throwable items, a four-room **linear level**
+  (City1) with area-gated progression, a **minimap**, and a win/lose result screen.
+- **Economy & Lab** — earn resources from raids; a **shop** for seeds + combat items and a **Lab** to
+  permanently upgrade a strain's HP + attack; every balance number lives in one `GameConfig` asset.
+- **Audio** — looping background music per scene (menu / farm / battle) with crossfades, plus a full
+  SFX set; master / music / SFX all adjustable from the **Esc options menu**.
 - **Cohesive pixel art** — Cute Fantasy tileset with Y-sorted decor, animated monsters and water,
   and a parchment/pixel UI.
 
@@ -70,6 +94,7 @@ Design, process, and submission evidence live under [`doc/`](doc/):
 
 - **[Reference & Creative Contribution](doc/reference-and-contribution.md)** — what inspired the
   game, the reference→transformation table, and what is my own
+- **[Accessibility, Security & Social](doc/accessibility.md)** — what's supported and the honest gaps
 - **[Evidence index](doc/evidence.md)** — what changed since Session 1, mapped to scenes/scripts/commits
 - **[Peer Feedback](doc/peer-feedback.md)** — feedback received and what I changed in response
 - **[Asset Credits](doc/asset-credits.md)** — art/audio sources and licenses
@@ -78,12 +103,17 @@ Design, process, and submission evidence live under [`doc/`](doc/):
 
 ## My Contribution (solo)
 
-This is a solo project: I made the **design decisions** (concept, the farm + raid loop, the six
-strains and their passives), wrote and modified the **gameplay scripts** and Unity systems, built
-the **scenes** (farm + the four-room battle level), implemented **player interaction** (planting,
-the action-brawler controls, squad command), the **UI/feedback** (HUD, panels, result screen), and
-did the **testing and post-feedback improvements** (see [Evidence](doc/evidence.md) and
-[Peer Feedback](doc/peer-feedback.md)). External art is credited in [Asset Credits](doc/asset-credits.md).
+This is a solo project. I **proposed and refined the core idea** — taking the "grow your fighters
+like crops" loop from **Zombie Farm** and working out my own details (the six strains and their
+passives, the hunger + permadeath risk, and the loop that ties the farm to a real-time raid). The
+**design and direction are mine** — the concept, the two-mode loop, the combat feel, and the level
+layout. I **designed the scenes** (the farm and the four-room raid) — what each contains and how the
+rooms escalate — then used AI to build the basic version and **reworked and hand-tuned them myself**.
+The **C# was written with an AI assistant under my direction**: I decided what each system needed,
+then reviewed, modified, debugged, and integrated it, and iterated everything from playtest feedback
+(see [Use of AI](doc/reference-and-contribution.md#use-of-ai), [Evidence](doc/evidence.md), and
+[Peer Feedback](doc/peer-feedback.md)). External assets (art, fonts, audio) are licensed and credited
+in [Asset Credits](doc/asset-credits.md).
 
 ## Unity Version
 

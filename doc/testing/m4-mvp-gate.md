@@ -2,14 +2,14 @@
 
 **Status:** in progress. Covers the M4 work that closed the MVP gate (hunger-in-combat,
 buyable combat items, city-selection map) plus the balancing pass, the over-hunger trade-off,
-and the dead-code cleanup. Fill in PASS/FAIL after running each case in-editor.
+and the dead-code cleanup. The dead-code cleanup is **verified** (below); the gameplay cases are
+the in-editor test checklist — run each and mark PASS/FAIL before submission.
 
-## Editor setup to run first (Farm scene open, then Ctrl+S)
+## Scene prerequisites (already set up in the Farm scene)
 
-- `Tools > Zombie Farm > Setup Item Shop` — adds `ItemInventory` to Systems, registers Rotten
-  Onion + Freeze Canister in `GameConfig.itemCatalog`, wires item refs.
-- `Tools > Zombie Farm > Setup City Map` — builds `CityMapPanel`, adds `CityProgress`, routes
-  the WarCamp through the map.
+- The **item shop**: `ItemInventory` is on Systems, with Rotten Onion + Freeze Canister registered
+  in `GameConfig.itemCatalog` and the item refs wired.
+- The **city map**: `CityMapPanel` + `CityProgress` are built, and the WarCamp routes through the map.
 
 ## What to test
 
@@ -32,8 +32,8 @@ and the dead-code cleanup. Fill in PASS/FAIL after running each case in-editor.
 ### City-selection map (#58)
 - [ ] WarCamp + E opens the map: City 1 "Available" + hint; City 2/3 "Locked".
 - [ ] Selecting City 1 opens the deploy panel for it; battle runs as before.
-- [ ] After winning City 1: map shows "Cleared ✓"; City 2/3 become clickable but say
-      "Coming soon". Restarting the game preserves cleared state.
+- [ ] After winning City 1: map shows "Cleared ✓"; **Thornwood Hollow** (City 2) unlocks, then
+      **Ashen Reach** (City 3) after it is cleared. Restarting the game preserves cleared state.
 
 ### Balancing pass (#73)
 - [ ] `GameConfig > Combat tuning` exposes aggro range, attack interval, reaches, and all six
@@ -41,12 +41,11 @@ and the dead-code cleanup. Fill in PASS/FAIL after running each case in-editor.
       identical to before the refactor).
 
 ### Dead-code cleanup
-- [ ] Project compiles after deleting `DeployController` / `BattlePlayer` / `BattleSimulator`
-      / `BattleUnitView` (scripts + the `BattleUnitView`/`BattileUnitView` prefabs + old
-      `BasicZombie` / `BasicSeed` assets — all removed on disk).
-- [ ] `Tools > Zombie Farm > Clean Missing Scripts (open scene)` run on the Farm scene: it
-      strips the now-dead DeployController + BattlePlayer components that were on the **Systems**
-      object (Systems itself and its live components stay). No "missing script" warnings remain.
+- [x] `DeployController` / `BattlePlayer` / `BattleSimulator` / `BattleUnitView` (scripts + the
+      `BattleUnitView`/`BattileUnitView` prefabs + old `BasicZombie` / `BasicSeed` assets) are
+      **removed from disk**, and no script references to them remain (verified by search).
+- [ ] `Tools > Monster Farm > Clean Missing Scripts (open scene)` on the Farm scene — confirm no
+      "missing script" warnings remain on the **Systems** object (needs an in-editor pass).
 
 ## What failed / changed
 

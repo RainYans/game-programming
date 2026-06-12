@@ -5,6 +5,10 @@
 > "monster", display only). Farm logic (planting, growth, roaming, hunger) is unchanged — it's
 > reskinned and re-laid-out on a square grid, not rewritten.
 
+> **🔧 Build note (final submission).** **Plot expansion was cut** — the farm ships with a fixed plot
+> set. Everything else here (avatar movement, walk-up plant/harvest, roaming monsters, buildings incl.
+> the Lab) is in the build. See [evidence.md](../evidence.md).
+
 The farm is the home base and the hub of the game. The player controls an avatar (a
 "doctor-farmer") who walks the base to plant, tend, harvest, shop, and deploy.
 
@@ -34,26 +38,26 @@ The farm is the home base and the hub of the game. The player controls an avatar
 - **Grow:** the plot advances through growth stages (seed → growing → ripe) driven by
   real-time, persisted as a planted timestamp so growth continues across saves.
   (Implemented as `CropData` + `CropInstance`.)
-- **Harvest:** walk to a ripe plot → press interact → the grown zombie is produced.
+- **Harvest:** walk to a ripe plot → press interact → the grown monster is produced.
 
-## Grown Zombies Roam the Farm
+## Grown Monsters Roam the Farm
 
-When a zombie is harvested it does **not** go into an abstract inventory counter — it
-**spawns as a roaming unit on the farm**. These wandering zombies are the player's standing
-army: at deploy time the player picks from the zombies currently on the farm.
+When a monster is harvested it does **not** go into an abstract inventory counter — it
+**spawns as a roaming unit on the farm**. These wandering monsters are the player's standing
+army: at deploy time the player picks from the monsters currently on the farm.
 
-- Roaming zombies wander idly and show their **strain** and **hunger state** (see
+- Roaming monsters wander idly and show their **strain** and **hunger state** (see
   [zombies.md](zombies.md)) so the player can read their farm at a glance.
 - This visually connects "what I grew" with "what I can deploy," and gives the base life.
 
-> **Implementation note / migration:** the foundation stores harvested zombies as
+> **Implementation note / migration:** the foundation stores harvested monsters as
 > `Inventory` counts. Moving to roaming farm units is a Week-1 task. A count-based fallback
 > is acceptable for the MVP gate if spawning roamers slips, but roaming units are the target.
 
 ## Plot Expansion
 
 The farm starts with a limited number of plots. The player can spend currency to **unlock
-additional plots**, increasing how many zombies can grow at once. (Economy in
+additional plots**, increasing how many monsters can grow at once. (Economy in
 [economy.md](economy.md).)
 
 ## Buildings
@@ -70,7 +74,7 @@ the proximity-open. Interiors and NPCs are explicitly out of scope (see
 
 ## Open Questions
 
-- **Over-hunger downside on the farm:** if a roaming zombie goes too long without feeding,
+- **Over-hunger downside on the farm:** if a roaming monster goes too long without feeding,
   does it lose HP / risk starving? (See the hunger mechanic in [zombies.md](zombies.md) —
   this is the one balance hook still to confirm.)
 - Exact interact key and whether harvest is proximity-auto or key-gated (currently: key).

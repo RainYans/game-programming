@@ -15,10 +15,12 @@ MonoBehaviour:
   id: wild_runner
   displayName: Wild Runner
   role: Skirmisher
-  maxHp: 5
-  attack: 2
-  moveSpeed: 3.6
+  backstory: 
+  maxHp: 22
+  attack: 4
+  moveSpeed: 3.8
   range: 0
+  displayScale: 1
   passive: 0
   unlockedAtStart: 0
   color: {r: 0.85, g: 0.55, b: 0.2, a: 1}

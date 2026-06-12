@@ -15,10 +15,13 @@ MonoBehaviour:
   id: bomber
   displayName: Bomber
   role: Burst
-  maxHp: 16
-  attack: 4
-  moveSpeed: 2.4
+  backstory: A Bombschroom grown a little too ripe. Cheerful to the very end, it
+    toddles into the heart of the enemy and bursts in a cloud of cleansing spores.
+  maxHp: 32
+  attack: 5
+  moveSpeed: 4.2
   range: 0
+  displayScale: 1
   passive: 6
   unlockedAtStart: 0
   color: {r: 0.55, g: 0.35, b: 0.65, a: 1}

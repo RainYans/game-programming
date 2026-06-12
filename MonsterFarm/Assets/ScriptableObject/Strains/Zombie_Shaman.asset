@@ -15,10 +15,13 @@ MonoBehaviour:
   id: shaman
   displayName: Shaman
   role: Support
-  maxHp: 12
-  attack: 1
-  moveSpeed: 2.4
+  backstory: A fallen-feather angelet, last of the Vale's healing choir. It hums
+    an old lullaby that knits its allies' wounds even in the thick of battle.
+  maxHp: 30
+  attack: 4
+  moveSpeed: 4.2
   range: 0
+  displayScale: 1
   passive: 5
   unlockedAtStart: 0
   color: {r: 0.45, g: 0.55, b: 0.8, a: 1}
