@@ -32,6 +32,8 @@ memory/
 **/Plugins/NuGet/
 **/Plugins/NuGet.meta
 tools/
+# Stray reference composite (likely CF-derived) — kept local, not part of the build
+MonsterFarm/roster.png
 
 # ── Cute Fantasy art (Kenmi) — licensed; redistribution forbidden, kept LOCAL only ──
 # The license bars hosting the asset files anywhere downloadable, incl. a public repo
