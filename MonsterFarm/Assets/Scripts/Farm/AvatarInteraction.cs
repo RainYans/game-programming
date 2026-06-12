@@ -19,8 +19,6 @@ public class AvatarInteraction : MonoBehaviour
              "(sprite bottom-center); nudge Y up (+) if the highlight sits a tile too low.")]
     [SerializeField] private Vector2 interactOffset = new Vector2(0f, 0.1f);
 
-    [SerializeField] private Key interactKey = Key.E;
-
     private Vector3Int currentCell;
     private bool hasHighlight;
 

@@ -12,21 +12,32 @@ action-brawler raid — share one squad and one save.
 
 ## How to Run
 
+**Quickest — play the build.** Download the packaged **Windows build** from the repository
+**[Releases](../../releases)** and run `Monster Farm.exe`. The build bundles the licensed art (which is
+git-ignored from the source tree), so it plays out of the box.
+
+**From source (for code / process review).**
+
 1. Open the **`MonsterFarm/`** project in **Unity 2022.3 LTS** (URP 2D, New Input System).
-2. Open `Assets/Scenes/Farm.unity` and press **Play**.
+2. Open `Assets/Scenes/MainMenu.unity` (or `Farm.unity`) and press **Play**.
 3. Walk to the **War Camp** building and interact to deploy a squad into the raid (City1), or open
    `Assets/Scenes/Battle.unity` directly to jump into combat with a test squad.
+   *(The art and its derived prefabs/tiles are git-ignored, so a bare clone will not render correctly
+   until the Cute Fantasy packs are re-imported — see the licensing note below. To simply play, use the build.)*
 
-Tuned for **1920×1080**. (No standalone build is attached yet — see the build-readiness notes in
-[Evidence](doc/evidence.md).)
+Tuned for **1920×1080**.
 
 > **Art assets are not in this repo (licensing).** The **Cute Fantasy** pixel art (by Kenmi) is
-> licensed, and its terms forbid redistributing the files, so the art is **kept local and not
-> committed** here. To build from source, download the packs from
-> [kenmi-art.itch.io/cute-fantasy-rpg](https://kenmi-art.itch.io/cute-fantasy-rpg) and import them
-> into `MonsterFarm/Assets/Art/CuteFantasy/`. Fonts (Pixel Operator, Alagard), SFX (Ninja Adventure),
-> and music (three CC0 OpenGameArt tracks) are free/CC0 and **are** included. See
-> [Asset Credits](doc/asset-credits.md).
+> licensed and its terms forbid redistributing the files, so it is **git-ignored and excluded from the
+> tracked project** (not redistributed here). Because the art is local-only, the assets derived from it
+> — the animated monster prefabs (`Resources/Monsters`, `Resources/MonsterAnim`), the decor prefabs, and
+> the tilemap source images (`Tiles/*Src.png`) — are **also git-ignored**, so a fresh clone will not
+> render or play as-is. **To play, use the packaged build in [Releases](../../releases).** To rebuild from
+> source instead, download the packs from
+> [kenmi-art.itch.io/cute-fantasy-rpg](https://kenmi-art.itch.io/cute-fantasy-rpg), import them into
+> `MonsterFarm/Assets/Art/CuteFantasy/`, and re-slice the derived prefabs/tiles. Fonts (Pixel Operator,
+> Alagard), SFX (Ninja Adventure), and music (three CC0 OpenGameArt tracks) are free/CC0 and **are**
+> included. See [Asset Credits](doc/asset-credits.md).
 
 ## Screenshots
 

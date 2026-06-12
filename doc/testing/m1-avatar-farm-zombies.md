@@ -24,11 +24,11 @@ versioning) and one spike (depth sorting) tracked as close-out items.
 - No blocking issues surfaced in M1 play; the readability/sorting items still to confirm are
   tracked under **Open / to confirm** below.
 
-## Open / to confirm
+## Resolved
 
-- **Depth sorting (top-down Y-sort)** with the avatar overlapping crops / buildings / roamers — confirm
-  no wrong-layer pop (M1 P0 spike).
-- **Roamer hunger label** is a placeholder TMP; readability (size/position) may need tuning.
+- **Depth sorting (top-down Y-sort)** — confirmed: the avatar sorts correctly against crops / buildings /
+  roamers with no wrong-layer pop.
+- **Roamer hunger label** — confirmed readable (size / position) at the shipped scale.
 
 ## Known follow-ups (not M1 blockers)
 

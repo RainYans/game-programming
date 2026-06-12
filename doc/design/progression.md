@@ -59,4 +59,4 @@ Play the loop → complete tasks → earn currency + unlock strains
   the gate.
 - **P1 (target):** the task system with strain unlocks; the three-city branching map.
 - **P2 (stretch):** more cities, deeper branching, per-city modifiers, a codex of enemy
-  info. See [Icebox in roadmap.md](roadmap.md#icebox-p2).
+  info. See [Icebox in roadmap.md](../roadmap.md#icebox-p2).

@@ -48,7 +48,7 @@ Items are **field-control tools**, not raw damage — consistent with the combat
 > **Stretch item pool (P2, not built for v1):** UV lamp, noise maker, pheromone spray,
 > auto-turret, electric net, blood-bait (risk/reward), mystery serum (random effect),
 > infection suppressant (power for risk), EMP, decoy, drone, fuel-drum combos. See
-> [Icebox in roadmap.md](roadmap.md#icebox-p2).
+> [Icebox in roadmap.md](../roadmap.md#icebox-p2).
 
 ## Lab
 

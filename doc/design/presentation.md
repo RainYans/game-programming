@@ -29,7 +29,7 @@ pleasant — not grim survival-horror, and not AAA fidelity.
 - **Every scene needs art:** the farm base, building exteriors, the avatar, six monster
   strains, wild-monster enemies, combat items/effects, the city map, and combat
   stages/backgrounds. This is a large surface and a real schedule risk (see
-  [roadmap.md](roadmap.md)).
+  [roadmap.md](../roadmap.md)).
 - **Coverage strategy:** placeholder shapes remain acceptable until a system is functional;
   art is integrated per-system as each lands, prioritizing the farm, the avatar, and the six
   strains (the most-seen assets) first.
@@ -66,4 +66,4 @@ pleasant — not grim survival-horror, and not AAA fidelity.
 - **P1 (target):** cartoon art integrated across the main scenes; the core SFX set; a clean
   HUD and panels.
 - **P2 (stretch):** particle "juice," ambient layers, richer animations, settings/volume,
-  menu polish. See [Icebox in roadmap.md](roadmap.md#icebox-p2).
+  menu polish. See [Icebox in roadmap.md](../roadmap.md#icebox-p2).

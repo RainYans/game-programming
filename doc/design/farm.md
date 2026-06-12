@@ -70,7 +70,7 @@ Buildings sit around the plot as click-to-open placeholders the avatar walks up 
 
 Buildings are flat UI panels for now (no walkable interiors). `BuildingInteraction` handles
 the proximity-open. Interiors and NPCs are explicitly out of scope (see
-[Icebox in roadmap.md](roadmap.md#icebox-p2)).
+[Icebox in roadmap.md](../roadmap.md#icebox-p2)).
 
 ## Open Questions
 

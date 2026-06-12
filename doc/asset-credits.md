@@ -11,7 +11,7 @@ All in-game pixel art (tiles, characters, monsters, buildings, props, and UI fra
 
 | Asset | Source | License | Notes |
 |-------|--------|---------|-------|
-| Cute Fantasy RPG (base pack) | https://kenmi-art.itch.io/cute-fantasy-rpg | Used under the Cute Fantasy itch.io asset license (commercial use permitted under the purchased/free license; raw assets not redistributed) | Tiles, player character, animals, enemies, buildings, outdoor decoration, UI frames/buttons/ribbons, icons, fonts |
+| Cute Fantasy RPG (base pack) | https://kenmi-art.itch.io/cute-fantasy-rpg | Used under the Cute Fantasy itch.io asset license (commercial use permitted under the purchased/free license; raw assets not redistributed) | Tiles, player character, animals, enemies, buildings, outdoor decoration, UI frames/buttons/ribbons, icons |
 | Cute Fantasy expansion packs (Desert, ShroomLands, Volcano, Military Camp, Dungeons, Halloween, Christmas) | Kenmi (same itch.io creator) | Same Cute Fantasy asset license | Extra tiles/props (e.g. lookout tower, fences, rocks) used as battle decor |
 
 Usage in this project: sprites were sliced and recombined into Unity **RuleTiles** (grass, hedge,
@@ -27,16 +27,18 @@ redistributed even if modified,"* and Kenmi has confirmed this includes hosting 
 others can download them — e.g. a public repository (verified on the itch.io license page, 2026-06).
 The Cute Fantasy art — the raw packs **and** everything sliced/derived from them (`Art/CuteFantasy/`,
 `Resources/MonsterAnim`, `Resources/Monsters`, `Art/MonsterIcons`, `Art/UIIcons`, `Art/Menu`, the
-`Tiles/*Src.png`) — is therefore **kept local and git-ignored, not committed to this public repo**.
-The base packs are available at <https://kenmi-art.itch.io/cute-fantasy-rpg>; the playable game may
-still be distributed as a **build**. The fonts and audio below are separately licensed (CC0 / OFL /
-CC-BY) and **are** included.
+`Tiles/*Src.png`) — is therefore **git-ignored and excluded from the tracked project**; it is not part
+of the published source and must be imported from Kenmi's page to build from scratch. *(This repository
+was developed privately and made public only for assessment; the licensed art is kept out of the
+published tree rather than redistributed.)* The base packs are available at
+<https://kenmi-art.itch.io/cute-fantasy-rpg>; the playable game may still be distributed as a **build**.
+The fonts and audio below are separately licensed (CC0 / OFL / CC-BY) and **are** included.
 
 ## Fonts
 
 | Asset | Source | License | Notes |
 |-------|--------|---------|-------|
-| **Pixel Operator** | Jayvee Enaguas (HarvettFox96) — https://www.dafont.com/pixel-operator.font | **CC0 1.0** (public domain) | Main UI font (HUD, shop, tutorial, menus, dialogue). Source TTF `Fonts/PixelOperator.ttf`, baked into the TextMesh Pro SDF asset `Fonts/CuteFantasyPixel.asset` |
+| **Pixel Operator** | Jayvee Enaguas (HarvettFox96) — https://www.dafont.com/pixel-operator.font | **CC0 1.0** (public domain) | Main UI font (HUD, shop, tutorial, menus, dialogue). Source TTF `Fonts/PixelOperator.ttf`, baked into the TextMesh Pro SDF asset `Fonts/PixelOperator SDF.asset` |
 | **Alagard** | Pix3M / Hewett Tsoi — https://www.dafont.com/alagard.font (also on OpenGameArt) | Free for personal & commercial use, **credit the author** (distributed as CC-BY on OpenGameArt) | Fantasy display font for titles + the storybook intro narration (`Alagard.asset`) |
 | TextMesh Pro default (LiberationSans) | Unity built-in | Unity Companion License | TMP fallback glyphs |
 | TextMesh Pro example fonts (Roboto, Anton, Bangers, Oswald, Electronic Highway Sign) | Bundled with Unity TextMesh Pro (`TextMesh Pro/Examples & Extras`) | OFL / Apache 2.0 (license files ship beside each font) | Unity sample fonts. **Roboto-Bold** is referenced by one label in `Farm.unity`; the rest only by TMP's own demo scenes |
@@ -59,6 +61,3 @@ CC-BY) and **are** included.
 | Input System | Unity Package Manager | Unity Companion License | New Input System |
 | TextMesh Pro | Unity Package Manager | Unity Companion License | UI text |
 | Cinemachine | Unity Package Manager | Unity Companion License | Farm camera follow + confiner |
-
-> Action item before final submission: confirm the exact Cute Fantasy and Ninja Adventure license
-> terms on their itch.io pages.

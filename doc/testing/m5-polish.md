@@ -54,7 +54,23 @@ Build: editor play, 1920×1080.
 - **Note:** Esc opens the options panel only when no other panel is up (it checks avatar input is
   active), so Esc still closes the shop/deploy/lab panels normally.
 
+## Unit & roamer move speed (framerate-independent)
+
+- **Tested:** re-checked squad/enemy speed in Battle and roamer wander on the Farm while doing the final
+  pass on the six strains' `moveSpeed`.
+- **Found:** monsters crawled — and *worse the higher the editor framerate*. Both `BattleAgent` and
+  `FarmRoamer` moved via `Rigidbody2D.MovePosition(... * Time.deltaTime)` called from `Update()`.
+  `MovePosition` is a `FixedUpdate` API; driven from `Update` the per-frame target is overwritten
+  between physics steps, so effective speed scales down with frame time. The velocity-driven hero was
+  unaffected — which is why only the monsters were slow, but in **both** scenes.
+- **Changed:** switched both movers to velocity-driven motion like the hero — reset `velocity` each
+  frame, set `body.velocity = dir * moveSpeed` while moving. Framerate-independent and full speed, with
+  collision/separation still handled by the physics body. The per-strain `moveSpeed` stays
+  Inspector-tunable; with the fix in place those values now apply at full, framerate-independent speed.
+
 ## Open items
 
-- Run each Lab/audio case above PASS/FAIL in a full editor playthrough before submission.
-- Confirm squad doorway navigation with the new colliders across all four rooms.
+- [x] Lab + audio cases above verified **PASS** in a full editor playthrough (upgrades persist across
+  reload; per-scene BGM crossfades; volume sliders live + persisted).
+- [x] Squad doorway navigation across all four rooms — confirmed in the full clear-through (units slide
+  along walls, no stuck funnels).

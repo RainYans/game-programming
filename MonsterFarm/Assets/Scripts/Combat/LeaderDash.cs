@@ -10,7 +10,6 @@ public class LeaderDash : MonoBehaviour
     [SerializeField] private float dashMultiplier = 2.4f;
     [SerializeField] private float dashDuration = 0.22f;
     [SerializeField] private float dashCooldown = 1.2f;
-    [SerializeField] private Key dashKey = Key.LeftShift;
 
     private AvatarController controller;
     private float dashTimer;

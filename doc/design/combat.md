@@ -115,7 +115,7 @@ The prototype's `BattleSimulator` (deterministic, two unit lists → event log) 
 `BattlePlayer` (replays the log) were a **simulation/replay** model. The new design is
 **interactive real-time**. The deterministic simulator may be retained for AI/auto-resolve
 or unit tests, but the playable combat is the real-time squad-tactics scene described here.
-This is the largest single piece of new work — see the schedule in [roadmap.md](roadmap.md).
+This is the largest single piece of new work — see the schedule in [roadmap.md](../roadmap.md).
 
 ## Build Tiers (summary)
 

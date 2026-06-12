@@ -34,5 +34,7 @@ shake, slash), and a win/lose condition. Combat reads and feels active rather th
 ## Still open (next playtests)
 
 - First-pass balance only (hero/strain numbers tuned by feel).
-- Squad units can clip walls (no collider by design).
+- Squad units can clip walls (no collider by design). *(Resolved in the final polish pass — each unit
+  now carries a Rigidbody2D + CircleCollider2D and stops at / slides along walls; see
+  [m5-polish.md](m5-polish.md).)*
 - No tutorial yet — the first area should teach the mechanic (planned next action).

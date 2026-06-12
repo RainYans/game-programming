@@ -70,6 +70,10 @@ coupling is tiny and localized:
 → The work is a **presentation swap + ~6 small code edits + scene rebuild + art reskin**, not
 a gameplay rewrite. Old saves still load (crop/unit positions are grid-agnostic).
 
+> *(Note: the one-off editor helpers `BattleSceneSetup.cs` / `FarmMapSetup.cs` cited in the table above
+> were throwaway scaffolding for the pivot and have since been removed; the scenes are now authored
+> directly. This section is a dated audit from 2026-06-06, kept for process history.)*
+
 ---
 
 ## 3. Art mapping (Cute Fantasy → our systems)
@@ -106,6 +110,12 @@ a gameplay rewrite. Old saves still load (crop/unit positions are grid-agnostic)
 ---
 
 ## 5. Combat v2 — "clear-the-village" (replaces City→Stage→Prep)
+
+> **🔧 Build note (final submission).** The shipped combat was simplified once more from the
+> "clear-the-village" plan below into a **four-room linear action-brawler** (Farm Outskirts → River+Bridge
+> → Hedge Garden → Village Square): **no box-select and no separate prep beat** — left-click = hero swing,
+> right-click = command the whole squad. Where this section differs, the **build is authoritative**; see
+> [combat.md](combat.md), [evidence.md](../evidence.md), and the [README](../../README.md).
 
 - A **LEVEL = one village map** (a real scene/area), seeded with monsters.
 - **Win = clear all monsters** (optionally: all monsters in the required zones).

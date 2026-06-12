@@ -94,6 +94,11 @@ public class FarmRoamer : MonoBehaviour
 
     private void Wander()
     {
+        // Velocity-driven movement: reset each frame, then set it while actually walking. (Was
+        // MovePosition with Time.deltaTime in Update, which made the wander speed framerate-dependent
+        // — units barely crawled at high FPS.)
+        if (body != null) body.velocity = Vector2.zero;
+
         if (nextTarget == null) return;
 
         if (pauseTimer > 0f)
@@ -112,7 +117,7 @@ public class FarmRoamer : MonoBehaviour
 
         Vector3 dir = to.normalized;
         if (body != null)
-            body.MovePosition(body.position + (Vector2)(dir * (moveSpeed * Time.deltaTime)));
+            body.velocity = (Vector2)(dir * moveSpeed);
         else
             transform.position += dir * (moveSpeed * Time.deltaTime);
         if (sprite != null && Mathf.Abs(dir.x) > 0.01f) sprite.flipX = dir.x < 0f;

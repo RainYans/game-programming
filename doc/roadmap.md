@@ -7,7 +7,8 @@
 >
 > - **P0 shipped and is solid** — the whole loop (farm → grow → deploy → raid → clear → reward →
 >   spend) plays end-to-end. On top of it, several *could-have* items also landed: per-scene audio,
->   the Lab, a boss, and cities 2–3.
+>   the Lab, a boss, and a **city-selection map** (City 1 is the one fully-built raid; cities 2–3 are
+>   scaffolded as map nodes — for this demo one polished level is enough, with the rest planned next).
 > - **A few P1 items were deliberately cut** to keep quality high rather than ship them half-built:
 >   the **task system**, **plot expansion**, and the **branching** city map (the map is **linear**
 >   instead — clear one city to unlock the next).

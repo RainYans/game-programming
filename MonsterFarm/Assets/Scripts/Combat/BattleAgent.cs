@@ -238,6 +238,11 @@ public class BattleAgent : MonoBehaviour
     {
         if (!IsAlive || manager == null) return;
 
+        // Velocity-driven movement (same as the hero): reset each frame, then MoveToward sets it while
+        // moving. (Previously MovePosition was called from Update with Time.deltaTime, so unit speed
+        // scaled with framerate — units crawled at high FPS. Setting velocity is framerate-correct.)
+        if (body != null) body.velocity = Vector2.zero;
+
         TickFlashAndDebuffs();
         Animate();
 
@@ -398,7 +403,7 @@ public class BattleAgent : MonoBehaviour
         Vector2 dir = to.normalized;
         dir.y *= IsoYScale;
         if (body != null)
-            body.MovePosition(body.position + dir * (moveSpeed * Time.deltaTime));
+            body.velocity = dir * moveSpeed;
         else
             transform.position += (Vector3)(dir * (moveSpeed * Time.deltaTime));
         FaceDir(dir.x);

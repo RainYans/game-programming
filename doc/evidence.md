@@ -14,7 +14,7 @@
 | UI / HUD | Plain, unclear HUD | Rebuilt: squad bars, item slots with icons, framed minimap, leader HP bar, parchment/pixel theme; reworked result screen | `Battle.unity` HUD, `BattleCommandController` |
 | Tuning | Units too slow; squad cards shrunk by a scale bug; UI clicks misaligned after a canvas-scaling change | Retuned move speeds; fixed the squad-card scale bug; fixed the screen→canvas coordinate mapping | `BattleAgent` (`BattleMoveScale` 0.6→1.1), `AvatarController` (hero 3→2.8) |
 | Professionalism | Folder/name said "ZombieFarm" | Renamed project folder to **MonsterFarm/**, product name + menus to "Monster Farm" (kept internal class ids/saves intact); wrote full submission docs | this `doc/`, `README.md`, rename commit |
-| Final polish pass | No music; hunger/combat only; fixed WASD; one flat Scripts folder | Added per-scene **BGM + SFX + volume sliders**, a **Lab** (resources → permanent strain upgrades, persisted), a **Bestiary** codex, **key rebinding**, **unit collision** (no wall-clip/overlap), **cities 2–3 + a boss**, and **reorganised the scripts into system folders** | `MusicManager`/`SfxManager`/`MasterAudio`, `LabManager`/`LabPanel`, `BestiaryPanel`, `KeyBindings`/`KeyRebindUI`, `BattleAgent` (RB2D+collider), `Assets/Scripts/` (Core/Farm/Combat/UI/…) |
+| Final polish pass | No music; hunger/combat only; fixed WASD; one flat Scripts folder | Added per-scene **BGM + SFX + volume sliders**, a **Lab** (resources → permanent strain upgrades, persisted), a **Bestiary** codex, **key rebinding**, **unit collision** (no wall-clip/overlap), a **boss**, a **city-selection map** (City 1 is the one fully-built raid; cities 2–3 are scaffolded as map nodes — one polished level is enough for this demo slice, the rest planned next), and **reorganised the scripts into system folders** | `MusicManager`/`SfxManager`/`MasterAudio`, `LabManager`/`LabPanel`, `BestiaryPanel`, `KeyBindings`/`KeyRebindUI`, `BattleAgent` (RB2D+collider), `Assets/Scripts/` (Core/Farm/Combat/UI/…) |
 
 ## Evidence index (assessment criterion → where)
 
@@ -45,26 +45,28 @@
 - **Should-have (done):** six strains with passives; hunger system; shop (seeds + items); themed
   four-room level; HUD + minimap + result screen; cohesive art + animation; first-launch onboarding
   + a dedicated combat tutorial scene.
-- **Could-have (built this final stretch):** cities 2–3 (Thornwood Hollow, Ashen Reach), a **boss**
-  (Wildbloom Brute — HP 200, ~2× scale), **audio** (per-scene BGM + SFX + master/music/sfx volume
-  sliders), **Lab** strain upgrades, a **Bestiary** codex, and **key rebinding**.
+- **Could-have (built this final stretch):** a **city-selection map** with unlock progression
+  (Thornwood Hollow and Ashen Reach are scaffolded as map nodes — for this vertical-slice demo one
+  fully-built raid is enough, and the remaining cities are planned to be completed progressively), a
+  **boss** (Wildbloom Brute — HP 200, ~2× scale), **audio** (per-scene BGM + SFX + master/music/sfx
+  volume sliders), **Lab** strain upgrades, a **Bestiary** codex, and **key rebinding**.
 - **Cut first (dropped/deferred to protect the slice):** isometric view (cut), RTS micro (cut),
   open-world farm/seasons (cut), the task system / plot expansion / branching map (cut for scope).
-  The one outstanding deferred item is a **packaged Windows build**.
+  A **packaged Windows build** is provided in the repository **Releases** for direct play.
 
 ## One concrete next action
 
-**Produce a packaged Windows build** (add the scenes to Build Settings in order, build, and
-smoke-test the full loop from a fresh save). The in-game tutorial earlier peer feedback asked for is
-now **done** (`Tutorial.unity` + `FarmTutorialController` / `CombatTutorialController`). Runner-up
-next action: record the gameplay demo video once the build is produced.
+**Record the gameplay demo video.** The packaged Windows build is now provided in the repository
+**Releases** (all five scenes wired into Build Settings in order — MainMenu → Intro → Farm → Battle →
+Tutorial — and smoke-tested from a fresh save). The in-game tutorial earlier peer feedback asked for is
+also **done** (`Tutorial.unity` + `FarmTutorialController` / `CombatTutorialController`).
 
-## Build readiness checklist (build deferred this pass)
+## Build readiness checklist
 
-- [x] Correct scenes exist (`Farm.unity`, `Battle.unity`)
+- [x] Correct scenes exist (`MainMenu` / `Intro` / `Farm` / `Battle` / `Tutorial`)
 - [x] Player spawns correctly (farm avatar; battle squad + hero)
 - [x] Controls work (verified in play)
 - [x] UI appears correctly (HUD verified)
 - [x] No serious console errors in play (only benign font/underline warnings)
-- [ ] Scenes added to Build Settings in final order — to confirm before building
-- [ ] Build target chosen (Windows) and build produced — scheduled, not yet done
+- [x] Scenes added to Build Settings in final order (MainMenu → Intro → Farm → Battle → Tutorial)
+- [x] Build target chosen (Windows) and build produced — provided in the repository Releases

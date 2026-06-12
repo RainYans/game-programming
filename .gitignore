@@ -4,6 +4,9 @@
 [Oo]bj/
 [Bb]uild/
 [Bb]uilds/
+*_[Bb]uild/
+# Packaged player build (distributed via GitHub Releases; it bundles the licensed art — never commit)
+MonsterFarm/MonsterFarm_build/
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
 

@@ -47,7 +47,6 @@ public class BattleCommandController : MonoBehaviour
 
     [Header("Selection")]
     [SerializeField] private float clickAgentRadius = 0.8f;
-    [SerializeField] private float dragStartThresholdPixels = 14f;
 
     private readonly HashSet<BattleAgent> selected = new HashSet<BattleAgent>();
     private bool leftPressing;
