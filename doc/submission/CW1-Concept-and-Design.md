@@ -1,7 +1,10 @@
 # Coursework 1 — Game Concept and Design
 
-**Student:** Yanshuo Liu  ·  **Student ID:** 2617486
-**Module:** Games Programming  ·  **Engine:** Unity 2022.3 LTS (URP 2D, New Input System)
+**Game:** Monster Farm<br>
+**Student:** Yanshuo Liu<br>
+**Student ID:** 2617486<br>
+**Module:** Games Programming<br>
+**Engine:** Unity 2022.3 LTS (URP 2D, New Input System)<br>
 **Repository:** https://github.com/RainYans/game-programming
 
 ---

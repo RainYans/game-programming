@@ -2,8 +2,11 @@
 
 > Source for `2617486_CW3_ProfessionalismPortfolio.pdf`.
 
-**Student:** Yanshuo Liu · **Student ID:** 2617486 · **Module:** Games Programming
-**Game:** Monster Farm · **Engine:** Unity 2022.3.62f3 (URP 2D, New Input System)
+**Game:** Monster Farm<br>
+**Student:** Yanshuo Liu<br>
+**Student ID:** 2617486<br>
+**Module:** Games Programming<br>
+**Engine:** Unity 2022.3.62f3 (URP 2D, New Input System)
 
 ---
 

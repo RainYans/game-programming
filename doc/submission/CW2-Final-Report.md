@@ -1,9 +1,12 @@
 # Coursework 2 — Final Report
 
-**Game:** Monster Farm  ·  **Student:** Yanshuo Liu  ·  **Student ID:** 2617486
-**Engine:** Unity 2022.3.62f3 (URP 2D, New Input System)  ·  **Platform:** Windows (Standalone)
-**Repository:** https://github.com/RainYans/game-programming
-**Playable build:** https://github.com/RainYans/game-programming/releases/tag/v1.1
+**Game:** Monster Farm<br>
+**Student:** Yanshuo Liu<br>
+**Student ID:** 2617486<br>
+**Engine:** Unity 2022.3.62f3 (URP 2D, New Input System)<br>
+**Platform:** Windows (Standalone)<br>
+**Repository:** https://github.com/RainYans/game-programming<br>
+**Playable build:** https://github.com/RainYans/game-programming/releases/tag/v1.1<br>
 **Final commit:** `e569e4ae825d7e2534cefdac4bfe2bc1aa216269`
 
 > Monster Farm is a top-down 2D pixel game that fuses a cozy farm-management loop with a hands-on
