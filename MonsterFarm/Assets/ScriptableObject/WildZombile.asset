@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WildZombile
   m_EditorClassIdentifier: 
   id: wild
-  displayName: Wile Zombile
+  displayName: Wild Zombie
   role: 
   backstory: 
   maxHp: 28
