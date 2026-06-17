@@ -10,9 +10,12 @@ Build: editor play, 1920×1080.
 - **Found:** the old spread made the Brute (speed 1.6) lag badly behind the hero while the Runner
   (4.2) shot ahead, and damage ran 1–6 so the Shaman felt useless and the Mauler one-shot things —
   fights dragged and read unevenly in a demo.
-- **Changed:** compressed **speed to ~2.2–3.2** (Brute 1.6→2.2, Runner 4.2→3.2, others 2.4→2.7) and
-  **attack to ~3–5** (Shaman 1→3, Brute 2→3, Mauler 6→5). Roles preserved, but the squad now keeps up
-  and a raid clears quickly enough to demo. Passives unchanged.
+- **Changed:** tightened the speed spread to **4–4.5** (Brute 4, Mauler/Shaman/Spitter/Bomber 4.2,
+  Runner 4.5) so the whole squad keeps pace with the hero, and lifted damage to **4–6** (Shaman 1→4,
+  Brute 2→4, Runner/Spitter/Bomber 5, Mauler stays the top hitter at 6). Roles preserved, and a raid
+  clears quickly enough to demo. Passives unchanged. *(An interim pass first compressed speeds lower;
+  the framerate fix below then restored full-speed movement, so the per-strain values settled at this
+  higher band — see "Unit & roamer move speed".)*
 
 ## Unit collision (no overlap / no wall-clipping)
 

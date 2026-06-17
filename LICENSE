@@ -19,3 +19,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+Scope note: This MIT licence covers only the original source code and design in
+this repository. Third-party assets (art, fonts, audio) are licensed separately
+— see doc/asset-credits.md. In particular, the "Cute Fantasy" art (by Kenmi) is
+NOT MIT-licensed and is excluded from this repository (git-ignored); it is
+bundled only in the distributed build, under its own licence.

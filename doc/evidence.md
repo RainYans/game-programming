@@ -54,12 +54,14 @@
   open-world farm/seasons (cut), the task system / plot expansion / branching map (cut for scope).
   A **packaged Windows build** is provided in the repository **Releases** for direct play.
 
-## One concrete next action
+## Demo video & build
 
-**Record the gameplay demo video.** The packaged Windows build is now provided in the repository
-**Releases** (all five scenes wired into Build Settings in order — MainMenu → Intro → Farm → Battle →
-Tutorial — and smoke-tested from a fresh save). The in-game tutorial earlier peer feedback asked for is
-also **done** (`Tutorial.unity` + `FarmTutorialController` / `CombatTutorialController`).
+**Recorded and submitted.** A narrated gameplay demo (student voice-over) walks the core loop and the
+headline systems; the link is in `2617486_CW2_DemoVideo.txt` (hosted on the University of Dundee
+OneDrive). The packaged Windows build is provided in the repository **Releases** (all five scenes wired
+into Build Settings in order — MainMenu → Intro → Farm → Battle → Tutorial — and smoke-tested from a
+fresh save). The in-game tutorial earlier peer feedback asked for is also **done** (`Tutorial.unity` +
+`FarmTutorialController` / `CombatTutorialController`).
 
 ## Build readiness checklist
 

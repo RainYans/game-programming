@@ -10,6 +10,10 @@ action-brawler raid — share one squad and one save.
 > directly) are implemented and play end-to-end. See [Evidence](doc/evidence.md) for what
 > changed and where to find it.
 
+> **Note:** this repository also contains two earlier in-class activities
+> (`2D_Game_Improvement/` and `SolarSystem/`) — they are **not** part of this submission.
+> The game is in **`MonsterFarm/`**.
+
 ## How to Run
 
 **Quickest — play the build.** Download the packaged **Windows build** from the repository

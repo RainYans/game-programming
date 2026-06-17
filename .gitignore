@@ -7,6 +7,8 @@
 *_[Bb]uild/
 # Packaged player build (distributed via GitHub Releases; it bundles the licensed art — never commit)
 MonsterFarm/MonsterFarm_build/
+# Zipped build archives also carry the licensed art — keep them out of the repo (upload to Releases/MyDundee)
+*.zip
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
 
