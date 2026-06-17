@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dbb91561dd748440991cb55dd865483, type: 3}
   m_Name: Game Config
   m_EditorClassIdentifier: 
-  startingResources: 50
+  startingResources: 200
   startingSeeds:
   - seed: {fileID: 11400000, guid: 17571c97ca1e9434aab5895180b9383f, type: 2}
     count: 3

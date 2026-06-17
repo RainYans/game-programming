@@ -18,6 +18,8 @@ public class FarmPauseMenu : MonoBehaviour
     [SerializeField] private Slider sfxSlider;
     [SerializeField] private Button controlsButton;
     [SerializeField] private GameObject controlsPanel;
+    [SerializeField] private Button howToPlayButton;
+    [SerializeField] private ManualBookController manualBook;
     [SerializeField] private AvatarController avatarMovement;
     [SerializeField] private AvatarInteraction avatarInteraction;
     [SerializeField] private string mainMenuScene = "MainMenu";
@@ -36,6 +38,8 @@ public class FarmPauseMenu : MonoBehaviour
         if (musicSlider != null) { musicSlider.minValue = 0f; musicSlider.maxValue = 1f; musicSlider.onValueChanged.AddListener(MusicManager.SetVolume); }
         if (sfxSlider != null) { sfxSlider.minValue = 0f; sfxSlider.maxValue = 1f; sfxSlider.onValueChanged.AddListener(SfxManager.SetVolume); }
         if (controlsButton != null) { controlsButton.onClick.RemoveAllListeners(); controlsButton.onClick.AddListener(OpenControls); }
+        if (manualBook == null) manualBook = FindFirstObjectByType<ManualBookController>();
+        if (howToPlayButton != null) { howToPlayButton.onClick.RemoveAllListeners(); howToPlayButton.onClick.AddListener(OpenManualBook); }
 
         if (panel != null) panel.SetActive(false);
         if (controlsPanel != null) controlsPanel.SetActive(false);
@@ -79,6 +83,15 @@ public class FarmPauseMenu : MonoBehaviour
         if (controlsPanel == null) return;
         controlsPanel.SetActive(true);
         controlsPanel.transform.SetAsLastSibling();
+        SfxManager.Play(SfxKind.ButtonClick);
+    }
+
+    /// Re-open the How-to-Play manual for review. Sits on top of the pause panel; closing it reveals
+    /// the pause panel again (the manual doesn't touch farm input in review mode).
+    public void OpenManualBook()
+    {
+        if (manualBook == null) return;
+        manualBook.OpenManual();
         SfxManager.Play(SfxKind.ButtonClick);
     }
 

@@ -49,6 +49,15 @@ public class UIManager : MonoBehaviour
         {
             case BuildingType.Shop: OpenShop(); break;
             case BuildingType.WarCamp:
+                // While the farm onboarding is still on the basics, hold the player here with a hint
+                // instead of launching the combat tutorial out of order.
+                var farmTut = FindFirstObjectByType<FarmTutorialController>();
+                if (farmTut != null && farmTut.BlockRaid)
+                {
+                    var hint = FindFirstObjectByType<MessageToast>();
+                    if (hint != null) hint.Show("Let's cover the basics first — plant a monster and visit the Shop.");
+                    break;
+                }
                 if (!TutorialState.BattleTutorialDone)
                 {
                     // The first-ever expedition routes into the dedicated combat tutorial scene

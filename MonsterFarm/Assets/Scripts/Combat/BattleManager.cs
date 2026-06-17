@@ -207,6 +207,7 @@ public class BattleManager : MonoBehaviour
         agent.Init(this, data, team, leader, uid, damageMultiplier, damageTakenMultiplier, upgradeMultiplier);
 
         (team == Team.Player ? players : enemies).Add(agent);
+        IgnoreCombatantCollisions(agent);
     }
 
     /// Spawn a single unit at a world point (used by the training tutorial to stage one mechanic at
@@ -224,7 +225,32 @@ public class BattleManager : MonoBehaviour
         agent.Init(this, data, team, leader, string.Empty);
         if (dummy) agent.SetDummy(true);
         (team == Team.Player ? players : enemies).Add(agent);
+        IgnoreCombatantCollisions(agent);
         return agent;
+    }
+
+    /// Combatants (squad, enemies, the leader) pass THROUGH each other so they never shove one
+    /// another around — only walls block them. As each unit spawns, ignore physics collisions
+    /// between its collider and every other combatant's. Wall colliders aren't in these lists, so
+    /// units still stop at walls.
+    private void IgnoreCombatantCollisions(BattleAgent agent)
+    {
+        Collider2D col = agent.GetComponent<Collider2D>();
+        if (col == null) return;
+        foreach (BattleAgent o in players) IgnorePair(col, o, agent);
+        foreach (BattleAgent o in enemies) IgnorePair(col, o, agent);
+        if (leader != null)
+        {
+            Collider2D lc = leader.GetComponent<Collider2D>();
+            if (lc != null) Physics2D.IgnoreCollision(col, lc, true);
+        }
+    }
+
+    private static void IgnorePair(Collider2D col, BattleAgent other, BattleAgent self)
+    {
+        if (other == null || other == self) return;
+        Collider2D oc = other.GetComponent<Collider2D>();
+        if (oc != null) Physics2D.IgnoreCollision(col, oc, true);
     }
 
     /// Remove every living unit on a side (training tutorial: clear the allies before the item demo).

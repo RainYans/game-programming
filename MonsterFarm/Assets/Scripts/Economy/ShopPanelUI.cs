@@ -84,6 +84,17 @@ public class ShopPanelUI : MonoBehaviour
     public void Open() => Refresh();
     public void Close() { }
 
+    /// The Buy button of the first visible card — used by the farm onboarding to highlight "click
+    /// Buy" during the shop step. Prefers an affordable card; falls back to any visible one.
+    public Button FirstVisibleBuyButton()
+    {
+        foreach (Card c in cards)
+            if (c.root != null && c.root.activeSelf && c.buyBtn != null && c.buyBtn.interactable) return c.buyBtn;
+        foreach (Card c in cards)
+            if (c.root != null && c.root.activeSelf && c.buyBtn != null) return c.buyBtn;
+        return null;
+    }
+
     private void Build()
     {
         if (config == null || rowParent == null || cardTemplate == null) return;

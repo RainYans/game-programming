@@ -32,6 +32,7 @@ public class DeployPanel : MonoBehaviour
     [SerializeField] private TMP_Text counterLabel;
     [SerializeField] private Button deployButton;
     [SerializeField] private Button cancelButton;
+    [SerializeField] private GameObject emptyHint; // shown when the player has no monsters to deploy yet
 
     private static readonly Color Gold = new Color(0.59f, 0.37f, 0.08f);
     private static readonly Color Hungry = new Color(0.80f, 0.30f, 0.12f);
@@ -77,6 +78,8 @@ public class DeployPanel : MonoBehaviour
         content.transform.SetAsLastSibling();
         content.SetActive(true);
         RefreshAll();
+        // No harvested monsters yet — tell the player how to get some instead of an empty grid.
+        if (emptyHint != null) emptyHint.SetActive(cards.Count == 0);
         isOpen = true;
         SetFarmInput(false);
     }

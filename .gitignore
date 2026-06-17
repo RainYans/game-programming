@@ -52,6 +52,10 @@ MonsterFarm/Assets/Art/MonsterIcons/
 MonsterFarm/Assets/Art/UIIcons/
 MonsterFarm/Assets/Art/Menu/
 MonsterFarm/Assets/Art/CityThumbs/
+# How-to-Play manual illustrations are in-game SCREENSHOTS — they embed licensed CF art pixels,
+# so keep them local too. The published build carries them; a source-only clone just shows blank
+# manual pages, same as every other CF asset above.
+MonsterFarm/Assets/Art/Manual/
 # CF-derived sprites loaded at runtime + tilemap source images
 MonsterFarm/Assets/Resources/MonsterAnim/
 MonsterFarm/Assets/Resources/Monsters/

@@ -87,9 +87,11 @@ public class BattleAgent : MonoBehaviour
     private const float IsoYScale = 1f; // top-down: no Y squash (was 0.5f for isometric)
     private const float BattleMoveScale = 1.1f; // global unit speed (units must keep up with the leader)
     private const float LungeDuration = 0.13f;
-    private const float LungeSpeed = 7f;
+    private const float LungeReach = 0.28f; // peak jab offset — applied to the SPRITE only, never the body
     private float lungeTimer;
     private Vector2 lungeDir;
+    private Vector3? moveGoal; // physics-move target chosen in Update, applied in FixedUpdate (keeps unit separation)
+    private Transform visualRoot; // child that holds the sprite, so the lunge jabs the art, not the body
     private const float ArriveEpsilon = 0.05f;
     private const float MoveArriveDistance = 0.3f;
     private const float FlashSeconds = 0.14f;
@@ -97,6 +99,11 @@ public class BattleAgent : MonoBehaviour
     // along walls (the hero + walls are already physics colliders). Tune here if it feels off.
     private const float ColliderRadius = 0.28f;
     private const float BodyDrag = 12f;
+    // Boids-style separation: the squad all chases the same leader point, so the physics solver alone
+    // can't stop them piling up while moving. Each unit also steers away from nearby same-team units.
+    // Tune here if the squad feels too spread out (lower) or still overlaps (raise radius).
+    private const float SeparationRadius = 0.85f;
+    private const float SeparationWeight = 1.3f;
     private Rigidbody2D body;
 
     // Balance tunables, resolved from GameConfig via BattleManager.Tuning at Init.
@@ -133,7 +140,21 @@ public class BattleAgent : MonoBehaviour
         passive = data.passive;
         auraTimer = t.auraTickInterval; // delay first tick
 
-        sprite = GetComponentInChildren<SpriteRenderer>();
+        // Put the visible sprite on a child ("Visual") so the melee lunge can jab the ART without
+        // moving the physics body — moving the body into the target would shove both units apart.
+        var rootSr = GetComponent<SpriteRenderer>();
+        var visGo = new GameObject("Visual");
+        visGo.transform.SetParent(transform, false);
+        visualRoot = visGo.transform;
+        sprite = visGo.AddComponent<SpriteRenderer>();
+        if (rootSr != null)
+        {
+            sprite.sprite = rootSr.sprite;          // fallback look until monster art replaces it below
+            sprite.sortingLayerID = rootSr.sortingLayerID;
+            sprite.sortingOrder = rootSr.sortingOrder;
+            rootSr.enabled = false;                 // the child renders now
+        }
+
         // Real animated monster art by strain id; fall back to a static sprite, then the
         // placeholder colour tint if no art exists.
         animFrames = Resources.LoadAll<Sprite>("MonsterAnim/" + data.id);
@@ -238,10 +259,10 @@ public class BattleAgent : MonoBehaviour
     {
         if (!IsAlive || manager == null) return;
 
-        // Velocity-driven movement (same as the hero): reset each frame, then MoveToward sets it while
-        // moving. (Previously MovePosition was called from Update with Time.deltaTime, so unit speed
-        // scaled with framerate — units crawled at high FPS. Setting velocity is framerate-correct.)
-        if (body != null) body.velocity = Vector2.zero;
+        // AI picks a move target here (Update); the actual physics move runs in FixedUpdate via
+        // MovePosition. This keeps speed framerate-correct AND lets the solver push overlapping units
+        // apart. (A plain velocity-set in Update overwrote the separation impulse → units stacked.)
+        moveGoal = null;
 
         TickFlashAndDebuffs();
         Animate();
@@ -264,12 +285,20 @@ public class BattleAgent : MonoBehaviour
             return;
         }
 
-        // Attack lunge — jab toward the target then back (a clear melee "swing", no drift).
+        // Attack lunge — a VISUAL jab toward the target then back. Offsets the sprite child only;
+        // the physics body never moves, so a melee hit no longer shoves units around on contact.
         if (lungeTimer > 0f)
         {
             lungeTimer -= Time.deltaTime;
-            float sign = lungeTimer > LungeDuration * 0.5f ? 1f : -1f;
-            transform.position += (Vector3)(lungeDir * sign * (LungeSpeed * Time.deltaTime));
+            if (visualRoot != null)
+            {
+                if (lungeTimer <= 0f) visualRoot.localPosition = Vector3.zero; // snap back when the jab ends
+                else
+                {
+                    float along = Mathf.Sin(Mathf.Clamp01(1f - lungeTimer / LungeDuration) * Mathf.PI); // 0→1→0
+                    visualRoot.localPosition = (Vector3)(lungeDir * (LungeReach * along));
+                }
+            }
             return;
         }
 
@@ -366,11 +395,15 @@ public class BattleAgent : MonoBehaviour
             if (passive == Passive.Corrosion && target.IsAlive)
                 target.ApplyCorrosion(t.corrosionDuration, t.corrosionExtraDamage);
 
-            // Visible attack: melee units lunge into the target so combat reads clearly.
+            // Visible attack tell: melee units lunge into the target; ranged units fire a projectile.
             if (range == AttackRange.Melee)
             {
                 lungeDir = ((Vector2)(target.transform.position - transform.position)).normalized;
                 lungeTimer = LungeDuration;
+            }
+            else
+            {
+                BattleProjectile.Spawn(transform.position, target.transform.position, sprite);
             }
 
             attackTimer = t.attackInterval;
@@ -392,6 +425,10 @@ public class BattleAgent : MonoBehaviour
                 lungeDir = ((Vector2)(leader.position - transform.position)).normalized;
                 lungeTimer = LungeDuration;
             }
+            else
+            {
+                BattleProjectile.Spawn(transform.position, leader.position, sprite);
+            }
             attackTimer = t.attackInterval;
         }
     }
@@ -401,12 +438,57 @@ public class BattleAgent : MonoBehaviour
         Vector2 to = (Vector2)(worldTarget - transform.position);
         if (to.sqrMagnitude < ArriveEpsilon * ArriveEpsilon) return;
         Vector2 dir = to.normalized;
-        dir.y *= IsoYScale;
         if (body != null)
-            body.velocity = dir * moveSpeed;
+            moveGoal = worldTarget; // moved in FixedUpdate so overlapping units still separate
         else
             transform.position += (Vector3)(dir * (moveSpeed * Time.deltaTime));
         FaceDir(dir.x);
+    }
+
+    // Physics move runs here (not Update) so speed is framerate-correct. Combines "head to my goal"
+    // with a push away from nearby allies, so the squad (which all chases the same leader point)
+    // spreads out instead of stacking. Idle-but-crowded units also gently creep apart.
+    private void FixedUpdate()
+    {
+        if (body == null || dummy || frozenTimer > 0f || lungeTimer > 0f) return;
+
+        Vector2 dir = Vector2.zero;
+        bool hasGoal = false;
+        if (moveGoal != null)
+        {
+            Vector2 to = (Vector2)(moveGoal.Value - transform.position);
+            if (to.sqrMagnitude >= ArriveEpsilon * ArriveEpsilon)
+            {
+                dir = to.normalized;
+                dir.y *= IsoYScale;
+                hasGoal = true;
+            }
+        }
+
+        dir += SeparationPush() * SeparationWeight;
+        if (dir.sqrMagnitude < 0.0001f) return;
+
+        float spd = hasGoal ? moveSpeed : moveSpeed * 0.4f; // idle units only creep apart, don't sprint
+        body.MovePosition(body.position + dir.normalized * (spd * Time.fixedDeltaTime));
+    }
+
+    // Sum of pushes away from same-team units within SeparationRadius (stronger the closer they are).
+    private Vector2 SeparationPush()
+    {
+        if (manager == null) return Vector2.zero;
+        var allies = Team == Team.Player ? manager.Players : manager.Enemies;
+        if (allies == null) return Vector2.zero;
+        Vector2 push = Vector2.zero;
+        Vector2 p = transform.position;
+        foreach (BattleAgent a in allies)
+        {
+            if (a == null || a == this || !a.IsAlive) continue;
+            Vector2 d = p - (Vector2)a.transform.position;
+            float dist = d.magnitude;
+            if (dist > 0.0001f && dist < SeparationRadius)
+                push += (d / dist) * (1f - dist / SeparationRadius);
+        }
+        return push;
     }
 
     private void FaceToward(Vector3 worldTarget) => FaceDir(worldTarget.x - transform.position.x);

@@ -17,6 +17,7 @@ public class FarmRoamer : MonoBehaviour
     private Rigidbody2D body;
     private Vector3 target;
     private float pauseTimer;
+    private bool moving;
 
     private string uid;
     private Inventory inventory;
@@ -94,10 +95,9 @@ public class FarmRoamer : MonoBehaviour
 
     private void Wander()
     {
-        // Velocity-driven movement: reset each frame, then set it while actually walking. (Was
-        // MovePosition with Time.deltaTime in Update, which made the wander speed framerate-dependent
-        // — units barely crawled at high FPS.)
-        if (body != null) body.velocity = Vector2.zero;
+        // AI/idle decision here (Update); the physics move runs in FixedUpdate via MovePosition so
+        // roamers stay framerate-correct AND get pushed apart instead of overlapping. `moving` gates it.
+        moving = false;
 
         if (nextTarget == null) return;
 
@@ -116,11 +116,19 @@ public class FarmRoamer : MonoBehaviour
         }
 
         Vector3 dir = to.normalized;
-        if (body != null)
-            body.velocity = (Vector2)(dir * moveSpeed);
-        else
+        moving = true;
+        if (body == null)
             transform.position += dir * (moveSpeed * Time.deltaTime);
         if (sprite != null && Mathf.Abs(dir.x) > 0.01f) sprite.flipX = dir.x < 0f;
+    }
+
+    private void FixedUpdate()
+    {
+        if (body == null || !moving) return;
+        Vector3 to = target - transform.position;
+        if (to.sqrMagnitude < 0.0004f) return;
+        Vector2 dir = ((Vector2)to).normalized;
+        body.MovePosition(body.position + dir * (moveSpeed * Time.fixedDeltaTime));
     }
 
     private void PollHunger()
